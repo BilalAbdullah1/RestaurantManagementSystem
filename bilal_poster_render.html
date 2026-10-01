@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Bilal Abdullah — Enterprise Software Solutions Flyer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      width: 1080px;
+      height: 1080px;
+      overflow: hidden;
+      background: #ffffff;
+      font-family: 'Montserrat', sans-serif;
+      position: relative;
+    }
+
+    /* DIAGONAL DARK BACKGROUND (LEFT SIDE) */
+    .dark-cut {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50%;
+      height: 100%;
+      background: #15181f;
+      clip-path: polygon(0 0, 100% 0, 62% 100%, 0 100%);
+      z-index: 1;
+    }
+
+    /* DIAGONAL BOTTOM RIGHT ACCENT */
+    .bottom-accent {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 50%;
+      height: 150px;
+      background: #15181f;
+      clip-path: polygon(50% 0, 100% 0, 100% 100%, 0 100%);
+      z-index: 1;
+    }
+
+    /* GEOMETRIC CONCENTRIC RINGS BEHIND PERSON */
+    .rings-layer {
+      position: absolute;
+      top: 150px;
+      left: 40px;
+      width: 560px;
+      height: 560px;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* TOP LEFT: BRAND LOGO & TITLE */
+    .brand-box {
+      position: absolute;
+      top: 48px;
+      left: 54px;
+      z-index: 10;
+    }
+    .brand-name {
+      font-size: 28px;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+    }
+    .brand-sub {
+      font-size: 13px;
+      font-weight: 700;
+      color: #00e632;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* TOP RIGHT: SOCIAL ICONS */
+    .social-box {
+      position: absolute;
+      top: 48px;
+      right: 54px;
+      z-index: 10;
+      text-align: right;
+    }
+    .icons-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+    .s-icon {
+      width: 34px;
+      height: 34px;
+      background: #00e632;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #0b0d13;
+      font-size: 16px;
+      font-weight: 800;
+      box-shadow: 0 4px 10px rgba(0, 230, 50, 0.35);
+    }
+    .follow-lbl {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #4b5563;
+      letter-spacing: 0.5px;
+    }
+
+    /* REAL PHOTO OF BILAL ABDULLAH (CLEAN ROUNDED ARCH FRAME) */
+    .photo-wrapper {
+      position: absolute;
+      bottom: 0;
+      left: 40px;
+      width: 540px;
+      height: 840px;
+      z-index: 4;
+      display: flex;
+      align-items: flex-end;
+      pointer-events: none;
+    }
+    .photo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      border-radius: 120px 120px 0 0;
+      mask-image: linear-gradient(to top, transparent 0%, black 15%, black 85%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to top, transparent 0%, black 15%, black 85%, transparent 100%);
+      filter: drop-shadow(15px 15px 35px rgba(0, 0, 0, 0.7));
+    }
+
+    /* FLOATING BADGE: "HAVE AN IDEA OR PROJECT?" */
+    .floating-circle {
+      position: absolute;
+      top: 480px;
+      left: 175px;
+      width: 155px;
+      height: 155px;
+      background: #1f232b;
+      border: 4px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      z-index: 6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.75);
+      padding: 12px;
+    }
+    .f-small {
+      font-size: 13px;
+      font-weight: 700;
+      color: #9ca3af;
+      letter-spacing: 0.5px;
+    }
+    .f-big {
+      font-size: 24px;
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1.1;
+      margin: 2px 0;
+    }
+    .f-green {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #00e632;
+    }
+
+    /* RIGHT SIDE HEADLINE & SERVICES (Z-INDEX 20 TO AVOID ANY OVERLAP) */
+    .right-pane {
+      position: absolute;
+      top: 175px;
+      right: 54px;
+      width: 480px;
+      z-index: 20;
+    }
+
+    .eyebrow-rule {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1f2937;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      position: relative;
+      display: inline-block;
+    }
+    .eyebrow-rule::after {
+      content: "";
+      position: absolute;
+      top: -6px;
+      left: 0;
+      right: 0;
+      height: 2.5px;
+      background: #1f2937;
+    }
+
+    .h-word-1 {
+      font-size: 64px;
+      font-weight: 900;
+      color: #111827;
+      line-height: 0.95;
+      letter-spacing: -2px;
+      text-transform: uppercase;
+    }
+    .h-word-2 {
+      font-size: 72px;
+      font-weight: 900;
+      color: #00e632;
+      line-height: 0.95;
+      letter-spacing: -3px;
+      text-transform: uppercase;
+      text-shadow: 0 4px 16px rgba(0, 230, 50, 0.4);
+    }
+    .h-word-3 {
+      font-size: 32px;
+      font-weight: 800;
+      color: #1f2937;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      margin-top: 6px;
+      margin-bottom: 26px;
+    }
+
+    /* "WHAT WE DO / OUR SERVICES" CARD */
+    .widget-container {
+      position: relative;
+    }
+    .widget-tabs {
+      display: inline-flex;
+      align-items: center;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px 10px 0 0;
+      overflow: hidden;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+    }
+    .w-tab-gray {
+      padding: 8px 18px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #4b5563;
+    }
+    .w-tab-green {
+      padding: 8px 18px;
+      font-size: 13px;
+      font-weight: 800;
+      background: #00e632;
+      color: #0b0d13;
+      border-radius: 8px 8px 0 0;
+    }
+
+    .widget-card {
+      background: #1e222b;
+      border-radius: 0 20px 20px 20px;
+      padding: 24px 26px;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+    }
+    .w-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 14.5px;
+      font-weight: 600;
+      color: #e5e7eb;
+      margin-bottom: 14px;
+      line-height: 1.35;
+    }
+    .w-row:last-child {
+      margin-bottom: 0;
+    }
+    .w-num {
+      color: #00e632;
+      font-weight: 800;
+      font-size: 16px;
+      min-width: 18px;
+    }
+    .w-row strong {
+      color: #ffffff;
+    }
+
+    /* BOTTOM ELEMENTS */
+    .green-pill-btn {
+      position: absolute;
+      bottom: 54px;
+      left: 64px;
+      z-index: 10;
+      background: #00e632;
+      padding: 14px 34px;
+      border-radius: 999px;
+      box-shadow: 0 10px 30px rgba(0, 230, 50, 0.5);
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+    }
+    .p-phone {
+      font-size: 26px;
+      font-weight: 900;
+      color: #0b0d13;
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+    .p-web {
+      font-size: 13px;
+      font-weight: 700;
+      color: #064e1e;
+      margin-top: 4px;
+    }
+
+    .dark-contact-btn {
+      position: absolute;
+      bottom: 58px;
+      right: 58px;
+      z-index: 10;
+      background: #1e222b;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+      padding: 14px 32px;
+      border-radius: 999px;
+      font-size: 16px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+    }
+    .dark-contact-btn span {
+      color: #00e632;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Diagonal Dark Background Cut -->
+  <div class="dark-cut"></div>
+  <div class="bottom-accent"></div>
+
+  <!-- Concentric Green & Charcoal Rings -->
+  <div class="rings-layer">
+    <svg viewBox="0 0 560 560" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+      <!-- Outer Dark Mechanical Ring with Holes -->
+      <circle cx="280" cy="280" r="240" stroke="#252933" stroke-width="40" />
+      <circle cx="280" cy="40" r="10" fill="#ffffff" />
+      <circle cx="40" cy="280" r="10" fill="#ffffff" />
+      <circle cx="480" cy="180" r="10" fill="#ffffff" />
+      <circle cx="100" cy="440" r="10" fill="#ffffff" />
+
+      <!-- Vivid Green Ring with dashed break -->
+      <circle cx="280" cy="280" r="185" stroke="#00e632" stroke-width="58" stroke-dasharray="880 260" />
+
+      <!-- Inner White Ring -->
+      <circle cx="280" cy="280" r="115" stroke="#ffffff" stroke-width="20" />
+    </svg>
+  </div>
+
+  <!-- Top Left: Bilal Abdullah Logo / Header -->
+  <div class="brand-box">
+    <div class="brand-name">Bilal Abdullah</div>
+    <div class="brand-sub">Enterprise Solutions</div>
+  </div>
+
+  <!-- Top Right: Social Icons -->
+  <div class="social-box">
+    <div class="icons-row">
+      <div class="s-icon">💬</div>
+      <div class="s-icon">in</div>
+      <div class="s-icon">🐙</div>
+      <div class="s-icon">✉</div>
+    </div>
+    <div class="follow-lbl">Connect With Me</div>
+  </div>
+
+  <!-- Real Photo of Bilal Abdullah (In Suit) -->
+  <div class="photo-wrapper">
+    <img src="bilal_profile.jpg" alt="Bilal Abdullah" class="photo-img" />
+  </div>
+
+  <!-- Floating Badge: "Have An Idea Or Project?" -->
+  <div class="floating-circle">
+    <span class="f-small">Have An</span>
+    <span class="f-big">Idea</span>
+    <span class="f-green">Or Project?</span>
+  </div>
+
+  <!-- Right Pane: Headline & Services -->
+  <div class="right-pane">
+    <div class="eyebrow-rule">Enterprise &bull; SaaS</div>
+    <div class="h-word-1">Software</div>
+    <div class="h-word-2">Solutions</div>
+    <div class="h-word-3">Architect</div>
+
+    <!-- Services Widget -->
+    <div class="widget-container">
+      <div class="widget-tabs">
+        <div class="w-tab-gray">What We Do</div>
+        <div class="w-tab-green">Our Services</div>
+      </div>
+      <div class="widget-card">
+        <div class="w-row">
+          <span class="w-num">1</span>
+          <div><strong>School Management System:</strong> 100+ Screens, Fee Challans &amp; Exam Broadsheet</div>
+        </div>
+        <div class="w-row">
+          <span class="w-num">2</span>
+          <div><strong>Inventory &amp; Point of Sale:</strong> Real-Time Stock Ledger &amp; Barcode Billing</div>
+        </div>
+        <div class="w-row">
+          <span class="w-num">3</span>
+          <div><strong>Custom SaaS &amp; Web Apps:</strong> .NET 9 Core, React 18 &amp; Clean Architecture</div>
+        </div>
+        <div class="w-row">
+          <span class="w-num">4</span>
+          <div><strong>Multi-Tenant Database:</strong> PostgreSQL, SQL Server &amp; REST APIs</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Left: Phone & Website Pill -->
+  <div class="green-pill-btn">
+    <div class="p-phone">+92 300 0000000</div>
+    <div class="p-web">github.com/BilalAbdullah1 &bull; Portfolio</div>
+  </div>
+
+  <!-- Bottom Right: Contact Us Button -->
+  <div class="dark-contact-btn">
+    <span>&rarr;</span> Contact Us
+  </div>
+
+</body>
+</html>

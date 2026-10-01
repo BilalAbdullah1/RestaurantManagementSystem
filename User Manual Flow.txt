@@ -1,0 +1,1311 @@
+# 🔗 VOKE Solutions SMS — Complete Operational Flow Guide & User Manual
+# Step-by-Step Chain: "What Comes After What?"
+
+---
+
+> **System:** VOKE Solutions — School Management System (SMS)  
+> **Architecture:** Clean Architecture .NET 10 Web API + React 19 Vite TypeScript + TailwindCSS  
+> **Purpose:** This guide shows the exact sequence of operations to follow when setting up, administering, and operating the SMS.  
+> Every step tells you: **Where to Navigate → What to Do (All Scenarios & Forms) → Validations & Edge Cases → Backend APIs & Tables → What Happens Next.**  
+> Includes a **100% interconnected, human-readable dummy dataset (Zero GUIDs!)** so you can easily understand, test, and implement the entire system flow.
+
+---
+
+# 📑 TABLE OF CONTENTS
+
+- [PART A: FIRST-TIME SYSTEM SETUP (Admin Only)](#part-a-first-time-system-setup-admin-only)
+  - [🔗 CHAIN 1: Authentication & Initial Login](#-chain-1-authentication--initial-login)
+  - [🔗 CHAIN 2: Campus & Tenant Setup](#-chain-2-campus--tenant-setup)
+  - [🔗 CHAIN 3: Roles, Users & Security Configuration](#-chain-3-roles-users--security-configuration)
+  - [🔗 CHAIN 4: Calendar & Academic Year Foundation](#-chain-4-calendar--academic-year-foundation)
+  - [🔗 CHAIN 5: Academic Structure — Classes, Sections, Subjects](#-chain-5-academic-structure--classes-sections-subjects)
+  - [🔗 CHAIN 6: Staff Registration & Account Creation](#-chain-6-staff-registration--account-creation)
+  - [🔗 CHAIN 7: Timetable Creation & Verification (Class, Teacher & Substitute Management)](#-chain-7-timetable-creation--verification)
+  - [🔗 CHAIN 8: Student Registration, Enrollment & Parent Accounts](#-chain-8-student-registration-enrollment--parent-accounts)
+  - [🔗 CHAIN 9: Fee System Configuration (Chart of Accounts, Structures, Concessions & Challans)](#-chain-9-fee-system-configuration)
+  - [🔗 CHAIN 9b: Optional Module Setup (Transport, Hostel, Library, Inventory, Biometrics)](#-chain-9b-optional-module-setup-independent--do-anytime)
+- [PART B: DAILY OPERATIONS](#part-b-daily-operations)
+  - [🔗 CHAIN 10: Morning Routine — Attendance, Biometrics, Substitutes & Gate Passes](#-chain-10-morning-routine--what-happens-first-every-day)
+  - [🔗 CHAIN 11: During School Hours — Academics, Homework, Diary, POS & Expenses](#-chain-11-during-school-hours--ongoing-daily-tasks)
+  - [🔗 CHAIN 12: What Students Do (Student Portal Flow)](#-chain-12-what-students-do-student-portal-flow)
+  - [🔗 CHAIN 13: What Parents Do (Parent Portal Flow)](#-chain-13-what-parents-do-parent-portal-flow)
+- [PART C: MONTHLY OPERATIONS](#part-c-monthly-operations)
+  - [🔗 CHAIN 14: Monthly Fee & Payroll Cycle](#-chain-14-monthly-fee--payroll-cycle)
+- [PART D: EXAM CYCLE (2-4 Times Per Academic Year)](#part-d-exam-cycle-2-4-times-per-academic-year)
+  - [🔗 CHAIN 15: Complete Examination Cycle](#-chain-15-complete-examination-cycle)
+  - [🔗 CHAIN 16: Communication Flow — How to Reach Parents, Students & Staff](#-chain-16-communication-flow--how-to-reach-parents-students--staff)
+- [PART E: YEAR-END OPERATIONS](#part-e-year-end-operations)
+  - [🔗 CHAIN 17: End of Academic Year — Closing & Transition](#-chain-17-end-of-academic-year--closing--transition)
+- [🔗 ANYTIME OPERATIONS — Independent Tasks (No Sequence Required)](#-anytime-operations--independent-tasks-no-sequence-required)
+- [🗺️ MASTER FLOW MAP — The Complete Picture](#️-master-flow-map--the-complete-picture)
+- [📊 MASTER RELATIONAL DUMMY DATASET (Clean Human-Readable Data — Zero GUIDs!)](#-master-relational-dummy-dataset)
+
+---
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# PART A: FIRST-TIME SYSTEM SETUP (Admin Only)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+> [!IMPORTANT]
+> If you are setting up the system for the very first time (brand new school with no data), follow Part A completely from Chain 1 through Chain 9b before moving to Part B. If the system has already been configured and you are a daily user, skip ahead to **Part B: Daily Operations**.
+
+---
+
+## 🔗 CHAIN 1: Authentication & Initial Login
+
+```
+📍 STARTING POINT: The system has just been deployed. No school data exists yet.
+   You have received your initial Admin login credentials.
+
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 1: SIGN IN TO THE SYSTEM                                  │
+│                                                                  │
+│  📍 Navigate to: /signin (the login page)                       │
+│  👤 Role: All Users (Admin, Teacher, Staff, Parent, Student)     │
+│                                                                  │
+│  ✅ What to do:                                                  │
+│     1. Select School Campus/Workspace from <SearchableSelect>    │
+│        (e.g., "Excellence International School - Main Campus").  │
+│     2. Enter registered Email Address (admin@excellence.edu.pk). │
+│     3. Enter Password (use Lucide <Eye>/<EyeOff> icon to verify).│
+│     4. Click "Sign In" button.                                   │
+│     5. If 2FA is active, enter the 6-digit OTP code received.    │
+│                                                                  │
+│  📊 What happens:                                                │
+│     JWT & Refresh tokens are generated and stored in localStorage│
+│     The system automatically redirects you to your dashboard:    │
+│       • Admin → Admin Dashboard (/dashboard)                     │
+│       • Teacher or Staff → Staff Dashboard (/staff-dashboard)    │
+│       • Parent → Parent Dashboard (/parent-dashboard)            │
+│       • Student → Student Dashboard (/student-dashboard)         │
+│                                                                  │
+│  💡 Why this matters:                                            │
+│     The entire system is role-protected. Without logging in,     │
+│     you cannot access any screens. The role determines which     │
+│     sidebar menu items are visible and which screens you can     │
+│     open. Admins see everything. Other roles see only what       │
+│     their permissions allow.                                     │
+│                                                                  │
+│  🔗 Also available on this screen:                               │
+│     • "Forgot Password?" link → Opens the Password Recovery     │
+│       screen (/ForgotPassword) where you enter your email to     │
+│       receive a reset token, then to /ResetPassword.             │
+│     • "Sign Up" link → Opens the Registration screen for new    │
+│       campus creation.                                           │
+│                                                                  │
+│  ➡️ NEXT STEP: You land on the Admin Dashboard. Now proceed     │
+│     to create your school/campus.                                │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+```
+
+---
+
+## 🔗 CHAIN 2: Campus & Tenant Setup
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 2: CREATE YOUR SCHOOL / CAMPUS                            │
+│                                                                  │
+│  📍 Navigate to: Sidebar → System Settings → Tenants (Campuses)│
+│  👤 Role: SuperAdmin / System Admin                              │
+│                                                                  │
+│  ✅ What to do:                                                  │
+│     Click the "Add Campus" button (Opens <ProfileDrawer>).       │
+│     Fill in your school's details:                               │
+│       • School Name: "Excellence International School"          │
+│       • Campus Code: "EXC-MAIN"                                 │
+│       • Address: "Plot 45, Sector B, Phase 5, DHA, Lahore"      │
+│       • Phone: "+92-42-35889900"                                │
+│       • Official Email: "info@excellence.edu.pk"                │
+│       • Currency: "PKR (Rs.)"                                   │
+│       • Upload school logo using <ImageUpload>.                 │
+│                                                                  │
+│     If you operate multiple campuses (branches), create each one │
+│     as a separate tenant. Each tenant operates as an isolated    │
+│     data environment — students, staff, fees, and records are    │
+│     kept separate per campus.                                    │
+│                                                                  │
+│  📊 What happens:                                                │
+│     The campus is created in the database. The school name and   │
+│     logo appear in the sidebar header, replacing the default     │
+│     branding. All subsequent data you create (students, classes, │
+│     fees) will belong to this campus.                            │
+│                                                                  │
+│  💡 Why this matters:                                            │
+│     In a multi-tenant architecture, every piece of data is       │
+│     scoped to a tenant (campus). This is the very first thing    │
+│     that must exist because everything else depends on it.       │
+│                                                                  │
+│  ⚠️ Important: The Public Admission Portal URL is generated     │
+│     using this tenant's ID/Code. Example:                        │
+│     /PublicAdmissionPortal/EXC-MAIN                              │
+│     Share this link with parents so they can submit admission    │
+│     applications online without needing to log in.               │
+│                                                                  │
+│  ➡️ NEXT STEP: Define user roles and permissions.               │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+```
+
+---
+
+## 🔗 CHAIN 3: Roles, Users & Security Configuration
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 3: REVIEW AND CREATE ROLES                                │
+│                                                                  │
+│  📍 Navigate to: Sidebar → System Settings → Roles & Permissions│
+│  👤 Role: Admin                                                  │
+│                                                                  │
+│  ✅ What to do:                                                  │
+│     The system comes pre-configured with standard roles:         │
+│       • SuperAdmin — Full master system access                   │
+│       • Admin — Campus administrator                             │
+│       • Principal — Academic and disciplinary head               │
+│       • Teacher — Academic operations, attendance, marks         │
+│       • Staff — Support operations, front office, HR             │
+│       • Accountant — Fees, payroll, and general ledger           │
+│       • Librarian — Library catalog & book issuance              │
+│       • Parent — View-only portal for child's data               │
+│       • Student — View-only portal for personal academic data    │
+│                                                                  │
+│     Review these default roles. If your school needs additional  │
+│     specialized roles (for example, "Transport Manager",         │
+│     "Hostel Warden", "Lab Incharge", "Vice Principal"), create   │
+│     them here by clicking "Add Role", entering name and saving.  │
+│                                                                  │
+│  📊 What happens:                                                │
+│     Roles are stored in the database. Every user account must    │
+│     be assigned a role. The role determines what screens,        │
+│     menus, and actions are available to that user.               │
+│                                                                  │
+│  💡 Why this matters:                                            │
+│     Without roles, there is no access control. Roles are the     │
+│     foundation of the Role-Based Access Control (RBAC) system.   │
+│                                                                  │
+│  ➡️ NEXT STEP: Configure the Permissions Matrix.                │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 4: CONFIGURE THE PERMISSIONS MATRIX                       │
+│                                                                  │
+│  📍 Navigate to: Sidebar → System Settings → Permissions        │
+│                  Matrix (RBAC)                                   │
+│  👤 Role: Admin                                                  │
+│                                                                  │
+│  ✅ What to do:                                                  │
+│     You will see a grid where the columns are Roles and the      │
+│     rows are Permissions (organized by module). Each cell is a   │
+│     checkbox. Check or uncheck each permission for each role.    │
+│                                                                  │
+│     Example configurations:                                      │
+│       • "Finance & Fees" module → Only Admin & Accountant access │
+│       • "Student Attendance" → Admin + Teacher access            │
+│       • "Marks Entry" → Admin + Teacher access                   │
+│       • "Staff Directory" → Admin + Teacher + Staff can view     │
+│       • "System Settings" → Only Admin                           │
+│                                                                  │
+│     After configuring, click "Save" to apply immediately.        │
+│                                                                  │
+│  📊 What happens:                                                │
+│     The sidebar dynamically hides or shows menu items based on   │
+│     these permissions. When a Teacher logs in, they only see     │
+│     their allowed menus. If anyone tries to visit a restricted   │
+│     URL directly, they are blocked.                              │
+│                                                                  │
+│  💡 Why this matters:                                            │
+│     This is your security backbone. It ensures sensitive modules │
+│     like Finance, Payroll, and Settings are protected.           │
+│                                                                  │
+│  ➡️ NEXT STEP: Create user accounts for other admins.           │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 5: CREATE INITIAL ADMIN USER ACCOUNTS                     │
+│                                                                  │
+│  📍 Navigate to: Sidebar → System Settings → User Management   │
+│  👤 Role: Admin                                                  │
+│                                                                  │
+│  ✅ What to do:                                                  │
+│     Click "Add User". Create login accounts for school managers  │
+│     who need system access right away:                           │
+│       • Email: "principal@excellence.edu.pk"                     │
+│       • Password: "Admin@123"                                    │
+│       • Role: "Principal" from <SearchableSelect>                │
+│       • Full Name: "Dr. Imran Khan"                              │
+│       • Is Active: Toggle ON                                     │
+│                                                                  │
+│     Note: You will create Teacher, Staff, Parent, and Student    │
+│     accounts later — after their profiles have been registered   │
+│     in the system. For now, only create Admin accounts.          │
+│                                                                  │
+│  📊 What happens:                                                │
+│     Each new user can now log in with their credentials and      │
+│     access the system according to their assigned role.          │
+│                                                                  │
+│  💡 Why this matters:                                            │
+│     Multiple admins can now share the workload of setting up     │
+│     the system — one handles academics, another handles finance. │
+│                                                                  │
+│  ➡️ NEXT STEP: Configure security settings.                     │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 6: CONFIGURE SECURITY SETTINGS (Recommended)              │
+│                                                                  │
+│  📍 Navigate to: Sidebar → System Settings → Security Settings │
+│  👤 Role: Admin                                                  │
+│                                                                  │
+│  ✅ What to do:                                                  │
+│     Configure security parameters:                               │
+│       • Password Policy: Minimum 8 characters with numbers       │
+│       • Session Timeout: 30 minutes of inactivity auto-logout    │
+│       • Two-Factor Authentication: Enable 2FA for Admin accounts │
+│       • Brute Force Protection: Lock account after 5 failed tries│
+│     Click "Apply Security Settings".                             │
+│                                                                  │
+│  📊 What happens:                                                │
+│     All rules take effect immediately for every user in the      │
+│     system, safeguarding sensitive student and financial data.   │
+│                                                                  │
+│  ➡️ NEXT STEP: Set up the holiday calendar.                     │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+```
+
+---
+
+## 🔗 CHAIN 4: Calendar & Academic Year Foundation
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 7: DEFINE THE HOLIDAY CALENDAR                            │
+│                                                                  │
+│  📍 Navigate to: Sidebar → System Settings → Holiday Calendar  │
+│  👤 Role: Admin / HR                                             │
+│                                                                  │
+│  ✅ What to do:                                                  │
+│     Add school holidays and vacation breaks for the year:        │
+│       • Title: "Eid-ul-Fitr Holidays"                            │
+│       • Type: "Public Holiday" from <SearchableSelect>           │
+│       • Dates: 10-Apr-2025 to 13-Apr-2025 via <DatePicker>       │
+│       • Description: "Gazetted National Holiday"                 │
+│                                                                  │
+│  📊 What happens:                                                │
+│     Holidays appear on the calendar. Attendance screens          │
+│     automatically skip these dates — you cannot mark attendance  │
+│     on holidays. Working-day reports exclude them automatically. │
+│                                                                  │
+│  💡 Why this matters:                                            │
+│     Setting holidays early prevents attendance distortion and    │
+│     ensures correct working days calculation for payroll.        │
+│                                                                  │
+│  ➡️ NEXT STEP: Create the Academic Year.                        │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 8: CREATE THE ACADEMIC YEAR                               │
+│                                                                  │
+│  📍 Navigate to: Sidebar → Academics → Academic Years          │
+│  👤 Role: Admin / Principal                                      │
+│                                                                  │
+│  ✅ What to do:                                                  │
+│     Click "Add Academic Year" and create the current session:    │
+│       • Name: "Academic Year 2025-2026"                          │
+│       • Start Date: "2025-04-01" via <DatePicker>                │
+│       • End Date: "2026-03-31" via <DatePicker>                  │
+│       • Status: Mark this year as "ACTIVE" (Current Year)        │
+│     Click "Save Academic Year".                                  │
+│                                                                  │
+│     Only one academic year can be active at a time. The active   │
+│     year is the one the entire system operates under.            │
+│                                                                  │
+│  📊 What happens:                                                │
+│     Every module references this active year: fee challans,      │
+│     exams, attendance, student enrollments, and timetables.      │
+│                                                                  │
+│  ⚠️ CRITICAL: Do NOT skip this step. Without an active year,    │
+│     downstream modules will not function properly.               │
+│                                                                  │
+│  ➡️ NEXT STEP: Create Classes.                                  │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+```
+
+---
+
+## 🔗 CHAIN 5: Academic Structure — Classes, Sections, Subjects
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 9: CREATE ALL CLASSES                                     │
+│                                                                  │
+│  📍 Navigate to: Sidebar → Academics → Classes                 │
+│  👤 Role: Admin / Academic Incharge                              │
+│                                                                  │
+│  ✅ What to do:                                                  │
+│     Click "Add Class" and create your grade levels:              │
+│       • "Class 9th"  | Code: "CLS-09" | Order: 9 | Capacity: 80 │
+│       • "Class 10th" | Code: "CLS-10" | Order: 10| Capacity: 80 │
+│       • "Class 8th"  | Code: "CLS-08" | Order: 8 | Capacity: 80 │
+│       • "Class 7th"  | Code: "CLS-07" | Order: 7 | Capacity: 80 │
+│                                                                  │
+│  📊 What happens:                                                │
+│     Classes appear in data tables and dropdown selectors across  │
+│     enrollment, fee structures, timetable, and exams.            │
+│                                                                  │
+│  ➡️ NEXT STEP: Create Sections under each class.                │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 10: CREATE SECTIONS UNDER EACH CLASS                      │
+│                                                                  │
+│  📍 Navigate to: Sidebar → Academics → Sections                │
+│  👤 Role: Admin / Academic Incharge                              │
+│                                                                  │
+│  ✅ What to do:                                                  │
+│     For each class, create one or more sections:                 │
+│       • Parent Class: "Class 9th" from <SearchableSelect>        │
+│       • Section Name: "Section A - Jinnah"                       │
+│       • Room Number: "Room 201, Academic Block B"                │
+│       • Capacity: "40 Students"                                  │
+│       • (Repeat for Section B - Iqbal in Room 202)               │
+│                                                                  │
+│  📊 What happens:                                                │
+│     Sections divide classes into manageable student groups.      │
+│     Attendance, timetables, and class teachers are assigned at   │
+│     the Section level (e.g. Class 9th-A).                        │
+│                                                                  │
+│  ➡️ NEXT STEP: Create Subjects.                                 │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 11: CREATE ALL SUBJECTS                                   │
+│                                                                  │
+│  📍 Navigate to: Sidebar → Academics → Subjects                │
+│  👤 Role: Academic Coordinator                                   │
+│                                                                  │
+│  ✅ What to do:                                                  │
+│     Click "Add Subject" and create all subjects:                 │
+│       • "Mathematics"        | Code: "MATH-101" | Compulsory     │
+│       • "Physics"            | Code: "PHY-101"  | Compulsory     │
+│       • "Chemistry"          | Code: "CHEM-101" | Compulsory     │
+│       • "English Literature" | Code: "ENG-101"  | Compulsory     │
+│       • "Urdu Language"      | Code: "URD-101"  | Compulsory     │
+│       • "Computer Science"   | Code: "CS-101"   | Elective (Sc-A)│
+│       • "Biology"            | Code: "BIO-101"  | Elective (Sc-A)│
+│                                                                  │
+│  📊 What happens:                                                │
+│     Subjects populate in exam schedules, marks entry, timetable  │
+│     periods, homework, and study material uploads.               │
+│                                                                  │
+│  ➡️ NEXT STEP: Map subjects to classes.                         │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 12: ASSIGN SUBJECTS TO CLASSES                            │
+│                                                                  │
+│  📍 Navigate to: Sidebar → Academics → Class-Subject Mapping    │
+│  👤 Role: Academic Coordinator                                   │
+│                                                                  │
+│  ✅ What to do:                                                  │
+│     Select Class: "Class 9th". Click "Assign Subject":           │
+│       • Subject: "Mathematics" from <SearchableSelect>           │
+│       • Total Marks: "100" | Passing Marks: "33"                 │
+│       • Weekly Periods: "6 Periods / Week"                       │
+│       • (Repeat for Physics, Chemistry, English, Urdu, CS)       │
+│                                                                  │
+│  📊 What happens:                                                │
+│     Defines the curriculum for Class 9th. Only mapped subjects   │
+│     appear for timetable scheduling and exam marks entry.        │
+│                                                                  │
+│  ➡️ NEXT STEP: Register staff and teachers.                      │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+```
+
+---
+
+## 🔗 CHAIN 6: Staff Registration & Account Creation
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 13: REGISTER ALL STAFF MEMBERS                            │
+│                                                                  │
+│  📍 Navigate to: Sidebar → HR & Payroll → Staff Directory      │
+│  👤 Role: Admin / HR Manager                                     │
+│                                                                  │
+│  ✅ What to do:                                                  │
+│     Click "Add Staff" (Full-page form):                          │
+│       • Personal: Full Name ("Mr. Hassan Raza"), Gender, DOB,    │
+│         CNIC ("35202-1111102-1"), Phone ("0300-1111002").       │
+│       • Professional: Designation ("HOD Mathematics"),          │
+│         Department ("Academics"), Staff Type ("Teaching"),       │
+│         Basic Salary ("PKR 120,000"), Contract ("Permanent").   │
+│       • Hardware IDs: RFID Card ("RFID-STF-02"), Biometric ID    │
+│         ("BIO-STF-02").                                          │
+│       • Documents: Upload CNIC & Degree copies via <ImageUpload>.│
+│       • (Repeat for Ms. Ayesha Siddiqui, Mr. Tariq Mahmood, etc.)│
+│                                                                  │
+│  📊 What happens:                                                │
+│     Staff profiles are created. Teachers can now be assigned to  │
+│     class sections, timetable periods, and subjects.             │
+│                                                                  │
+│  ➡️ NEXT STEP: Create login accounts for staff.                 │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 14: CREATE LOGIN ACCOUNTS FOR STAFF                       │
+│                                                                  │
+│  📍 Navigate to: Sidebar → System Settings → User Management   │
+│  👤 Role: Admin                                                  │
+│                                                                  │
+│  ✅ What to do:                                                  │
+│     Click "Add User" for each staff member:                      │
+│       • Email: "hassan@excellence.edu.pk"                        │
+│       • Password: "Admin@123"                                    │
+│       • Role: "Teacher" from <SearchableSelect>                  │
+│       • Link to Profile: "Mr. Hassan Raza (Math HOD)"            │
+│                                                                  │
+│  📊 What happens:                                                │
+│     Teachers can log in to view their teaching schedule, mark    │
+│     attendance, assign homework, and enter exam marks.           │
+│                                                                  │
+│  ➡️ NEXT STEP: Build the Weekly Timetable.                       │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+```
+
+---
+
+## 🔗 CHAIN 7: Timetable Creation & Verification
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 15: CREATE CLASS TIMETABLES                               │
+│                                                                  │
+│  📍 Navigate to: Sidebar → Academics → Class Timetable         │
+│  👤 Role: Academic Coordinator / Admin                           │
+│                                                                  │
+│  ✅ What to do:                                                  │
+│     1. Select Class: "Class 9th" & Section: "Section A".         │
+│     2. Choose View Mode: [ Matrix Grid | Kanban | Timeline ].    │
+│     3. OPTION A: Manual Slot Allocation                          │
+│        Click on Monday Period 1 (08:00 AM - 08:45 AM):           │
+│          • Subject: "Mathematics" from <SearchableSelect>        │
+│          • Teacher: "Mr. Hassan Raza" from <SearchableSelect>    │
+│          • Room: "Room 201"                                      │
+│          • Start & End Time: "08:00 AM" to "08:45 AM" via        │
+│            <TimePicker>.                                         │
+│        Click "Save Period Slot".                                 │
+│                                                                  │
+│     4. OPTION B: Smart Auto-Generation                           │
+│        Click "Smart Auto-Generate" button at top right.          │
+│        System automatically populates period slots based on      │
+│        subject weekly quotas and teacher availability.           │
+│                                                                  │
+│  ⚡ Conflict Detection:                                          │
+│     If Mr. Hassan Raza is already booked in Class 10th at 08:00, │
+│     the system displays a red warning preventing double-booking! │
+│                                                                  │
+│  🖨️ PDF Export:                                                 │
+│     Click "Export Timetable PDF" to print classroom schedule.    │
+│                                                                  │
+│  ➡️ NEXT STEP: Verify Teacher Timetables.                       │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 15b: VERIFY TEACHER TIMETABLES                            │
+│                                                                  │
+│  📍 Navigate to: Sidebar → Academics → Teacher Timetable       │
+│  👤 Role: Teachers / Principal                                   │
+│                                                                  │
+│  ✅ What to do:                                                  │
+│     1. Select Teacher: "Mr. Hassan Raza".                        │
+│     2. System displays his consolidated weekly schedule:         │
+│        • Mon 08:00-08:45: Class 9th-A Mathematics (Room 201)     │
+│        • Mon 08:45-09:30: Class 10th-A Mathematics (Room 203)    │
+│        • Mon 09:30-10:15: FREE PERIOD (Available for proxy)      │
+│     3. Verify no overlapping periods and balanced workload.      │
+│     4. Print individual teacher schedule slip.                   │
+│                                                                  │
+│  ➡️ NEXT STEP: Check Substitute Management setup.                │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 15c: SUBSTITUTE & PROXY TEACHER SETUP                      │
+│                                                                  │
+│  📍 Navigate to: Sidebar → Academics → Substitute Management     │
+│  👤 Role: Vice Principal / Academic Incharge                     │
+│                                                                  │
+│  ✅ What to do:                                                  │
+│     When any teacher is absent or on leave for today:            │
+│       1. Select Date (Today) and Absent Teacher (Ms. Ayesha).    │
+│       2. System lists her scheduled periods for today.           │
+│       3. For each period, system shows teachers who have a       │
+│          FREE period during that exact time slot!                │
+│       4. Select free teacher (Mr. Tariq Mahmood) and click       │
+│          "Assign Substitute".                                    │
+│       5. Mr. Tariq receives instant proxy alert on his dashboard.│
+│                                                                  │
+│  ➡️ NEXT STEP: Register Students and Enrol them.                 │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+```
+
+---
+
+## 🔗 CHAIN 8: Student Registration, Enrollment & Parent Accounts
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 16: REGISTER STUDENTS                                     │
+│                                                                  │
+│  There are 4 different paths to add students to the system:      │
+│                                                                  │
+│  ─── PATH A: Direct Registration ─────────────────────────────  │
+│  📍 Navigate to: Sidebar → Students → Student Directory        │
+│  Click "Add Student": Enter Name ("Muhammad Usman"), Gender,     │
+│  DOB ("14-May-2010"), B-Form ("35202-0000001-1"), Blood Group    │
+│  ("B+"), House ("Jinnah House - Red"), RFID ("RFID-STU-01"),     │
+│  Emergency Contact ("0300-1122334 - Mr. Tariq Mehmood Sr.").    │
+│                                                                  │
+│  ─── PATH B: Through Admissions CRM ──────────────────────────  │
+│  📍 Navigate to: Sidebar → Students → Admission Enquiries       │
+│  Review walk-in/online enquiries. Schedule test, enter scores,   │
+│  and click "Convert to Enrolled Student" in 1 click!             │
+│                                                                  │
+│  ─── PATH C: Public Admission Portal ─────────────────────────  │
+│  📍 Share URL with parents: /PublicAdmissionPortal/EXC-MAIN     │
+│  Parents submit online application without login. Appears in    │
+│  Admissions CRM automatically.                                   │
+│                                                                  │
+│  ─── PATH D: Bulk CSV Import ─────────────────────────────────  │
+│  📍 Navigate to: System Settings → Bulk CSV Data Importer      │
+│  Upload spreadsheet to import hundreds of students at once.      │
+│                                                                  │
+│  ➡️ NEXT STEP: Enroll students into classes.                    │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 17: ENROLL STUDENTS INTO CLASSES & SECTIONS               │
+│                                                                  │
+│  📍 Navigate to: Sidebar → Students → Student Enrollments       │
+│  👤 Role: Academic Incharge                                      │
+│                                                                  │
+│  ✅ What to do:                                                  │
+│     Filter by Academic Year 2025-2026, Class 9th, Section A.     │
+│     Assign Roll Numbers:                                         │
+│       • Muhammad Usman → Roll # 101 | Section A                  │
+│       • Ali Farooq     → Roll # 103 | Section A                  │
+│     Click "Electives" to assign elective subjects:               │
+│       • Muhammad Usman → Computer Science (CS-101)               │
+│       • Zainab Bibi    → Biology (BIO-101)                       │
+│                                                                  │
+│  📊 What happens:                                                │
+│     Enrolled students appear in attendance sheets, fee challans, │
+│     and exam marks sheets for their assigned section.            │
+│                                                                  │
+│  ➡️ NEXT STEP: Create Parent and Student Login Accounts.         │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 18: PARENT DIRECTORY & USER LOGINS                        │
+│                                                                  │
+│  📍 Navigate to: Sidebar → Students → Parents                   │
+│  👤 Role: Admin                                                  │
+│                                                                  │
+│  ✅ What to do:                                                  │
+│     Create Parent Profile:                                       │
+│       • Name: "Mr. Tariq Mehmood Sr."                            │
+│       • CNIC: "35201-1234567-1" | Mobile: "0300-1122334"         │
+│       • Email: "parent.tariq@gmail.com"                          │
+│       • Linked Children: Select [ Muhammad Usman (Class 9th-A)   │
+│         and Fatima Tariq (Class 8th-A) ] via <MultiSelect>.      │
+│                                                                  │
+│     Generates Parent Portal Login:                               │
+│       • Username: parent.tariq@gmail.com | Password: Admin@123   │
+│     Generates Student Portal Login:                              │
+│       • Username: usman@excellence.edu.pk | Password: Admin@123  │
+│                                                                  │
+│  ➡️ NEXT STEP: Set up the fee system.                           │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+```
+
+---
+
+## 🔗 CHAIN 9: Fee System Configuration
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 19: DEFINE FEE TYPES & CHART OF ACCOUNTS                  │
+│                                                                  │
+│  📍 Navigate to: Sidebar → Finance & Fees → Fee Setup          │
+│  👤 Role: Chief Accountant                                       │
+│                                                                  │
+│  ✅ What to do:                                                  │
+│     1. Verify 3-Tier Chart of Accounts:                          │
+│        • 1110 Cash in Hand | 1120 Bank Alfalah Main A/C          │
+│        • 4110 Tuition Fee Revenue | 4120 Lab Fee Revenue         │
+│     2. Create Fee Types:                                         │
+│        • "Tuition Fee"      (Monthly | Linked to GL 4110)        │
+│        • "Science Lab Fee"  (Monthly | Linked to GL 4120)        │
+│        • "Computer Lab Fee" (Monthly | Linked to GL 4120)        │
+│        • "Admission Fee"    (One-Time | Linked to GL 4110)       │
+│                                                                  │
+│  ➡️ NEXT STEP: Create fee structures per class.                 │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 20: CREATE CLASS-WISE FEE STRUCTURES                      │
+│                                                                  │
+│  📍 Navigate to: Sidebar → Finance & Fees → Fee Structures     │
+│  👤 Role: Accountant                                             │
+│                                                                  │
+│  ✅ What to do:                                                  │
+│     Configure base monthly fee for each class:                   │
+│       • Class 9th: Tuition (12,000) + Science Lab (1,500) +      │
+│         Computer Lab (1,000) = Total PKR 14,500 / month.         │
+│       • Class 8th: Total PKR 12,000 / month.                     │
+│       • Class 10th: Total PKR 16,000 / month.                    │
+│                                                                  │
+│  ➡️ NEXT STEP: Set up fee concessions.                          │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 21: CREATE FEE CONCESSIONS                                │
+│                                                                  │
+│  📍 Navigate to: Sidebar → Finance & Fees → Fee Concessions   │
+│  👤 Role: Principal / Accountant                                 │
+│                                                                  │
+│  ✅ What to do:                                                  │
+│     Assign sibling and merit discounts:                          │
+│       • Student: "Fatima Tariq (Class 8th-A)"                    │
+│       • Concession Type: "Sibling Concession (25% on Tuition)"   │
+│       • Amount Saved: -PKR 3,000 / month                         │
+│       • Reason: "Younger sibling of Muhammad Usman (Class 9th)"  │
+│       • Valid: Full Academic Year 2025-2026                      │
+│                                                                  │
+│  ➡️ NEXT STEP: Generate First Month Fee Challans.                │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 22: GENERATE BATCH FEE CHALLANS & 3-PART VOUCHERS         │
+│                                                                  │
+│  📍 Navigate to: Sidebar → Finance & Fees → Fee Challans      │
+│  👤 Role: Accountant                                             │
+│                                                                  │
+│  ✅ What to do:                                                  │
+│     1. Select Month & Year: "April 2025".                        │
+│     2. Due Date: "10-Apr-2025" | Late Fine: "PKR 500".           │
+│     3. Click "Generate Batch Challans":                          │
+│        • Muhammad Usman: 14,500 Base + 4,000 Transport = 18,500  │
+│        • Fatima Tariq: 12,000 - 3,000 Sibling + 4,000 = 13,000   │
+│     4. Click "Print 3-Part Bank Challans (PDF)":                 │
+│        Generates Bank Copy, School Copy, and Parent Copy.        │
+│                                                                  │
+│  🎉 SETUP COMPLETE!                                              │
+│     Your school foundation is ready for daily operations.        │
+│                                                                  │
+│  ➡️ NEXT: Proceed to PART B — Daily Operations.                 │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+```
+
+---
+
+## 🔗 CHAIN 9b: Optional Module Setup (Independent — Do Anytime)
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│                                                                  │
+│  🚌 TRANSPORT MODULE (/TransportSetup, /TransportRoutes)         │
+│  ─────────────────────────────────────────────────────────────── │
+│  1. Add vehicle "Toyota Coaster (30 Seats)", Driver Aslam.       │
+│  2. Create Route 1 (DHA Phase 5 & 6 | Route Fee: PKR 4,000/mo).  │
+│  3. Allocate seat to Muhammad Usman -> Billed on fee challan.    │
+│                                                                  │
+│  ─────────────────────────────────────────────────────────────── │
+│                                                                  │
+│  🏨 HOSTEL MODULE (/HostelSetup, /HostelAllocations)             │
+│  ─────────────────────────────────────────────────────────────── │
+│  1. Create "Iqbal Boys Hostel Block A", Room 101 (2 Beds).       │
+│  2. Monthly Room Rent: PKR 18,000/mo (including mess).           │
+│  3. Allocate Bed 1 to student Saad Ali.                          │
+│                                                                  │
+│  ─────────────────────────────────────────────────────────────── │
+│                                                                  │
+│  📖 LIBRARY MODULE (/BookCatalog, /IssueBooks, /LibraryFines)    │
+│  ─────────────────────────────────────────────────────────────── │
+│  1. Catalog books with ISBN, Author, Shelf location.             │
+│  2. Issue books to students (14-day loan period).                │
+│  3. Auto-calculates overdue fines (PKR 20 / day).                │
+│                                                                  │
+│  ─────────────────────────────────────────────────────────────── │
+│                                                                  │
+│  📦 INVENTORY MODULE (/StockCatalog, /StockLedger)               │
+│  ─────────────────────────────────────────────────────────────── │
+│  1. Add items (A4 Paper, Lab Chemicals, Uniforms) with reorder   │
+│     minimum stock thresholds.                                    │
+│  2. Record Inward GRN purchases and Outward department issues.   │
+│                                                                  │
+│  ─────────────────────────────────────────────────────────────── │
+│                                                                  │
+│  🔌 BIOMETRIC SYNC (/BiometricDevices)                           │
+│  ─────────────────────────────────────────────────────────────── │
+│  Connect ZKTeco / Hikvision biometric machines via IP to sync   │
+│  real-time student & staff morning punches automatically.        │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# PART B: DAILY OPERATIONS
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+> [!NOTE]
+> Follow Chains 10 through 13 every morning and throughout each school day.
+
+---
+
+## 🔗 CHAIN 10: Morning Routine — What Happens First Every Day
+
+```
+07:30 AM — 08:30 AM: SCHOOL ARRIVAL & MORNING OPERATIONS
+
+┌──────────────────────────────────────────────────────────────────┐
+│  DAILY STEP 1: STAFF CLOCK-IN & ATTENDANCE                      │
+│                                                                  │
+│  📍 Navigate to: Sidebar → HR & Payroll → Staff Attendance     │
+│  👤 Responsible: HR / Automated Biometric Sync                   │
+│  ⏰ Timing: 07:30 AM - 08:00 AM                                 │
+│                                                                  │
+│  ✅ What to do:                                                  │
+│     Staff clock in via Biometric machine or manual attendance.   │
+│     Arrivals after 08:00 AM are flagged "Late" with penalty fine.│
+│                                                                  │
+│  ➡️ NEXT: Handle teacher absences immediately.                   │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+┌──────────────────────────────────────────────────────────────────┐
+│  DAILY STEP 2: MANAGE TEACHER SUBSTITUTIONS                     │
+│                                                                  │
+│  📍 Navigate to: Sidebar → Academics → Substitute Management  │
+│  👤 Responsible: Vice Principal / Academic Incharge              │
+│  ⏰ Timing: 08:00 AM - 08:15 AM                                 │
+│                                                                  │
+│  ✅ What to do:                                                  │
+│     Check absent teachers (Ms. Ayesha Siddiqui on leave).        │
+│     System auto-suggests teachers with FREE periods during her   │
+│     classes. Assign Mr. Tariq Mahmood as substitute.             │
+│     Mr. Tariq gets instant push alert and proxy attendance rights│
+│                                                                  │
+│  ➡️ NEXT: Morning Student Roll-Call Attendance.                  │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+┌──────────────────────────────────────────────────────────────────┐
+│  DAILY STEP 3: MARK STUDENT SECTION ATTENDANCE                  │
+│                                                                  │
+│  📍 Navigate to: Sidebar → Students → Attendance               │
+│  👤 Responsible: Class Teacher (08:00 AM - 08:30 AM)             │
+│                                                                  │
+│  ✅ What to do:                                                  │
+│     1. Select Class 9th - Section A. Grid loads 40 students.     │
+│     2. Click "Mark All Present", then toggle Absent (A),         │
+│        Late (L), or Leave (LV). Click "Submit Attendance".       │
+│                                                                  │
+│  📱 Automated Absent SMS Alert:                                  │
+│     System instantly dispatches SMS to parents of absent         │
+│     students: "Dear Parent, your child Muhammad Usman was marked │
+│     Absent today 15-Apr-2025 at Excellence International School."│
+│                                                                  │
+│  ➡️ NEXT: Handle visitor gate passes at reception.               │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+┌──────────────────────────────────────────────────────────────────┐
+│  DAILY STEP 4: MANAGE VISITORS & GATE PASSES                    │
+│                                                                  │
+│  📍 Navigate to: Sidebar → Front Office → Visitors Log &       │
+│                  Gate Pass                                       │
+│  👤 Responsible: Receptionist / Security Guard                   │
+│                                                                  │
+│  ✅ What to do:                                                  │
+│     Capture Visitor Name, CNIC, Phone, Purpose of Visit, and     │
+│     issue printed badge. Click "Check-Out" upon departure.       │
+│                                                                  │
+│  ➡️ NEXT: Continue with daytime academic operations.             │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+```
+
+---
+
+## 🔗 CHAIN 11: During School Hours — Ongoing Daily Tasks
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  ACADEMIC & ADMINISTRATIVE TASKS DURING THE DAY                  │
+│                                                                  │
+│  1. COLLECT FEE PAYMENTS (/FeePaymentHistory):                   │
+│     Cashier scans challan barcode, records payment (Cash/Bank),  │
+│     prints receipt. Auto-posts journal entry to ledger.          │
+│                                                                  │
+│  2. LESSON PLANNING & STUDY MATERIALS (/LessonPlanning):         │
+│     Teachers log daily objectives and upload revision PDFs.      │
+│                                                                  │
+│  3. ASSIGN HOMEWORK (/HomeworkManagement):                       │
+│     Teacher creates assignment (e.g. Math Exercise 4.2),         │
+│     attaches worksheet, and sets submission deadline.            │
+│                                                                  │
+│  4. POST DAILY STUDENT DIARY (/StudentDiaryManager):             │
+│     Class teacher posts daily oral tests and diary notes.        │
+│     Instantly published to Parent Portal app.                    │
+│                                                                  │
+│  5. CANTEEN RFID WALLET POS (/StudentWallets):                   │
+│     Students tap RFID smartcard at canteen for cashless lunch.   │
+│                                                                  │
+│  6. DAILY EXPENSE TRACKING (/SchoolExpensesTracker):             │
+│     Record petty cash vouchers, electricity bills, generator fuel│
+│     with receipt photo uploads.                                  │
+│                                                                  │
+│  7. STUDENT BEHAVIOR & HOUSE POINTS (/HouseSystemDashboard):     │
+│     Award discipline stars or sports points to school houses.    │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🔗 CHAIN 12: What Students Do (Student Portal Flow)
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  STUDENT PORTAL DASHBOARD (/student-dashboard)                   │
+│  👤 Role: Student (Login: usman@excellence.edu.pk / Admin@123)   │
+│                                                                  │
+│  1. VIEW DAILY TIMETABLE & ATTENDANCE:                           │
+│     Inspect 8 scheduled periods and live attendance gauge (96.5%)│
+│                                                                  │
+│  2. HOMEWORK SUBMISSIONS (/StudentHomeworkPortal):               │
+│     Download assignment worksheets, upload completed solution    │
+│     PDF / photos, and view graded scores & teacher comments.     │
+│                                                                  │
+│  3. ONLINE COMPUTER-BASED TESTS (/StudentCBT):                   │
+│     Take timed online quizzes with fullscreen proctoring and     │
+│     instant MCQ score breakdown.                                 │
+│                                                                  │
+│  4. DIGITAL STUDY LIBRARY (/StudyMaterialRepository):            │
+│     Access lecture notes, revision guides, and video links.      │
+│                                                                  │
+│  5. APPLY STUDENT LEAVE (/StudentLeaveApplication):              │
+│     Submit urgent or medical leave request to class teacher.     │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🔗 CHAIN 13: What Parents Do (Parent Portal Flow)
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  PARENT PORTAL DASHBOARD (/parent-dashboard)                     │
+│  👤 Role: Parent (Login: parent.tariq@gmail.com / Admin@123)     │
+│                                                                  │
+│  1. MULTI-CHILD SWITCHER:                                        │
+│     Toggle between [ Muhammad Usman (9th) ] and                  │
+│     [ Fatima Tariq (8th) ] with one click!                       │
+│                                                                  │
+│  2. REAL-TIME ATTENDANCE & GATE LOGS:                            │
+│     View child's morning check-in time and monthly percentage.   │
+│                                                                  │
+│  3. FEE INVOICES & PAYMENT HISTORY (/FeePaymentHistory):         │
+│     Download monthly 3-part bank challans and paid receipts.     │
+│                                                                  │
+│  4. DIGITAL REPORT CARDS & EXAM RESULTS:                         │
+│     View term broadsheet, GPA, subject marks, and teacher notes. │
+│                                                                  │
+│  5. BOOK PTM SLOTS (/PtmScheduler):                              │
+│     Book 15-minute appointment slots with subject teachers.      │
+│                                                                  │
+│  6. HELPDESK & LEAVE APPLICATIONS:                               │
+│     Submit student leaves or dispute tickets directly to school. │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# PART C: MONTHLY OPERATIONS
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+---
+
+## 🔗 CHAIN 14: Monthly Fee & Payroll Cycle
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  MONTHLY STEP 1: GENERATE MONTHLY FEE CHALLANS                   │
+│  📍 Navigate to: Finance → Fee Challans                          │
+│  ✅ Generate next month batch challans. Apply transport fees,    │
+│     concessions, and unpaid past arrears automatically.          │
+├──────────────────────────────────────────────────────────────────┤
+│  MONTHLY STEP 2: FEE DEFAULTERS RECOVERY & SMS                   │
+│  📍 Navigate to: Finance → Fee Defaulters                        │
+│  ✅ Filter unpaid challans past due date. Click "Broadcast SMS"  │
+│     to send payment reminder text messages to parents.           │
+├──────────────────────────────────────────────────────────────────┤
+│  MONTHLY STEP 3: STAFF ATTENDANCE & ADVANCE LOAN DEDUCTIONS      │
+│  📍 Navigate to: HR → Staff Attendance & Staff Loans             │
+│  ✅ Audit monthly staff attendance (unpaid leaves) and active    │
+│     staff advance loan monthly installments (EMI).               │
+├──────────────────────────────────────────────────────────────────┤
+│  MONTHLY STEP 4: CALCULATE PAYROLL & SALARY SLIPS                │
+│  📍 Navigate to: HR → Payroll Slips / Salary Slips Manager       │
+│  ✅ Calculate Basic Pay + Allowances minus Tax, PF & Loan EMI.   │
+│     Approve and print salary slips; export bank transfer file.   │
+├──────────────────────────────────────────────────────────────────┤
+│  MONTHLY STEP 5: FINANCIAL STATEMENTS CLOSING                    │
+│  📍 Navigate to: Reports → Trial Balance / Profit & Loss         │
+│  ✅ Review Monthly Profit & Loss statement and reconcile bank    │
+│     accounts in General Ledger.                                  │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# PART D: EXAM CYCLE (2-4 Times Per Academic Year)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+---
+
+## 🔗 CHAIN 15: Complete Examination Cycle
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  EXAM STEP 1: CREATE EXAM TERM & GRADING SCALES                  │
+│  📍 Navigate to: Exams → Exam Setups & Grading Scales            │
+│  ✅ Create "Mid-Term Examination 2025" (30% weightage).          │
+│     Configure GPA scale: A+ (85%+), A (75%+), B (65%+), etc.     │
+├──────────────────────────────────────────────────────────────────┤
+│  EXAM STEP 2: QUESTION BANK & CBT SETUP                          │
+│  📍 Navigate to: Exams → Question Bank & Online Exams            │
+│  ✅ Add MCQs & subjective questions with difficulty tags. Build  │
+│     online CBT tests with live countdown timer and proctoring.   │
+├──────────────────────────────────────────────────────────────────┤
+│  EXAM STEP 3: PUBLISH DATE-SHEET & ADMIT CARDS                   │
+│  📍 Navigate to: Exams → Exam Schedules & Admit Card Generator   │
+│  ✅ Build date-sheet schedule per class. Check fee clearance and │
+│     generate printable roll number admit cards with barcode.     │
+├──────────────────────────────────────────────────────────────────┤
+│  EXAM STEP 4: BATCH MARKS ENTRY DASHBOARD                        │
+│  📍 Navigate to: Exams → Marks Entry Dashboard                   │
+│  ✅ Teachers input obtained marks in fast spreadsheet grid with  │
+│     max marks validation. System auto-computes Grades & Status.  │
+├──────────────────────────────────────────────────────────────────┤
+│  EXAM STEP 5: BROADSHEET MATRIX & REPORT CARDS                   │
+│  📍 Navigate to: Reports → Broadsheet & Report Card Manager      │
+│  ✅ Generate Class Broadsheet matrix showing section ranks.      │
+│     Batch print high-definition term Report Cards for parents.   │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🔗 CHAIN 16: Communication Flow — How to Reach Parents, Students & Staff
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  MULTI-CHANNEL COMMUNICATION & EVENT TOOLS                       │
+│                                                                  │
+│  • EMERGENCY BROADCASTS (/CommunicationBroadcaster):             │
+│    Send urgent weather/closure SMS & emails to targeted classes. │
+│  • DIGITAL NOTICEBOARD (/DigitalNoticeBoard):                     │
+│    Post circulars and exam schedules with downloadable PDFs.     │
+│  • PTM SCHEDULER (/PtmScheduler):                                │
+│    Schedule parent-teacher meeting slots to eliminate queues.    │
+│  • BIRTHDAY WISHES (/BirthdayWishes):                            │
+│    Automated daily greeting SMS to students and staff.           │
+│  • FEEDBACK BOX (/FeedbackSuggestions):                          │
+│    Review parent feedback and quality ratings.                   │
+│  • STAFF CHAT (/StaffChat):                                      │
+│    Real-time departmental messaging for school staff.            │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# PART E: YEAR-END OPERATIONS
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+---
+
+## 🔗 CHAIN 17: End of Academic Year — Closing & Transition
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  YEAR-END STEP 1: FINALIZE ANNUAL EXAMS & BROADSHEETS            │
+│  📍 Complete all marks entry and verify final passing grades.    │
+├──────────────────────────────────────────────────────────────────┤
+│  YEAR-END STEP 2: STUDENT PROMOTIONS WIZARD                      │
+│  📍 Navigate to: Students → Student Promotions                   │
+│  ✅ Multi-step wizard: Promotes passed Class 9th students into   │
+│     Class 10th for the new academic year; flags repeaters.       │
+├──────────────────────────────────────────────────────────────────┤
+│  YEAR-END STEP 3: GRADUATION & ALUMNI ARCHIVING                  │
+│  📍 Navigate to: Students → Alumni Directory                     │
+│  ✅ Archive graduating final-year batch into Alumni Directory.   │
+│     Issue School Leaving Certificates (SLC) via /Certificates.   │
+├──────────────────────────────────────────────────────────────────┤
+│  YEAR-END STEP 4: STAFF PERFORMANCE APPRAISALS                   │
+│  📍 Navigate to: HR → Staff Appraisals                           │
+│  ✅ Record annual teacher appraisals, ratings, and increments.   │
+├──────────────────────────────────────────────────────────────────┤
+│  YEAR-END STEP 5: ANNUAL FINANCIAL STATEMENTS & AUDIT            │
+│  📍 Navigate to: Reports → Profit & Loss & Balance Sheet         │
+│  ✅ Generate annual audited statements for management board.     │
+├──────────────────────────────────────────────────────────────────┤
+│  YEAR-END STEP 6: FULL DATABASE BACKUP                           │
+│  📍 Navigate to: System Settings → Database Backup               │
+│  ✅ Create and download complete encrypted database backup.      │
+├──────────────────────────────────────────────────────────────────┤
+│  YEAR-END STEP 7: CREATE & ACTIVATE NEW ACADEMIC YEAR            │
+│  📍 Navigate to: Academics → Academic Years                      │
+│  ✅ Create "Academic Year 2026-2027" and set as Active.          │
+│     🔄 The system restarts the operational cycle smoothly!      │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+# 🔗 ANYTIME OPERATIONS — Independent Tasks (No Sequence Required)
+
+| Task | Screen Route | Purpose |
+|---|---|---|
+| Issue Character / Bonafide Certificate | Front Office → Certificates Manager (`/CertificatesManager`) | Generate official signed and watermarked student certificates. |
+| RFID Smartcard Top-Up | Finance → Student Wallets (`/StudentWallets`) | Top up student cashless canteen balance. |
+| Manual Accounting Journal Entry | Finance → General Ledger (`/GeneralLedger`) | Post double-entry Journal Vouchers (JVs) for accruals. |
+| Issue Staff Advance Loan | HR → Staff Loans (`/StaffLoans`) | Grant advance loans with auto EMI salary deductions. |
+| Track Library Overdue Fines | Library → Library Fines (`/LibraryFines`) | Collect late fines or add to student fee challan. |
+| Inspect Security Audit Logs | System Settings → System Audits (`/SystemAudits`) | Investigate forensic user action logs and IP addresses. |
+| Multi-Campus Network Overview | System Settings → Executive Master (`/ExecutiveMasterDashboard`) | View aggregated high-level KPIs across all campuses. |
+
+---
+
+# 🗺️ MASTER FLOW MAP — The Complete Picture
+
+```
+                                ┌──────────────┐
+                                │   SIGN IN    │
+                                │  (/signin)   │
+                                └──────┬───────┘
+                                       │
+                     ┌─────────────────┼─────────────────┐
+                     ▼                 ▼                 ▼
+             ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+             │    ADMIN     │  │  TEACHER /   │  │  PARENT /    │
+             │  DASHBOARD   │  │   STAFF      │  │  STUDENT     │
+             │ (/dashboard) │  │  DASHBOARD   │  │  DASHBOARD   │
+             └──────┬───────┘  └──────┬───────┘  └──────┬───────┘
+                    │                 │                 │
+                    ▼                 ▼                 ▼
+         ┌──────────────────┐  ┌───────────────┐ ┌──────────────────┐
+         │ PART A & B:      │  │ DAILY ROUTINE:│ │ PORTAL SERVICES: │
+         │ ONE-TIME SETUP   │  │               │ │                  │
+         │                  │  │ • Mark Daily  │ │ • View Live      │
+         │ 1. Campus        │  │   Attendance  │ │   Attendance     │
+         │ 2. Roles & RBAC  │  │ • Assign      │ │ • Download Fee   │
+         │ 3. Users         │  │   Homework    │ │   Challans / Pay │
+         │ 4. Academic Years│  │ • Grade       │ │ • View Term      │
+         │ 5. Classes       │  │   Submissions │ │   Report Cards   │
+         │ 6. Sections      │  │ • Enter Exam  │ │ • Submit Student │
+         │ 7. Subjects      │  │   Marks       │ │   Leave Requests │
+         │ 8. Timetable     │  │ • Post Diary  │ │ • Take Online    │
+         │ 9. Staff HR      │  │ • Substitute  │ │   CBT Exams      │
+         │ 10. Students     │  │   Coverages   │ │ • Book PTM Slots │
+         │ 11. Fee Config   │  └───────────────┘ └──────────────────┘
+         └────────┬─────────┘
+                  │
+                  ▼
+         ┌────────────────────────────────────────────────────────┐
+         │             RECURRING OPERATIONAL CYCLES               │
+         │                                                        │
+         │   📅 DAILY:    Attendance + Fee Collection + Diary     │
+         │   📅 MONTHLY:  Fee Challans + Payroll Slips + Reports  │
+         │   📅 TERMLY:   Exams + Broadsheet + Term Report Cards  │
+         │   📅 YEARLY:   Student Promotions + Financial Closing  │
+         │                                                        │
+         │         🔄 REPEATS EVERY ACADEMIC YEAR SESSION         │
+         └────────────────────────────────────────────────────────┘
+```
+
+---
+
+# 📊 MASTER RELATIONAL DUMMY DATASET
+### (Clean, Human-Readable Data — 100% Connected Across All Modules — Zero GUIDs!)
+
+> [!TIP]
+> Use this realistic dataset to populate or verify your SMS deployment. All names, classes, subjects, fees, and marks interconnect perfectly across screens and tables.
+
+---
+
+### 🏫 1. Campus Details
+- **Campus Name:** Excellence International School (Main Campus)
+- **Campus Code:** `EXC-MAIN`
+- **Address:** Plot 45, Sector B, Phase 5, DHA, Lahore
+- **Phone / Email:** `+92-42-35889900` • `info@excellence.edu.pk`
+- **Currency:** PKR (Rs.)
+
+---
+
+### 🔑 2. User Accounts & Logins (Password for all: `Admin@123`)
+| # | Full Name | Designation / Role | Email Address | Linked Entity |
+|---|---|---|---|---|
+| 1 | Bilal Ahmad Admin | SuperAdmin / IT Admin | `admin@excellence.edu.pk` | System Owner |
+| 2 | Dr. Imran Khan | Campus Principal | `principal@excellence.edu.pk` | Principal Profile |
+| 3 | Mr. Hassan Raza | HOD Mathematics (Teacher) | `hassan@excellence.edu.pk` | Staff Profile # 2 |
+| 4 | Ms. Ayesha Siddiqui | Physics Lecturer (Teacher) | `ayesha@excellence.edu.pk` | Staff Profile # 3 |
+| 5 | Mr. Tariq Mahmood | English Teacher | `tariq@excellence.edu.pk` | Staff Profile # 4 |
+| 6 | Mr. Rehan Malik | Chief Accountant | `rehan@excellence.edu.pk` | Staff Profile # 5 |
+| 7 | Ms. Zara Noor | Chief Librarian | `zara@excellence.edu.pk` | Staff Profile # 6 |
+| 8 | Mr. Tariq Mehmood Sr. | Parent / Guardian | `parent.tariq@gmail.com` | Father of Usman & Fatima |
+| 9 | Mr. Farooq Khan | Parent / Guardian | `parent.farooq@gmail.com` | Father of Ali & Hamza |
+| 10 | Muhammad Usman | Student (Class 9th-A) | `usman@excellence.edu.pk` | Student Roll # 101 |
+
+---
+
+### 📅 3. Academic Sessions
+1. **Academic Year 2025-2026** (`2025-04-01` to `2026-03-31`) → **ACTIVE / CURRENT**
+2. **Academic Year 2024-2025** (`2024-04-01` to `2025-03-31`) → Archived
+
+---
+
+### 🏛️ 4. Classes & Sections
+| Class Name | Code | Section Name | Room # | Capacity | Section Class Teacher |
+|---|---|---|---|---|---|
+| **Class 9th** | `CLS-09` | Section A (Jinnah) | Room 201 | 40 Students | Mr. Hassan Raza |
+| **Class 9th** | `CLS-09` | Section B (Iqbal) | Room 202 | 40 Students | Ms. Ayesha Siddiqui |
+| **Class 10th**| `CLS-10` | Section A (Jinnah) | Room 203 | 40 Students | Mr. Tariq Mahmood |
+| **Class 8th** | `CLS-08` | Section A (Sir Syed)| Room 104 | 40 Students | Ms. Zainab Noor |
+| **Class 7th** | `CLS-07` | Section A (Liaquat) | Room 105 | 35 Students | Mr. Bilal Ashraf |
+
+---
+
+### 📚 5. Subjects & Class Mappings (Class 9th)
+| Subject Name | Code | Type | Total Marks | Passing Marks | Assigned Subject Teacher |
+|---|---|---|---|---|---|
+| **Mathematics** | `MATH-101` | Compulsory | 100 | 33 | Mr. Hassan Raza |
+| **Physics** | `PHY-101` | Compulsory | 100 | 33 | Ms. Ayesha Siddiqui |
+| **Chemistry** | `CHEM-101` | Compulsory | 100 | 33 | Dr. Salman Tahir |
+| **English Literature**| `ENG-101` | Compulsory | 100 | 33 | Mr. Tariq Mahmood |
+| **Urdu Language** | `URD-101` | Compulsory | 100 | 33 | Ms. Farzana Bibi |
+| **Computer Science** | `CS-101` | Elective (Science A) | 100 | 33 | Mr. Asim Qureshi |
+| **Biology** | `BIO-101` | Elective (Science A) | 100 | 33 | Dr. Nida Fatima |
+
+---
+
+### ⏰ 6. Class 9th-A Timetable (Monday Schedule)
+| Period | Time Slot | Subject | Teacher | Room |
+|---|---|---|---|---|
+| **Period 1** | 08:00 AM - 08:45 AM | Mathematics | Mr. Hassan Raza | Room 201 |
+| **Period 2** | 08:45 AM - 09:30 AM | Physics | Ms. Ayesha Siddiqui | Room 201 |
+| **Period 3** | 09:30 AM - 10:15 AM | Chemistry | Dr. Salman Tahir | Science Lab 1 |
+| **Break** | 10:15 AM - 10:45 AM | *Recess / Refreshment* | — | School Canteen |
+| **Period 4** | 10:45 AM - 11:30 AM | English Literature | Mr. Tariq Mahmood | Room 201 |
+| **Period 5** | 11:30 AM - 12:15 PM | Computer Science / Bio | Mr. Asim / Dr. Nida | CS Lab / Bio Lab |
+| **Period 6** | 12:15 PM - 01:00 PM | Urdu Language | Ms. Farzana Bibi | Room 201 |
+
+---
+
+### 👨‍🏫 7. Staff & Faculty Profiles
+| # | Full Name | Designation | CNIC | Basic Salary | Phone | RFID Card |
+|---|---|---|---|---|---|---|
+| 1 | Dr. Imran Khan | Campus Principal | `35202-1111101-1` | PKR 250,000 | 0300-1111001 | `RFID-STF-01` |
+| 2 | Mr. Hassan Raza | HOD Mathematics | `35202-1111102-1` | PKR 120,000 | 0300-1111002 | `RFID-STF-02` |
+| 3 | Ms. Ayesha Siddiqui | Physics Lecturer | `35202-1111103-1` | PKR 95,000 | 0300-1111003 | `RFID-STF-03` |
+| 4 | Mr. Tariq Mahmood | English Teacher | `35202-1111104-1` | PKR 90,000 | 0300-1111004 | `RFID-STF-04` |
+| 5 | Mr. Rehan Malik | Chief Accountant | `35202-1111105-1` | PKR 110,000 | 0300-1111005 | `RFID-STF-05` |
+| 6 | Ms. Zara Noor | Chief Librarian | `35202-1111106-1` | PKR 75,000 | 0300-1111006 | `RFID-STF-06` |
+| 7 | Mr. Asim Qureshi | CS Specialist | `35202-1111107-1` | PKR 95,000 | 0300-1111007 | `RFID-STF-07` |
+| 8 | Dr. Salman Tahir | Chemistry Lecturer| `35202-1111108-1` | PKR 95,000 | 0300-1111008 | `RFID-STF-08` |
+| 9 | Mr. Muhammad Aslam | Transport Driver | `35201-9988776-1` | PKR 45,000 | 0301-7788990 | `RFID-STF-09` |
+| 10| Mr. Zafar Iqbal | Hostel Warden | `35202-1111110-1` | PKR 65,000 | 0300-1111010 | `RFID-STF-10` |
+
+---
+
+### 🎓 8. Student Directory & Family Linking
+| Roll # | Full Name | Gender | B-Form | Class & Section | House | Parent Name & Phone |
+|---|---|---|---|---|---|---|
+| **101** | Muhammad Usman | Male | `35202-0000001-1` | Class 9th - Section A | Jinnah (Red) | Mr. Tariq Mehmood Sr. (`0300-1122334`) |
+| **102** | Fatima Tariq | Female | `35202-0000002-1` | Class 8th - Section A | Iqbal (Green) | Mr. Tariq Mehmood Sr. (`0300-1122334`) |
+| **103** | Ali Farooq | Male | `35202-0000003-1` | Class 9th - Section A | Tariq (Blue) | Mr. Farooq Khan (`0300-5566778`) |
+| **104** | Hamza Farooq | Male | `35202-0000004-1` | Class 10th - Section A | Sir Syed (Yellow)| Mr. Farooq Khan (`0300-5566778`) |
+| **105** | Ayan Ahmed | Male | `35202-0000005-1` | Class 9th - Section A | Jinnah (Red) | Mr. Ahmed Raza (`0300-4433221`) |
+| **106** | Zainab Bibi | Female | `35202-0000006-1` | Class 9th - Section A | Iqbal (Green) | Mr. Rashid Minhas (`0300-9988776`) |
+| **107** | Bilal Ashraf | Male | `35202-0000007-1` | Class 9th - Section A | Tariq (Blue) | Mr. Ashraf Ali (`0321-1122334`) |
+| **108** | Maryam Noor | Female | `35202-0000008-1` | Class 9th - Section A | Sir Syed (Yellow)| Mr. Noor Muhammad (`0333-5566778`) |
+| **109** | Saad Ali (Boarder) | Male | `35202-0000009-1` | Class 10th - Section A | Jinnah (Red) | Mr. Ali Raza (`0300-7788991`) |
+| **110** | Danial Khan | Male | `35202-0000010-1` | Class 9th - Section B | Iqbal (Green) | Mr. Jahangir Khan (`0302-3344556`) |
+
+---
+
+### 💳 9. Fee Structures, Monthly Challans & Payment Status (April 2025)
+| Challan # | Student Name | Class | Tuition + Labs | Concession | Transport | Total Amount | Status | Payment Mode |
+|---|---|---|---|---|---|---|---|---|
+| `CHL-2025-04-001` | Muhammad Usman | 9th-A | PKR 14,500 | PKR 0 | PKR 4,000 | **PKR 18,500** | `PAID` | Bank Alfalah IBFT (08-Apr) |
+| `CHL-2025-04-002` | Fatima Tariq | 8th-A | PKR 12,000 | -PKR 3,000 (25% Sibling) | PKR 4,000 | **PKR 13,000** | `PAID` | Bank Alfalah IBFT (08-Apr) |
+| `CHL-2025-04-003` | Ali Farooq | 9th-A | PKR 14,500 | PKR 0 | PKR 0 | **PKR 14,500** | `UNPAID` (Defaulter) | Overdue (SMS Sent) |
+| `CHL-2025-04-004` | Hamza Farooq | 10th-A| PKR 16,000 | PKR 0 | PKR 0 | **PKR 16,000** | `PAID` | School Cash Counter (10-Apr)|
+| `CHL-2025-04-005` | Ayan Ahmed | 9th-A | PKR 14,500 | PKR 0 | PKR 0 | **PKR 14,500** | `PAID` | Bank Alfalah Cash Deposit |
+
+---
+
+### 📝 10. Mid-Term Exam Results (Student: Muhammad Usman - Roll # 101)
+| Subject | Max Marks | Passing Marks | Marks Obtained | Percentage | Letter Grade | Subject Teacher Remark |
+|---|---|---|---|---|---|---|
+| **Mathematics** | 100 | 33 | **92** | 92.0% | `A+` | Highest in Section (Outstanding) |
+| **Physics** | 100 | 33 | **88** | 88.0% | `A` | Excellent Practical Lab skills |
+| **Chemistry** | 100 | 33 | **85** | 85.0% | `A` | Very Good Conceptual clarity |
+| **English Literature**| 100 | 33 | **79** | 79.0% | `B+` | Good Essay & Comprehension |
+| **Urdu Language** | 100 | 33 | **84** | 84.0% | `A` | Neat presentation & Poetry |
+| **Computer Science** | 100 | 33 | **95** | 95.0% | `A+` | Perfect Programming logic |
+| **GRAND TOTAL** | **600** | **198** | **523** | **87.17%** | **A+** | **🏆 1st Position in Section A** |
+
+---
+
+> **End of Flow Guide & User Manual**  
+> *Follow these chains step by step and you will never be confused about what to do next.*  
+> *VOKE Solutions — School Management System*

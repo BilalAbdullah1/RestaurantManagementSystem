@@ -1,0 +1,1676 @@
+# 📘 VOKE Solutions — School Management System (SMS)
+# Complete User Manual — Screen-by-Screen Guide
+
+---
+
+> **System Name:** VOKE Solutions SMS  
+> **Type:** Multi-Tenant School Management System  
+> **Roles:** Admin, Teacher, Staff, Parent, Student  
+> **Architecture:** React + .NET Core API + SQL Server  
+
+---
+
+## 🔐 PHASE 1: AUTHENTICATION (Login Flow)
+
+### Screen 1: Sign In (`/signin`)
+**Purpose:** System entry point for all users.
+
+**Key Features:**
+- Email & Password login
+- Role-based redirection after login:
+  - **Admin** → Admin Dashboard
+  - **Parent** → Parent Dashboard
+  - **Student** → Student Dashboard
+  - **Staff/Teacher** → Staff Dashboard
+- "Forgot Password?" link → takes you to Password Recovery screen
+- "Sign Up" link → takes you to Registration screen
+
+**Flow:** After successful login → System checks your role → Auto-redirects to your dashboard.
+
+---
+
+### Screen 2: Sign Up (`/signup`)
+**Purpose:** New user registration (typically admin-invited).
+
+**Key Features:**
+- Register a new account with credentials
+- After registration → Redirect to Sign In
+
+---
+
+### Screen 3: Forgot Password (`/ForgotPassword`)
+**Purpose:** Password recovery for locked-out users.
+
+**Key Features:**
+- Enter registered email
+- System sends a password reset link to email
+- **Flow:** Enter email → Receive link → Click link → Opens Reset Password screen
+
+---
+
+### Screen 4: Reset Password (`/ResetPassword`)
+**Purpose:** Set a new password using the recovery link.
+
+**Key Features:**
+- Enter new password & confirm
+- After successful reset → Redirect to Sign In
+
+---
+
+### Screen 5: Public Admission Portal (`/PublicAdmissionPortal/:tenantId`)
+**Purpose:** Public-facing form for parents to submit admission applications online. **No login required.**
+
+**Key Features:**
+- Parents fill out student information, guardian details, and class preference
+- Each school (tenant) has its own unique portal link
+- Submitted applications appear in the Admissions CRM (admin side)
+- **Flow:** Parent fills form → Submission saved → Admin reviews in Admissions CRM
+
+---
+
+## 📊 PHASE 2: DASHBOARDS (Role-Based Home Screens)
+
+### Screen 6: Admin Dashboard (`/dashboard`)
+**Purpose:** Central command center for Admin users. Shows a bird's-eye view of the entire school.
+
+**Key Features:**
+- **KPI Summary Cards:** Total students, total staff, fee collection, attendance rate
+- **Attendance Chart:** Visual graph of today's student attendance
+- **Fee Collection Overview:** Revenue chart with monthly trends
+- **Recent Admissions:** Latest enrolled students
+- **Quick Action Buttons:** Jump to Student Directory, Fee Challans, Staff Directory, etc.
+- **Notices/Announcements:** Latest noticeboard items
+- **Calendar Events:** Upcoming school events
+
+**Flow:** This is the Admin's landing page. From here, navigate to any module via the sidebar.
+
+---
+
+### Screen 7: Parent Dashboard (`/parent-dashboard`)
+**Purpose:** A parent's personalized view of their child's school activity.
+
+**Key Features:**
+- **Child's Attendance Summary:** Present/Absent stats
+- **Fee Status:** Outstanding dues, last payment info
+- **Exam Results:** Latest marks/grades
+- **Homework Status:** Pending/Submitted assignments
+- **Recent Notices:** School announcements
+- **Quick Actions:** Apply for Leave, View Fee History, View Report Card
+
+**Flow:** Parents land here after login. They can view their child's info and use quick action links.
+
+---
+
+### Screen 8: Student Dashboard (`/student-dashboard`)
+**Purpose:** A student's personal academic hub.
+
+**Key Features:**
+- **My Attendance:** Attendance percentage & calendar heatmap
+- **My Results:** Latest exam scores and grades
+- **My Timetable:** Today's class schedule
+- **Homework:** Pending assignments
+- **Notices:** School announcements
+- **Quick Actions:** View assignments, take online exams
+
+**Flow:** Students land here. They can view their academic data and access assignments/tests.
+
+---
+
+### Screen 9: Staff Dashboard (`/staff-dashboard`)
+**Purpose:** A teacher/staff member's personal workspace.
+
+**Key Features:**
+- **My Attendance:** Personal attendance record
+- **My Timetable:** Today's teaching schedule
+- **Leave Balance:** Remaining leave days
+- **Quick Actions:** Mark attendance, view timetable, apply for leave
+- **Notices:** School announcements
+
+**Flow:** Staff/Teachers land here. From here, navigate to their relevant modules.
+
+---
+
+## 📢 PHASE 3: NOTICEBOARD
+
+### Screen 10: Notice Board (`/Noticeboard`)
+**Purpose:** School-wide announcement board visible to all roles.
+
+**Key Features:**
+- **View All Notices:** List of all published notices with date, title, and priority
+- **Search & Filter:** Search by keyword, filter by category/date
+- **Create Notice (Admin):** Add new notices with rich text, images, and priority levels
+- **Edit / Delete:** Admin can manage existing notices
+- **Pin Important Notices:** Pin critical announcements to the top
+- **Export:** Download notices as PDF
+
+**Flow:** All users see this. Admin creates/manages notices → Everyone reads them.
+
+---
+
+## 📈 PHASE 4: REPORTS & ANALYTICS MODULE
+
+### Screen 11: Reports Overview Hub (`/ReportsCenter`)
+**Purpose:** Central dashboard showing all available reports as clickable cards.
+
+**Key Features:**
+- **Categorized Report Cards:** Academic, Financial, Student, Staff reports
+- **Quick Access:** Click any report card to jump directly to that report
+- **Report Categories:** Exam Broadsheet, Fee Vouchers, Certificates, ID Cards, Attendance, Financial Statements
+
+**Flow:** Click any report tile → Opens that specific report screen.
+
+---
+
+### Screen 12: Class Broadsheet Result (`/reports/broadsheet`)
+**Purpose:** View entire class exam results in a spreadsheet-style format.
+
+**Key Features:**
+- Select Class, Section, Exam to generate broadsheet
+- Full result matrix: all students × all subjects × marks/grades
+- **Export to PDF/Excel**
+- Print-friendly layout
+
+---
+
+### Screen 13: 3-Copy Fee Voucher Slip (`/reports/fee-voucher`)
+**Purpose:** Generate printable fee voucher slips in 3-copy format (Bank, School, Student).
+
+**Key Features:**
+- Select Class/Section or individual student
+- Generate bulk or single fee challans
+- **Print 3-copy format** (standard bank deposit slip layout)
+- Shows fee breakup, due date, student info
+
+---
+
+### Screen 14: School Leaving Certificate (`/reports/slc-certificate`)
+**Purpose:** Generate official School Leaving Certificates (SLC) for departing students.
+
+**Key Features:**
+- Select student from directory
+- Auto-fills academic data, enrollment dates, conduct remarks
+- **Print/Download PDF** with school letterhead
+
+---
+
+### Screen 15: Staff Payroll Summary (`/reports/staff-payroll`)
+**Purpose:** Generate payroll summary report for all staff.
+
+**Key Features:**
+- Filter by month, department
+- Shows basic salary, allowances, deductions, net pay for each staff
+- **Export to Excel/PDF**
+
+---
+
+### Screen 16: Bulk Student ID Cards (`/reports/student-id-cards`)
+**Purpose:** Generate and print student ID cards in bulk.
+
+**Key Features:**
+- Select Class/Section
+- Auto-generates ID cards with photo, name, class, roll no, barcode
+- **Bulk Print** in card format
+- Customizable card template
+
+---
+
+### Screen 17: Student Attendance Heatmap (`/reports/attendance`)
+**Purpose:** Visual heatmap report of student attendance over time.
+
+**Key Features:**
+- Select Class/Section and date range
+- Color-coded calendar heatmap (green = present, red = absent)
+- **Summary Statistics:** Total present, absent, late percentages
+- **Export to PDF**
+
+---
+
+### Screen 18: Fee Defaulters Aging Report (`/reports/fee-defaulters`)
+**Purpose:** Identify students with overdue fee payments.
+
+**Key Features:**
+- List of defaulters sorted by overdue amount/days
+- Aging buckets: 30 days, 60 days, 90+ days overdue
+- Contact details for follow-up
+- **Export for collection drives**
+
+---
+
+### Screen 19: Profit & Loss Statement (`/reports/profit-loss`)
+**Purpose:** Financial P&L statement for the school.
+
+**Key Features:**
+- Income vs. Expenses breakdown
+- Filter by date range, academic year
+- Chart visualization
+- **Export to PDF/Excel**
+
+---
+
+### Screen 20: Daily Collection Report (`/reports/daily-collection`)
+**Purpose:** View fee collections for a specific day.
+
+**Key Features:**
+- Select date to view collections
+- Breakdown by payment method (Cash, Bank, Online)
+- Total collected amount
+- **Print daily summary**
+
+---
+
+### Screen 21: Balance Sheet Statement (`/reports/balance-sheet`)
+**Purpose:** Financial balance sheet showing assets, liabilities, and equity.
+
+**Key Features:**
+- Standard accounting balance sheet format
+- Filter by date range
+- **Export to PDF**
+
+---
+
+### Screen 22: Trial Balance Statement (`/reports/trial-balance`)
+**Purpose:** Trial balance for accounting reconciliation.
+
+**Key Features:**
+- All accounts with debit/credit balances
+- Total debits = Total credits verification
+- **Export to PDF/Excel**
+
+---
+
+### Screen 23: Report Cards & Transcripts (`/reports/report-cards`)
+**Purpose:** Generate individual student report cards.
+
+**Key Features:**
+- Select Exam, Class, Section
+- Generate report cards with subject-wise marks, grades, rankings
+- **Bulk or Individual generation**
+- **Print/Download PDF** with school branding
+
+---
+
+### Screen 24: Student Certificates (TC/Bonafide) (`/reports/student-certificates`)
+**Purpose:** Generate Transfer Certificates and Bonafide certificates.
+
+**Key Features:**
+- Select student → Choose certificate type (TC or Bonafide)
+- Auto-fills student data
+- **Print with school letterhead**
+
+---
+
+## 👨‍🎓 PHASE 5: STUDENTS MODULE
+
+### Screen 25: Student Directory (`/students`)
+**Purpose:** Master list of all enrolled students.
+
+**Key Features:**
+- **KPI Stat Cards:** Total students, active, inactive, by gender
+- **Data Table:** Searchable, sortable, filterable list of all students
+- **Search:** Global search by name, roll number, class
+- **Filters:** Filter by class, section, status, gender
+- **Profile Drawer:** Click a student → Opens side panel with full profile (photo, contact, academic info)
+- **Action Menu (per row):** View Profile, Edit, Medical Records, Transfer Certificate, Deactivate
+- **Add New Student:** Button to register a new student
+- **Export:** CSV and PDF export of student data
+- **Pagination:** Rows per page selector
+
+**Flow:** View all students → Click to see profile → Use actions to manage individual students.
+
+---
+
+### Screen 26: Parent Directory (`/parents`)
+**Purpose:** Master list of all parents/guardians linked to students.
+
+**Key Features:**
+- **Data Table:** All parents with name, contact, linked students
+- **Search & Filter:** By name, phone, email
+- **Profile Drawer:** Click parent → See their linked children, contact info
+- **Export:** CSV/PDF
+
+**Flow:** View parents → Click to see which children they're linked to.
+
+---
+
+### Screen 27: Admissions CRM (`/AdmissionEnquiries`)
+**Purpose:** Manage admission enquiries and applications pipeline.
+
+**Key Features:**
+- **Kanban-style Pipeline:** Enquiry → Application → Interview → Admitted → Rejected
+- **Data Table View:** All enquiries in a sortable table
+- **Add New Enquiry:** Manually add a walk-in enquiry
+- **Status Tracking:** Move applications through pipeline stages
+- **Follow-up Notes:** Add notes and follow-up dates to each enquiry
+- **Convert to Student:** When admitted, convert enquiry directly into enrolled student
+
+**Flow:** Enquiry comes in (from Public Portal or manual) → Track through pipeline → Admit → Student created.
+
+---
+
+### Screen 28: Public Admission Desk (`/PublicAdmissionPortalDesk`)
+**Purpose:** Admin-side view of the public admission form (same as Screen 5 but inside the admin panel).
+
+**Key Features:**
+- Same as Public Admission Portal but accessible from within the admin panel
+- Admin can fill admission forms on behalf of walk-in parents
+
+---
+
+### Screen 29: Student Enrollments (`/StudentEnrollments`)
+**Purpose:** Enroll admitted students into classes and sections.
+
+**Key Features:**
+- **Enrollment Form:** Select student → Assign class, section, roll number
+- **Bulk Enrollment:** Enroll multiple students at once
+- **Transfer Between Sections:** Move students between sections
+- **Enrollment History:** View previous enrollments
+
+**Flow:** After admission → Come here to assign class/section → Student is now fully enrolled.
+
+---
+
+### Screen 30: Student Promotions (`/StudentPromotions`)
+**Purpose:** Promote students from one class to the next at year-end.
+
+**Key Features:**
+- **Select Source Class & Section:** Choose students to promote
+- **Select Target Class & Section:** Where they'll be promoted to
+- **Bulk Promote:** Select all or specific students
+- **Auto Roll Number Assignment:** New roll numbers in new class
+- **Fail/Repeat Option:** Mark students who failed
+
+**Flow:** Year-end → Select source class → Select destination class → Promote selected students.
+
+---
+
+### Screen 31: Student Attendance (`/StudentAttendance`)
+**Purpose:** Daily class attendance marking.
+
+**Key Features:**
+- **Select Class & Section:** Choose which class to mark
+- **Date Picker:** Select date
+- **Mark All Present/Absent:** Quick bulk action
+- **Individual Toggle:** Mark each student Present, Absent, Late, or Leave
+- **Save Attendance:** Submit the day's attendance
+- **View Past Attendance:** Check previously marked records
+
+**Flow:** Teacher selects class → Marks attendance → Saves → Data appears in reports.
+
+---
+
+### Screen 32: Proxy Attendance (`/ProxyAttendance`)
+**Purpose:** Mark attendance on behalf of another teacher (when substitute).
+
+**Key Features:**
+- Select the original teacher's class
+- Mark attendance as a substitute
+- Records show proxy marker identity
+
+---
+
+### Screen 33: Subject-wise Attendance (`/SubjectWiseAttendance`)
+**Purpose:** Mark attendance per subject/period instead of daily class-level.
+
+**Key Features:**
+- Select Class, Section, Subject, and Period
+- Mark attendance for that specific subject period
+- Useful for colleges/universities with different students per subject
+
+---
+
+### Screen 34: Behavior Logs (`/StudentBehaviorLogs`)
+**Purpose:** Record student behavior incidents (positive and negative).
+
+**Key Features:**
+- **Log Incident:** Add behavior record for a student
+- **Incident Types:** Discipline issue, Achievement, Warning, etc.
+- **Data Table:** All behavior logs with filters
+- **Student History:** View all incidents for a specific student
+- **Export:** CSV/PDF
+
+**Flow:** Teacher/Admin records incident → Appears in student's profile → Used in report cards.
+
+---
+
+### Screen 35: Alumni Directory (`/AlumniDirectory`)
+**Purpose:** Track graduated/passed-out students.
+
+**Key Features:**
+- **Alumni Cards:** Card-style display of alumni with photo, graduation year
+- **Search & Filter:** By name, batch year, class
+- **Profile Modal:** Click to view detailed alumni profile
+- **Add Alumni:** Register former students as alumni
+- **Stats:** Total alumni, by batch year
+
+**Flow:** Students graduate → Admin adds them as alumni → Track their records here.
+
+---
+
+### Screen 36: Student Leave Desk (`/StudentLeaveApplication`)
+**Purpose:** Students/parents submit leave applications; Admin/Teachers approve/reject.
+
+**Key Features:**
+- **Apply for Leave:** Submit leave with dates, reason, type
+- **My Leave History:** View all submitted applications
+- **Approve/Reject (Admin/Teacher):** Action buttons on each request
+- **Status Tracking:** Pending, Approved, Rejected
+
+**Flow:** Student/Parent applies → Admin/Teacher reviews → Approves or Rejects → Status updated.
+
+---
+
+## 🎓 PHASE 6: ACADEMICS MODULE
+
+### Screen 37: Academic Years (`/AcademicYears`)
+**Purpose:** Define and manage academic years/sessions.
+
+**Key Features:**
+- **Create Academic Year:** Set name, start date, end date
+- **Set Active Year:** Mark one year as the current active year
+- **Edit/Delete:** Manage existing years
+- **Data Table:** All academic years listed
+
+**Flow:** Create academic year first → This is used everywhere (fees, timetable, exams, attendance).
+
+---
+
+### Screen 38: Classes (`/Classes`)
+**Purpose:** Define school classes (Grade 1, Grade 2, etc.).
+
+**Key Features:**
+- **Add Class:** Create with name, numeric order, capacity
+- **Edit/Delete:** Manage existing classes
+- **Data Table:** All classes listed with section count
+- **Link to Sections:** Shows how many sections each class has
+
+**Flow:** Create classes → Then create sections under each class.
+
+---
+
+### Screen 39: Sections (`/Sections`)
+**Purpose:** Define sections within each class (A, B, C, etc.).
+
+**Key Features:**
+- **Add Section:** Create under a specific class with name, capacity
+- **Assign Class Teacher:** Link a teacher to a section
+- **Edit/Delete:** Manage existing sections
+- **Data Table:** All sections with class, teacher, student count
+
+**Flow:** Classes created → Create sections → Assign class teachers → Students enrolled here.
+
+---
+
+### Screen 40: Subjects (`/Subjects`)
+**Purpose:** Define all subjects taught in the school.
+
+**Key Features:**
+- **Add Subject:** Name, code, type (Core/Elective), elective group
+- **Subject Categories:** Core, Elective, Lab, Co-curricular
+- **Edit/Delete:** Manage subjects
+- **Data Table:** All subjects with type, code
+
+**Flow:** Create subjects → Then assign them to classes.
+
+---
+
+### Screen 41: Assign Subject to Class (`/ClassSubject`)
+**Purpose:** Map which subjects are taught in which class.
+
+**Key Features:**
+- **Select Class:** Choose a class
+- **Assign Subjects:** Pick subjects from the list and assign to the class
+- **Assign Teacher:** Link a specific teacher to teach that subject in that class
+- **Bulk Assign:** Assign multiple subjects at once
+
+**Flow:** After subjects exist → Come here → Assign subjects to classes → Assign teachers.
+
+---
+
+### Screen 42: Class Timetable (`/Timetable`)
+**Purpose:** Create and manage weekly class timetables.
+
+**Key Features:**
+- **Select Class & Section:** View timetable for specific class
+- **Week Grid View:** Monday–Saturday, period-by-period
+- **Add Period:** Assign subject, teacher, time slot to each cell
+- **Drag & Drop:** Rearrange periods
+- **Conflict Detection:** Warns if a teacher is double-booked
+- **Auto-Generate:** Option to auto-generate timetable
+- **Print Timetable:** Export as PDF
+
+**Flow:** Subjects assigned to class → Create timetable → Teachers see their schedule.
+
+---
+
+### Screen 43: Teacher Timetable (`/TeacherTimetable`)
+**Purpose:** View timetable from a teacher's perspective.
+
+**Key Features:**
+- **Select Teacher:** Choose a specific teacher
+- **Week Grid View:** Shows all their classes across the week
+- **Period Details:** Subject, class, section, room for each slot
+- **Print:** Export teacher's personal timetable
+
+**Flow:** Auto-generated from class timetables → Teachers view their personal schedule here.
+
+---
+
+### Screen 44: Substitute Management (`/SubstituteManagement`)
+**Purpose:** Manage teacher absences and assign substitutes.
+
+**Key Features:**
+- **Mark Teacher Absent:** Record teacher absence with reason
+- **Assign Substitute:** Pick another teacher to cover their periods
+- **Auto-Suggest:** System suggests available teachers based on free periods
+- **History Log:** Track all substitution records
+- **Notifications:** Substitute teacher gets notified
+
+**Flow:** Teacher is absent → Admin assigns substitute → Substitute teacher gets updated timetable.
+
+---
+
+### Screen 45: Lesson Planning (`/LessonPlanning`)
+**Purpose:** Teachers create and manage lesson plans.
+
+**Key Features:**
+- **Create Lesson Plan:** Title, subject, class, topic, objectives, activities
+- **Calendar View:** See plans mapped to dates
+- **Status Tracking:** Draft, Published, Completed
+- **Data Table:** All lesson plans with filters
+
+**Flow:** Teacher creates plan → Links to subject/class → Tracks completion.
+
+---
+
+### Screen 46: Study Material Library (`/StudyMaterialRepository`)
+**Purpose:** Upload and share study materials with students.
+
+**Key Features:**
+- **Upload Material:** Upload PDFs, docs, videos, links
+- **Categorize:** By subject, class, topic
+- **Search & Filter:** Find materials easily
+- **Download/View:** Students and teachers can access materials
+- **Data Table:** All materials listed
+
+**Flow:** Teacher uploads → Students access via their portal.
+
+---
+
+### Screen 47: Live Online Classes (`/LiveClassesManager`)
+**Purpose:** Schedule and manage live online classes (Zoom/Google Meet integration).
+
+**Key Features:**
+- **Schedule Class:** Set date, time, subject, class, meeting link
+- **Join Link:** Direct link to join the meeting
+- **Status:** Upcoming, In-Progress, Completed
+- **Data Table:** All scheduled live classes
+
+**Flow:** Teacher schedules → Students/Parents get notified → Join via link.
+
+---
+
+### Screen 48: Student Daily Diaries (`/StudentDiaryManager`)
+**Purpose:** Teachers post daily diary entries (homework, reminders) for classes.
+
+**Key Features:**
+- **Create Diary Entry:** Select class, date, add content
+- **Rich Text:** Format diary entries with text, images
+- **View By Date:** See all entries for a specific day
+- **Parent Visibility:** Parents can view diary entries from their portal
+
+**Flow:** Teacher posts diary → Parents/Students see it in their portal.
+
+---
+
+### Screen 49: House System & Points (`/HouseSystemDashboard`)
+**Purpose:** Manage school house system (Red House, Blue House, etc.) and track points.
+
+**Key Features:**
+- **House Cards:** Display all houses with colors, logos, points
+- **Award Points:** Give points to a house for events/achievements
+- **Leaderboard:** Ranking of houses by total points
+- **History:** Log of all point awards
+
+**Flow:** Create houses → Award points throughout the year → Track on leaderboard.
+
+---
+
+## 📚 PHASE 7: LMS (Learning Management System)
+
+### Screen 50: Homeworks (`/HomeworkManagement`)
+**Purpose:** Teachers create and manage homework assignments.
+
+**Key Features:**
+- **Create Homework:** Title, subject, class, description, due date, attachments
+- **Data Table:** All homeworks with status, due date, submission count
+- **Edit/Delete:** Manage existing homeworks
+- **Track Submissions:** See how many students have submitted
+
+**Flow:** Teacher creates homework → Students see it in their portal → Submit before due date.
+
+---
+
+### Screen 51: Homework Submissions (`/HomeworkSubmissions`)
+**Purpose:** Teachers review and grade submitted homework.
+
+**Key Features:**
+- **Submissions List:** All submissions for a selected homework
+- **Review & Grade:** Open submission, view attachment, assign grade/marks
+- **Feedback:** Add teacher comments
+- **Status:** Submitted, Graded, Late, Returned
+- **Bulk Grade:** Grade multiple submissions at once
+
+**Flow:** Students submit → Teacher opens this screen → Reviews → Grades → Student sees grade.
+
+---
+
+### Screen 52: Student Portal — Assignments (`/StudentHomeworkPortal`)
+**Purpose:** Students view their assignments and submit homework.
+
+**Key Features:**
+- **My Assignments:** List of all assignments for the student's class
+- **Submit Homework:** Upload file or write text response
+- **Due Date Tracking:** Shows which are pending, overdue, submitted
+- **View Grades:** See teacher's grade and feedback after review
+
+**Flow:** Student sees assignment → Uploads submission → Teacher grades → Student views result.
+
+---
+
+## 🎯 PHASE 8: MY PORTAL (Student & Parent Self-Service)
+
+### Screen 53: My Leaves — Student/Staff (`/StudentLeaveApplication` & `/StaffLeaveApplication`)
+**Purpose:** View and apply for leave.
+
+**Key Features:**
+- **Apply for Leave:** Choose leave type, dates, reason
+- **My Applications:** View all submitted leave requests with status
+- **Status:** Pending, Approved, Rejected
+
+---
+
+### Screen 54: Apply Leave — Parent (`/ApplyLeave`)
+**Purpose:** Parents apply for leave on behalf of their child.
+
+**Key Features:**
+- **Select Child:** If multiple children, choose which child
+- **Leave Application Form:** Dates, reason, leave type
+- **Track Status:** View approval status
+
+---
+
+### Screen 55: Fee Payments & Receipts (`/FeePaymentHistory`)
+**Purpose:** Parents/Students view fee payment history and pending dues.
+
+**Key Features:**
+- **Outstanding Dues:** List of unpaid fee challans
+- **Payment History:** All past payments with receipt numbers
+- **Download Receipt:** Print/download individual receipts
+- **Online Payment:** Pay fees online (if enabled)
+
+**Flow:** Parent views dues → Pays online or at bank → Receipt generated.
+
+---
+
+### Screen 56: Online Tests — Student CBT (`/StudentCBT`)
+**Purpose:** Students view and access available Computer-Based Tests.
+
+**Key Features:**
+- **Available Tests:** List of exams assigned to the student
+- **Start Test:** Click to begin an online exam
+- **Past Results:** View scores of completed tests
+
+**Flow:** Teacher publishes exam → Student sees it here → Starts exam → Redirects to exam screen.
+
+---
+
+## 👥 PHASE 9: HR & PAYROLL MODULE
+
+### Screen 57: Staff Directory (`/StaffDirectory`)
+**Purpose:** Master list of all staff members (teachers, admin staff, support staff).
+
+**Key Features:**
+- **KPI Stat Cards:** Total staff, by department, active/inactive
+- **Data Table:** All staff with name, designation, department, contact
+- **Search & Filter:** By name, department, designation, status
+- **Profile Drawer:** Click staff → See full profile with photo, qualifications
+- **Action Menu:** Edit, View, Deactivate
+- **Add New Staff:** Register new staff member
+- **Export:** CSV/PDF
+
+**Flow:** View all staff → Click for profile → Manage using action buttons.
+
+---
+
+### Screen 58: Staff Attendance (`/StaffAttendance`)
+**Purpose:** Mark and track daily staff attendance.
+
+**Key Features:**
+- **Date Picker:** Select date to mark
+- **Attendance List:** All staff with toggle for Present/Absent/Late/Leave
+- **Mark All:** Quick bulk action
+- **Biometric Sync:** Auto-sync from biometric devices (if configured)
+- **Monthly Summary:** Calendar view of attendance
+- **Export Report**
+
+**Flow:** Admin marks daily attendance → Or biometric auto-syncs → Monthly reports generated.
+
+---
+
+### Screen 59: Payroll Engine (`/SalarySlipsManager`)
+**Purpose:** Generate monthly salary slips for all staff.
+
+**Key Features:**
+- **Generate Payroll:** Select month → Auto-calculates based on salary structure
+- **Salary Breakup:** Basic, allowances, deductions, loans, net pay
+- **Bulk Generate:** Generate for all staff at once
+- **Individual Slip:** View/Print individual salary slip
+- **Loan Deductions:** Auto-deducts active loan installments
+- **Export:** PDF salary slips
+
+**Flow:** End of month → Generate payroll → Review → Approve → Staff can view slips.
+
+---
+
+### Screen 60: Advance Loans (`/StaffLoans`)
+**Purpose:** Manage staff salary advance loans.
+
+**Key Features:**
+- **Issue Loan:** Create a loan for a staff member with amount, installment plan
+- **Active Loans:** List of all active loans with remaining balance
+- **Repayment Schedule:** Monthly installment tracking
+- **Auto-Deduction:** Loan installments auto-deducted from salary
+- **Close Loan:** Mark loan as fully repaid
+
+**Flow:** Staff requests loan → Admin approves → Monthly deductions in payroll → Loan cleared.
+
+---
+
+### Screen 61: Performance Appraisals (`/StaffAppraisals`)
+**Purpose:** Conduct and track staff performance reviews.
+
+**Key Features:**
+- **Create Appraisal:** Set period, reviewer, reviewee
+- **Rating Categories:** Teaching quality, punctuality, teamwork, etc.
+- **Score Card:** Rate each category on a scale
+- **Comments & Feedback:** Written feedback from reviewer
+- **History:** View past appraisals for any staff member
+- **Data Table:** All appraisals with status
+
+**Flow:** Admin/HOD creates appraisal → Rates staff → Saves → History maintained.
+
+---
+
+### Screen 62: Resignation & Clearance (`/StaffClearance`)
+**Purpose:** Process staff resignations and clearance procedures.
+
+**Key Features:**
+- **Initiate Clearance:** Start clearance process for a departing staff
+- **Checklist:** Department-wise clearance items (Library books returned, ID card submitted, etc.)
+- **Approvals:** Each department signs off
+- **Final Settlement:** Calculate dues/payables
+- **Status:** In-Progress, Completed
+
+**Flow:** Staff resigns → Clearance initiated → Departments verify → Settlement calculated → Cleared.
+
+---
+
+### Screen 63: Leave Approvals (`/LeaveApprovals`)
+**Purpose:** Admin/HOD approves or rejects leave applications from staff.
+
+**Key Features:**
+- **Pending Requests:** All pending leave applications
+- **Approve/Reject:** Action buttons with optional remarks
+- **Leave Balance:** Shows remaining leaves for the applicant
+- **History:** Past approval/rejection records
+
+**Flow:** Staff applies for leave → Appears here → Admin reviews → Approves/Rejects.
+
+---
+
+### Screen 64: Staff My Leaves (`/StaffLeaveApplication`)
+**Purpose:** Staff members view their own leave history and apply for leave.
+
+**Key Features:**
+- **Apply Leave:** Submit leave request with dates, type, reason
+- **My History:** View all submitted applications and their status
+- **Leave Balance:** Remaining leave days by type (Casual, Sick, Annual)
+
+---
+
+## 💰 PHASE 10: FINANCE & FEES MODULE
+
+### Screen 65: Fee Setup (`/FeeSetup`)
+**Purpose:** Define fee types and categories (Tuition, Exam Fee, Lab Fee, etc.).
+
+**Key Features:**
+- **Add Fee Type:** Create fee categories with name, code
+- **Edit/Delete:** Manage existing fee types
+- **Data Table:** All fee types listed
+- **Account Mapping:** Link fee types to chart of accounts
+
+**Flow:** Define fee types first → Then create fee structures using these types.
+
+---
+
+### Screen 66: Fee Structures (`/FeeStructures`)
+**Purpose:** Create class-wise fee structures (how much each class pays).
+
+**Key Features:**
+- **Create Structure:** Select class, academic year → Add fee amounts for each fee type
+- **Monthly/Annual Breakdown:** Set monthly, quarterly, or annual amounts
+- **Edit/Delete:** Modify existing structures
+- **Data Table:** All structures with class, total fee
+- **Clone:** Copy a structure from one class to another
+
+**Flow:** Fee types exist → Create structure per class → This determines challan amounts.
+
+---
+
+### Screen 67: Fee Concessions (`/FeeConcessions`)
+**Purpose:** Define and assign fee discounts/concessions to students.
+
+**Key Features:**
+- **Create Concession:** Name, percentage or fixed amount discount
+- **Assign to Students:** Apply concession to specific students
+- **Concession Types:** Sibling discount, scholarship, staff-child discount, etc.
+- **Data Table:** All concessions with assigned student count
+
+**Flow:** Create concession rules → Assign to students → Automatically reflected in challans.
+
+---
+
+### Screen 68: Fee Challans (`/FeeChallans`)
+**Purpose:** Generate and manage monthly fee challans (invoices) for students.
+
+**Key Features:**
+- **Generate Challans:** Bulk generate for a class/section for a month
+- **Individual Challan:** Create for a single student
+- **Data Table:** All challans with student, amount, status, due date
+- **Payment Recording:** Mark challan as paid (cash, bank, online)
+- **Print Voucher:** Generate 3-copy bank deposit slip
+- **Filters:** By class, status (Paid/Unpaid/Overdue), date range
+- **Concession Applied:** Shows discounts applied
+
+**Flow:** Fee structure exists → Generate challans → Student pays → Mark as paid → Receipt generated.
+
+---
+
+### Screen 69: School Expenses (`/SchoolExpensesTracker`)
+**Purpose:** Track all school expenditures (salaries, utilities, supplies).
+
+**Key Features:**
+- **Add Expense:** Record an expense with category, amount, date, vendor
+- **Expense Categories:** Salary, Utilities, Maintenance, Supplies, etc.
+- **Data Table:** All expenses with filters
+- **Monthly Summary:** Total spending by category
+- **Receipts/Invoices:** Attach receipts to expenses
+- **Charts:** Visual breakdown of spending
+- **Export:** CSV/PDF
+
+**Flow:** Record every expense → Auto-posts to accounting ledger → Appears in P&L report.
+
+---
+
+### Screen 70: Chart of Accounts (`/ChartOfAccounts`)
+**Purpose:** Define the complete chart of accounts for double-entry accounting.
+
+**Key Features:**
+- **Account Tree:** Hierarchical tree view of all accounts (Assets, Liabilities, Income, Expenses, Equity)
+- **Add Account:** Create new accounts under parent categories
+- **Account Types:** Asset, Liability, Income, Expense, Equity
+- **Edit/Delete:** Manage accounts
+- **Search:** Find specific accounts
+- **Seeded Defaults:** Pre-populated standard school accounts
+
+**Flow:** Chart of accounts defined → Used by all financial transactions (fees, expenses, ledger).
+
+---
+
+### Screen 71: General Ledger — JV Register (`/GeneralLedger`)
+**Purpose:** Post journal vouchers (JVs) and view the general ledger.
+
+**Key Features:**
+- **Create JV:** Post a journal voucher with debit/credit accounts and amounts
+- **Debit = Credit Validation:** System ensures balanced entries
+- **Ledger View:** View all transactions for a specific account
+- **Data Table:** All journal entries with filters
+- **Narration:** Add descriptions to each entry
+- **Export:** PDF/Excel
+
+**Flow:** Financial transactions auto-post here → Admin can also post manual JVs → View ledger per account.
+
+---
+
+### Screen 72: Student Wallets — RFID (`/StudentWallets`)
+**Purpose:** Manage prepaid student wallet balances (for canteen, stationery, etc.).
+
+**Key Features:**
+- **Student Wallet List:** All students with wallet balance
+- **Top-Up:** Add money to a student's wallet
+- **Transaction History:** View all debits/credits for a wallet
+- **RFID Integration:** Link to RFID cards for tap-and-pay
+
+**Flow:** Parent tops up wallet → Student uses RFID card → Balance deducted → History tracked.
+
+---
+
+### Screen 73: Financial Audit Trail (`/FinancialAuditLogs`)
+**Purpose:** Complete audit log of all financial transactions.
+
+**Key Features:**
+- **Audit Log Table:** Every financial action logged (who, what, when)
+- **Filters:** By date, user, action type
+- **Immutable Records:** Cannot be edited or deleted
+- **Export:** PDF/Excel
+
+**Flow:** Every financial action (fee collection, expense, JV) auto-logged here.
+
+---
+
+## 💬 PHASE 11: COMMUNICATION MODULE
+
+### Screen 74: Omnichannel Broadcaster (`/CommunicationBroadcaster`)
+**Purpose:** Send mass notifications to parents, students, or staff via SMS, Email, and Push Notifications.
+
+**Key Features:**
+- **Compose Message:** Write message with rich text
+- **Select Audience:** By class, section, role, or individual
+- **Channel Selection:** SMS, Email, In-App, or All
+- **Schedule:** Send now or schedule for later
+- **Delivery Report:** Track sent, delivered, failed messages
+
+**Flow:** Admin composes → Selects audience → Selects channel → Sends → Delivery tracked.
+
+---
+
+### Screen 75: Digital Notice Board (`/DigitalNoticeBoard`)
+**Purpose:** Create and manage digital notices for display on screens or portal.
+
+**Key Features:**
+- **Create Notice:** Title, content, priority, expiry date
+- **Categories:** General, Academic, Event, Emergency
+- **Active/Expired:** Filter by notice status
+- **Data Table:** All notices with management actions
+
+---
+
+### Screen 76: PTM Scheduler (`/PtmScheduler`)
+**Purpose:** Schedule Parent-Teacher Meetings.
+
+**Key Features:**
+- **Create PTM:** Set date, time slots, classes involved
+- **Slot Management:** Define available time slots
+- **Parent Booking:** Parents book slots from their portal
+- **Schedule View:** See all bookings in a timeline
+
+**Flow:** Admin creates PTM → Sets slots → Parents book from portal → Meeting happens.
+
+---
+
+### Screen 77: Helpdesk & Tickets (`/HelpdeskTickets`)
+**Purpose:** Internal ticketing system for issues and requests.
+
+**Key Features:**
+- **Create Ticket:** Submit an issue with category, priority, description
+- **Ticket Status:** Open, In-Progress, Resolved, Closed
+- **Assign To:** Route tickets to specific departments/staff
+- **Comments Thread:** Conversation on each ticket
+- **Data Table:** All tickets with filters and search
+
+**Flow:** User raises ticket → Assigned to team → Resolved → Closed.
+
+---
+
+### Screen 78: Birthday Wishes Engine (`/BirthdayWishes`)
+**Purpose:** Auto-detect and send birthday wishes to students and staff.
+
+**Key Features:**
+- **Today's Birthdays:** List of people with birthdays today
+- **Auto-Send Wishes:** Automated birthday messages via SMS/Email
+- **Upcoming Birthdays:** Next 7/30 days preview
+- **Custom Message Templates:** Edit the birthday message template
+
+**Flow:** System auto-detects birthdays → Sends wishes → Admin can view and manage.
+
+---
+
+### Screen 79: Feedback & Suggestions (`/FeedbackSuggestions`)
+**Purpose:** Collect feedback and suggestions from parents, students, and staff.
+
+**Key Features:**
+- **Submit Feedback:** Anyone can submit feedback with category and rating
+- **Feedback List:** Admin views all submitted feedback
+- **Categories:** Academic, Infrastructure, Staff, Other
+- **Status:** New, Reviewed, Acted Upon
+- **Analytics:** Average ratings, trends
+
+---
+
+### Screen 80: School Event Calendar (`/EventCalendar`)
+**Purpose:** Manage and display school events on a calendar.
+
+**Key Features:**
+- **Calendar View:** Monthly calendar with events marked
+- **Create Event:** Add event with title, date, time, description, venue
+- **Event Types:** Academic, Sports, Cultural, Holiday
+- **RSVP:** Track attendance for events
+- **Notification:** Auto-notify participants
+
+---
+
+### Screen 81: Internal Staff Chat (`/StaffChat`)
+**Purpose:** Real-time chat platform for staff members.
+
+**Key Features:**
+- **Chat List:** All available staff for messaging
+- **Direct Messages:** One-on-one chat
+- **Group Chat:** Create groups for departments/teams
+- **Message History:** Scroll through past conversations
+- **Online Status:** See who's online
+
+---
+
+## 📝 PHASE 12: EXAMINATIONS MODULE
+
+### Screen 82: Exam Setups (`/ExamSetups`)
+**Purpose:** Define exam types (Midterm, Final, Unit Test, etc.).
+
+**Key Features:**
+- **Create Exam:** Name, type, academic year, total marks, passing marks
+- **Exam Types:** Formative, Summative, Unit Test, Annual
+- **Edit/Delete:** Manage exam configurations
+- **Data Table:** All exams with details
+
+**Flow:** Create exam types first → Then schedule exams → Then enter marks.
+
+---
+
+### Screen 83: Grading Scales (`/GradingScales`)
+**Purpose:** Define grading criteria (A+, A, B+, etc.) with mark ranges.
+
+**Key Features:**
+- **Create Scale:** Name (e.g., "Standard Grade Scale")
+- **Add Grade Bands:** A+ = 90-100, A = 80-89, etc.
+- **GPA Mapping:** Assign GPA values to each grade
+- **Multiple Scales:** Different scales for different exam types
+- **Edit/Delete:** Manage grades
+
+**Flow:** Define grading scale → Link to exam → Marks auto-converted to grades.
+
+---
+
+### Screen 84: Date Sheets (`/ExamSchedules`)
+**Purpose:** Create exam date sheets (schedule of exams).
+
+**Key Features:**
+- **Create Schedule:** Select exam, class → Add subject-wise dates and times
+- **Calendar View:** Visual exam schedule
+- **Print Date Sheet:** Generate printable PDF
+- **Notify:** Send date sheet to parents/students
+
+**Flow:** Exam created → Schedule dates per subject → Print/Share date sheet.
+
+---
+
+### Screen 85: Admit Cards & Slips (`/AdmitCardGenerator`)
+**Purpose:** Generate exam admit cards for students.
+
+**Key Features:**
+- **Select Exam & Class:** Choose which exam
+- **Generate Cards:** Bulk generate admit cards with student photo, roll no, exam schedule
+- **Print:** Bulk print in card format
+- **Custom Template:** School logo and branding
+
+**Flow:** Exam scheduled → Generate admit cards → Print and distribute.
+
+---
+
+### Screen 86: Question Bank — CBT (`/QuestionBank`)
+**Purpose:** Create and manage a bank of questions for Computer-Based Tests.
+
+**Key Features:**
+- **Add Question:** MCQ, True/False, Short Answer
+- **Categorize:** By subject, topic, difficulty level
+- **Bulk Import:** Upload questions from CSV/Excel
+- **Data Table:** All questions with filters
+- **Preview:** See how question will appear in exam
+
+**Flow:** Build question bank → Use questions in online CBT exams.
+
+---
+
+### Screen 87: Online CBT Exams (`/OnlineExams`)
+**Purpose:** Create and publish Computer-Based Tests (CBTs) for students.
+
+**Key Features:**
+- **Create Exam:** Title, duration, total marks, passing marks
+- **Select Questions:** Pick from question bank or auto-generate
+- **Assign to Class:** Specify which students can take the exam
+- **Settings:** Shuffle questions, time limit, negative marking
+- **Publish/Unpublish:** Control exam availability
+- **Results:** View student scores after completion
+
+**Flow:** Questions in bank → Create online exam → Assign to class → Students take exam → Auto-graded.
+
+---
+
+### Screen 88: Attempt CBT Exam (`/TakeOnlineExam`)
+**Purpose:** The actual exam-taking screen where students answer questions.
+
+**Key Features:**
+- **Timer:** Countdown timer for exam duration
+- **Question Navigation:** Jump between questions
+- **Mark for Review:** Flag questions to revisit
+- **Auto-Save:** Answers auto-saved periodically
+- **Submit:** Final submission
+- **Auto-Grade:** MCQ answers auto-graded instantly
+
+**Flow:** Student opens exam → Answers questions → Submits → Gets instant result.
+
+---
+
+### Screen 89: Marks Entry (`/MarksEntryDashboard`)
+**Purpose:** Teachers enter subject-wise marks for exams.
+
+**Key Features:**
+- **Select Exam, Class, Section, Subject**
+- **Marks Table:** All students listed with marks input fields
+- **Auto-Grade:** Marks auto-converted to grades (using grading scale)
+- **Save/Submit:** Save draft or final submit
+- **Validation:** Marks cannot exceed total marks
+- **Bulk Entry:** Quick entry for all students
+
+**Flow:** Exam done → Teacher enters marks → System calculates grades → Report cards generated.
+
+---
+
+## 🏨 PHASE 13: HOSTEL MODULE
+
+### Screen 90: Hostel Setup (`/HostelSetup`)
+**Purpose:** Define hostels, buildings, floors, and rooms.
+
+**Key Features:**
+- **Add Hostel:** Create hostel with name, warden, capacity
+- **Room Management:** Add rooms with room number, type (Single/Double/Dormitory), capacity
+- **Data Table:** All hostels and rooms listed
+- **Occupancy Stats:** Available vs. occupied rooms
+
+**Flow:** Create hostel → Add rooms → Then allocate students.
+
+---
+
+### Screen 91: Hostel Allocations (`/HostelAllocations`)
+**Purpose:** Assign students to hostel rooms.
+
+**Key Features:**
+- **Allocate Student:** Select student → Assign room → Set dates
+- **Current Allocations:** List of all currently allocated students
+- **Room Availability:** Shows available rooms and beds
+- **Check-In/Check-Out:** Record arrival and departure
+- **Transfer Room:** Move student to different room
+
+**Flow:** Hostel setup done → Allocate students to rooms → Track occupancy.
+
+---
+
+## 🚌 PHASE 14: TRANSPORT MODULE
+
+### Screen 92: Transport Setup (`/TransportSetup`)
+**Purpose:** Define transport vehicles and drivers.
+
+**Key Features:**
+- **Add Vehicle:** Registration number, capacity, driver, GPS tracker ID
+- **Driver Details:** Name, license number, contact
+- **Maintenance Log:** Track vehicle maintenance records
+- **Data Table:** All vehicles listed
+
+**Flow:** Add vehicles first → Then create routes → Then assign students.
+
+---
+
+### Screen 93: Transport Routes (`/TransportRoutes`)
+**Purpose:** Define bus routes with stops and timings.
+
+**Key Features:**
+- **Create Route:** Route name, vehicle assignment, stops with pickup/drop times
+- **Add Stops:** Define each stop with name, time, GPS coordinates
+- **Map View:** Visual route on map
+- **Data Table:** All routes with vehicle, stops count
+
+**Flow:** Vehicles exist → Create routes with stops → Assign students to routes.
+
+---
+
+### Screen 94: Student Routes (`/StudentTransport`)
+**Purpose:** Assign students to transport routes/stops.
+
+**Key Features:**
+- **Assign Student:** Select student → Pick route → Pick stop
+- **Current Assignments:** List of all students with their routes
+- **Fee Linking:** Transport fee auto-added to student's fee challan
+- **Data Table:** All assignments with filters
+
+**Flow:** Routes created → Assign students to routes → Transport fee reflected in their challans.
+
+---
+
+## 📦 PHASE 15: INVENTORY MODULE
+
+### Screen 95: Stock Catalog (`/StockCatalog`)
+**Purpose:** Manage inventory items (furniture, stationery, lab equipment, etc.).
+
+**Key Features:**
+- **Add Item:** Name, category, unit, reorder level, current stock
+- **Categories:** Furniture, Stationery, Lab Equipment, Sports, IT
+- **Data Table:** All items with stock levels
+- **Low Stock Alert:** Items below reorder level highlighted
+
+**Flow:** Add all inventory items → Track stock → Record transactions in Stock Ledger.
+
+---
+
+### Screen 96: Stock Ledger (`/StockLedger`)
+**Purpose:** Record stock-in and stock-out transactions.
+
+**Key Features:**
+- **Stock In:** Record incoming stock with quantity, date, supplier
+- **Stock Out:** Record items given out with quantity, purpose, receiver
+- **Transaction History:** Complete log of all stock movements
+- **Running Balance:** Current stock calculated automatically
+- **Data Table:** All transactions with filters
+
+**Flow:** Items exist in catalog → Record stock-in/stock-out → Balance auto-updated.
+
+---
+
+### Screen 97: Expense Logs (`/ExpenseLogs`)
+**Purpose:** Track expenses specifically related to inventory purchases.
+
+**Key Features:**
+- **Log Expense:** Record purchase expense for inventory items
+- **Vendor Details:** Supplier information
+- **Data Table:** All purchase expenses
+- **Link to Item:** Connect expense to a specific inventory item
+
+---
+
+## 📖 PHASE 16: LIBRARY MODULE
+
+### Screen 98: Book Catalog (`/BookCatalog`)
+**Purpose:** Manage the school library book collection.
+
+**Key Features:**
+- **Add Book:** Title, author, ISBN, category, copies, shelf location
+- **Categories:** Fiction, Non-Fiction, Reference, Textbook, etc.
+- **Search:** Find books by title, author, ISBN
+- **Data Table:** All books with available copies
+- **Barcode:** Generate barcodes for books
+
+**Flow:** Add all books → Then issue them to students/staff.
+
+---
+
+### Screen 99: Issue & Return (`/IssueBooks`)
+**Purpose:** Issue books to students/staff and record returns.
+
+**Key Features:**
+- **Issue Book:** Select member → Select book → Set return date
+- **Return Book:** Scan/select book → Mark as returned
+- **Currently Issued:** List of all books currently issued
+- **Overdue List:** Books past return date highlighted
+- **Data Table:** All issue/return records
+- **Fine Calculation:** Auto-calculate late return fines
+
+**Flow:** Book in catalog → Issue to member → Member returns → Fine if late.
+
+---
+
+### Screen 100: Library Fines (`/LibraryFines`)
+**Purpose:** Manage fines for overdue library books.
+
+**Key Features:**
+- **Fine List:** All outstanding fines with member, book, amount
+- **Pay Fine:** Record fine payment
+- **Fine Rules:** Set fine rate per day
+- **Data Table:** All fines with status (Paid/Unpaid)
+
+**Flow:** Book overdue → Fine auto-calculated → Member pays → Fine cleared.
+
+---
+
+## 🏢 PHASE 17: FRONT OFFICE MODULE
+
+### Screen 101: Visitors Log & Gate Pass (`/VisitorsLog`)
+**Purpose:** Record all school visitors and issue gate passes.
+
+**Key Features:**
+- **Check-In Visitor:** Record visitor name, purpose, whom to meet, ID proof
+- **Gate Pass Generation:** Print gate pass with visitor photo, time, purpose
+- **Check-Out:** Record departure time
+- **Currently In-Campus:** List of visitors currently inside
+- **Data Table:** Complete visitor log with search/filter
+- **Export:** CSV/PDF
+
+**Flow:** Visitor arrives → Guard checks in → Gate pass printed → Visitor meets person → Checks out.
+
+---
+
+### Screen 102: Certificates Manager (`/CertificatesManager`)
+**Purpose:** Manage and issue various certificates (Bonafide, Character, TC, etc.).
+
+**Key Features:**
+- **Certificate Types:** Bonafide, Character, Transfer, Migration, etc.
+- **Generate Certificate:** Select student → Choose type → Auto-generate
+- **Print:** Print with school letterhead and signature
+- **Data Table:** All issued certificates
+- **Tracking:** Track which certificates were issued to whom
+
+---
+
+### Screen 103: Notifications Inbox (`/NotificationsInbox`)
+**Purpose:** View all system notifications.
+
+**Key Features:**
+- **Notification List:** All notifications sorted by date
+- **Read/Unread:** Mark as read/unread
+- **Categories:** System, Fee, Attendance, Academic, etc.
+- **Click to Navigate:** Click notification → Goes to relevant screen
+
+---
+
+### Screen 104: PTM Slot Booking (`/PtmSlots`)
+**Purpose:** Book and manage PTM time slots.
+
+**Key Features:**
+- **Available Slots:** View available PTM time slots
+- **Book Slot:** Parents book a slot with preferred teacher
+- **My Bookings:** View booked slots
+- **Admin View:** See all bookings across all teachers
+
+**Flow:** PTM scheduled → Slots created → Parents book → Meeting happens at slot time.
+
+---
+
+## ⚙️ PHASE 18: SYSTEM SETTINGS (Admin Only)
+
+### Screen 105: Tenants / Campuses (`/Tenants`)
+**Purpose:** Manage multiple school campuses in a multi-tenant setup.
+
+**Key Features:**
+- **Add Campus:** Create a new tenant/campus with name, address, logo
+- **Branding:** Custom logo and school name per campus
+- **Database Isolation:** Each campus has isolated data
+- **Data Table:** All campuses listed
+- **Switch Campus:** Admin can switch between campuses
+
+**Flow:** System supports multiple campuses → Each has its own data → Admin manages all.
+
+---
+
+### Screen 106: User Management (`/UserManagement`)
+**Purpose:** Manage system user accounts (login credentials).
+
+**Key Features:**
+- **Add User:** Create account with email, password, role
+- **Assign Role:** Admin, Teacher, Staff, Parent, Student
+- **Link to Person:** Connect user account to a staff/student/parent record
+- **Activate/Deactivate:** Enable or disable user accounts
+- **Reset Password:** Admin can reset any user's password
+- **Data Table:** All users with role, status
+
+**Flow:** Create user account → Assign role → Link to person → They can log in.
+
+---
+
+### Screen 107: Permissions Matrix — RBAC (`/PermissionsMatrix`)
+**Purpose:** Fine-grained role-based access control.
+
+**Key Features:**
+- **Matrix Grid:** Roles (columns) × Permissions (rows)
+- **Toggle Permissions:** Check/uncheck specific permissions for each role
+- **Module-Level Control:** Control access to each module per role
+- **Bulk Assign:** Apply template permissions
+- **Save:** Apply changes instantly
+
+**Flow:** Define what each role can see/do → Sidebar and screens auto-filter based on permissions.
+
+---
+
+### Screen 108: Biometric Hardware — IoT (`/BiometricDevices`)
+**Purpose:** Configure and manage biometric attendance devices.
+
+**Key Features:**
+- **Add Device:** Register biometric device with IP, type, location
+- **Sync:** Pull attendance data from devices
+- **Device Status:** Online/Offline monitoring
+- **Data Table:** All registered devices
+
+**Flow:** Install biometric device → Register here → Auto-sync attendance data.
+
+---
+
+### Screen 109: Bulk CSV Data Importer (`/DataMigration`)
+**Purpose:** Import bulk data from CSV files (students, staff, fees, etc.).
+
+**Key Features:**
+- **Upload CSV:** Select data type → Upload CSV file
+- **Column Mapping:** Map CSV columns to system fields
+- **Validation:** Preview and validate data before import
+- **Import:** Execute bulk import
+- **Error Report:** Download errors for correction
+
+**Flow:** Prepare CSV → Upload → Map columns → Validate → Import → Data added to system.
+
+---
+
+### Screen 110: Database Backup Scheduler (`/DatabaseBackup`)
+**Purpose:** Schedule and manage database backups.
+
+**Key Features:**
+- **Manual Backup:** Create an instant backup
+- **Scheduled Backup:** Set daily/weekly auto-backup
+- **Backup List:** All backups with date, size, status
+- **Download:** Download backup file
+- **Restore:** Restore from a previous backup
+
+---
+
+### Screen 111: Executive Master Aggregator (`/ExecutiveMasterDashboard`)
+**Purpose:** High-level overview dashboard for executives/management.
+
+**Key Features:**
+- **Cross-Campus Stats:** Aggregate data across all campuses
+- **Key Metrics:** Total students, revenue, attendance, staff count across system
+- **Charts & Graphs:** Visual representations of key data
+
+---
+
+### Screen 112: Parent & Student Mobile Portal (`/ParentPortal`)
+**Purpose:** Configuration screen for the parent/student mobile portal.
+
+**Key Features:**
+- **Portal Settings:** Enable/disable features for parent/student portals
+- **Customization:** What data parents can see
+- **Mobile App Link:** QR code or link for app download
+
+---
+
+### Screen 113: Roles & Permissions (`/Roles`)
+**Purpose:** Create and manage user roles.
+
+**Key Features:**
+- **Add Role:** Create custom roles (e.g., "Lab Assistant", "Librarian")
+- **Edit/Delete:** Manage roles
+- **Assign Permissions:** Set what each role can access
+- **Data Table:** All roles with user count
+- **Default Roles:** Admin, Teacher, Staff, Parent, Student (pre-configured)
+
+**Flow:** Create custom roles → Assign permissions → Assign to users.
+
+---
+
+### Screen 114: Holiday Calendar (`/HolidayCalendar`)
+**Purpose:** Define school holidays and vacation days.
+
+**Key Features:**
+- **Add Holiday:** Date, name, type (National, Religious, School)
+- **Calendar View:** Visual calendar with holidays marked
+- **Recurring Holidays:** Set holidays that repeat annually
+- **Data Table:** All holidays listed
+- **Impact:** Holidays affect attendance marking (no attendance on holidays)
+
+**Flow:** Define holidays → Attendance module skips these dates → Calendar shows everywhere.
+
+---
+
+### Screen 115: System Audits (`/SystemAudits`)
+**Purpose:** Complete audit trail of all system actions.
+
+**Key Features:**
+- **Audit Log:** Every action logged — who did what, when, from where
+- **Filters:** By user, action type, date range, module
+- **IP Tracking:** Source IP address of each action
+- **Immutable:** Cannot be edited or deleted
+- **Export:** PDF/Excel
+
+**Flow:** Every system action auto-logged → Admin reviews for security/compliance.
+
+---
+
+### Screen 116: Security Settings (`/SecuritySettings`)
+**Purpose:** Configure system security parameters.
+
+**Key Features:**
+- **Password Policies:** Minimum length, complexity requirements
+- **Session Timeout:** Auto-logout after inactivity
+- **Two-Factor Authentication:** Enable/disable 2FA
+- **Login Restrictions:** IP whitelist/blacklist
+- **Brute Force Protection:** Account lockout after failed attempts
+
+---
+
+---
+
+## 🔄 COMPLETE SYSTEM FLOW — Step by Step
+
+Here is the recommended sequence to set up and use the system from scratch:
+
+```
+STEP 1:  Sign In → Admin logs in for the first time
+           │
+STEP 2:  Tenants → Create school/campus
+           │
+STEP 3:  Roles & Permissions → Define roles (or use defaults)
+           │
+STEP 4:  User Management → Create user accounts
+           │
+STEP 5:  Permissions Matrix → Fine-tune access per role
+           │
+STEP 6:  Holiday Calendar → Define school holidays
+           │
+STEP 7:  Academic Years → Create current session (e.g., 2026-2027)
+           │
+STEP 8:  Classes → Create all grade levels (Grade 1 through Grade 10)
+           │
+STEP 9:  Sections → Create sections under each class (A, B, C)
+           │
+STEP 10: Subjects → Define all subjects (English, Math, Science, etc.)
+           │
+STEP 11: Assign Subject to Class → Map subjects to each class
+           │
+STEP 12: Staff Directory → Add all teachers and staff members
+           │
+STEP 13: Class Timetable → Create weekly timetable for each class
+           │
+STEP 14: Student Directory → Add/register students (or use Admissions CRM)
+           │
+           ├── Alternative: Admissions CRM → Enquiry → Admit → Auto-create student
+           │
+STEP 15: Student Enrollments → Assign students to class/section
+           │
+STEP 16: Parent Directory → Parents auto-created with student registration
+           │
+STEP 17: Fee Setup → Define fee types
+           │
+STEP 18: Fee Structures → Set class-wise fee amounts
+           │
+STEP 19: Fee Concessions → Create discount rules (optional)
+           │
+STEP 20: Fee Challans → Generate monthly invoices
+           │
+STEP 21: Chart of Accounts → Set up accounting structure
+           │
+STEP 22: Daily Operations Begin:
+           │
+           ├── Student Attendance → Daily marking
+           ├── Staff Attendance → Daily marking  
+           ├── Homework → Teachers assign, students submit
+           ├── Notices → Post announcements
+           ├── Fee Collection → Record payments
+           ├── School Expenses → Log expenses
+           │
+STEP 23: Exam Cycle:
+           │
+           ├── Exam Setups → Create exam type
+           ├── Grading Scales → Define grades
+           ├── Date Sheets → Schedule exam dates
+           ├── Admit Cards → Generate and print
+           ├── Question Bank → Add questions (for CBT)
+           ├── Online Exams → Create CBT exams
+           ├── Marks Entry → Teachers enter results
+           ├── Report Cards → Generate and print
+           │
+STEP 24: Year-End:
+           │
+           ├── Student Promotions → Promote students to next class
+           ├── Alumni Directory → Graduate students moved here
+           ├── Staff Appraisals → Year-end reviews
+           ├── Financial Reports → P&L, Balance Sheet, Trial Balance
+           │
+STEP 25: New Academic Year → Create new year → Cycle repeats
+```
+
+---
+
+## 📱 PORTAL SUMMARY
+
+| Portal | Accessible By | Key Features |
+|--------|--------------|--------------|
+| **Admin Dashboard** | Admin | Full system control, KPIs, all modules |
+| **Staff Dashboard** | Teacher, Staff | Personal timetable, attendance, leaves |
+| **Parent Dashboard** | Parent | Child's attendance, fees, results, notices |
+| **Student Dashboard** | Student | Timetable, results, homework, online tests |
+| **Public Admission Portal** | Anyone (no login) | Submit admission application online |
+
+---
+
+## 🎯 MODULE COUNT SUMMARY
+
+| # | Module | Screens |
+|---|--------|---------|
+| 1 | Authentication | 5 screens |
+| 2 | Dashboards | 4 screens |
+| 3 | Noticeboard | 1 screen |
+| 4 | Reports & Analytics | 14 screens |
+| 5 | Students | 12 screens |
+| 6 | Academics | 13 screens |
+| 7 | LMS | 3 screens |
+| 8 | Self-Service Portals | 4 screens |
+| 9 | HR & Payroll | 8 screens |
+| 10 | Finance & Fees | 9 screens |
+| 11 | Communication | 8 screens |
+| 12 | Examinations | 8 screens |
+| 13 | Hostel | 2 screens |
+| 14 | Transport | 3 screens |
+| 15 | Inventory | 3 screens |
+| 16 | Library | 3 screens |
+| 17 | Front Office | 4 screens |
+| 18 | System Settings | 12 screens |
+| | **TOTAL** | **116 screens** |
+
+---
+
+> **🏁 End of User Manual**  
+> *VOKE Solutions — School Management System v1.0*  
+> *Complete feature coverage across all 116 screens, 18 modules, and 5 user roles.*
