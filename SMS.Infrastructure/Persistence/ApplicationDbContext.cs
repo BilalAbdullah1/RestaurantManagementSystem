@@ -33,88 +33,36 @@ namespace SMS.Infrastructure.Persistence
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<RolePermission> RolePermissions { get; set; }
-        public DbSet<Student> Students { get; set; }
         public DbSet<Permission> Permissions { get; set; }
-        public DbSet<AcademicYear> AcademicYears { get; set; }
-        public DbSet<SchoolClass> Classes { get; set; }
-        public DbSet<Section> Sections { get; set; }
-        public DbSet<Subject> Subjects { get; set; }
-        public DbSet<ClassSubject> ClassSubjects { get; set; }
-        public DbSet<StudentEnrollment> StudentEnrollments { get; set; }
+
+        // Restaurant Staff & HR / Payroll
         public DbSet<Staff> Staff { get; set; }
-        public DbSet<StudentAttendance> StudentAttendances { get; set; }
-        public DbSet<StudentSubjectAttendance> StudentSubjectAttendances { get; set; }
         public DbSet<StaffAttendance> StaffAttendances { get; set; }
-        public DbSet<StudentBehaviorLog> StudentBehaviorLogs { get; set; }
         public DbSet<SalarySlip> SalarySlips { get; set; }
         public DbSet<StaffLoan> StaffLoans { get; set; }
         public DbSet<StaffAppraisal> StaffAppraisals { get; set; }
         public DbSet<StaffClearance> StaffClearances { get; set; }
-        public DbSet<Notice> Notices { get; set; }
-        public DbSet<PtmSlot> PtmSlots { get; set; }
-        public DbSet<HelpdeskTicket> HelpdeskTickets { get; set; }
-        public DbSet<FeedbackSuggestion> FeedbackSuggestions { get; set; }
-        public DbSet<EventCalendarItem> EventCalendarItems { get; set; }
-        public DbSet<StaffChatMessage> StaffChatMessages { get; set; }
-        public DbSet<FeeType> FeeTypes { get; set; }
-        public DbSet<FeeStructure> FeeStructures { get; set; }
-        public DbSet<FeeConcession> FeeConcessions { get; set; }
-        public DbSet<FeeChallan> FeeChallans { get; set; }
-        public DbSet<FeeChallanDetail> FeeChallanDetails { get; set; }
-        public DbSet<FeePayment> FeePayments { get; set; }
-        public DbSet<ChartOfAccount> ChartOfAccounts { get; set; }
-        public DbSet<AdmissionEnquiry> AdmissionEnquiries { get; set; }
-        public DbSet<AlumniProfile> AlumniProfiles { get; set; }
-        public DbSet<StudentMedicalRecord> StudentMedicalRecords { get; set; }
-        public DbSet<StudentSubject> StudentSubjects { get; set; }
-        public DbSet<LessonPlan> LessonPlans { get; set; }
-        public DbSet<StudyMaterial> StudyMaterials { get; set; }
-        public DbSet<LiveClass> LiveClasses { get; set; }
-        public DbSet<StudentDiary> StudentDiaries { get; set; }
-        public DbSet<HousePointLog> HousePointLogs { get; set; }
-        public DbSet<SchoolExpense> SchoolExpenses { get; set; }
-        public DbSet<ExamSetup> ExamSetups { get; set; }
-        public DbSet<GradingScale> GradingScales { get; set; }
-        public DbSet<ExamSchedule> ExamSchedules { get; set; }
-        public DbSet<TimetablePeriod> TimetablePeriods { get; set; } = null!;
-        public DbSet<TimetableProxyAllocation> TimetableProxyAllocations { get; set; } = null!;
-        public DbSet<ExamMark> ExamMarks { get; set; }
-        public DbSet<ExamResult> ExamResults { get; set; }
-        public DbSet<QuestionBank> QuestionBanks { get; set; }
-        public DbSet<OnlineExam> OnlineExams { get; set; }
-        public DbSet<OnlineExamQuestion> OnlineExamQuestions { get; set; }
-        public DbSet<StudentExamAttempt> StudentExamAttempts { get; set; }
-        
-        // LMS / Homework Module
-        public DbSet<Homework> Homeworks { get; set; }
-        public DbSet<HomeworkSubmission> HomeworkSubmissions { get; set; }
-        public DbSet<HomeworkComment> HomeworkComments { get; set; }
         public DbSet<LeaveApplication> LeaveApplications { get; set; }
 
-        // Hostel Module
-        public DbSet<HostelRoom> HostelRooms { get; set; }
-        public DbSet<HostelAllocation> HostelAllocations { get; set; }
-
-        // Transport Module
-        public DbSet<TransportVehicle> TransportVehicles { get; set; }
-        public DbSet<TransportRoute> TransportRoutes { get; set; }
-        public DbSet<StudentTransport> StudentTransports { get; set; }
-
-        // Inventory Module
+        // Financial Accounting & Inventory
+        public DbSet<ChartOfAccount> ChartOfAccounts { get; set; }
+        public DbSet<SchoolExpense> SchoolExpenses { get; set; }
         public DbSet<InventoryItem> InventoryItems { get; set; }
         public DbSet<InventoryTransaction> InventoryTransactions { get; set; }
 
-        // Library Module
-        public DbSet<LibraryBook> LibraryBooks { get; set; }
-        public DbSet<BookIssuance> BookIssuances { get; set; }
-
-        // Notifications
+        // Notifications & General
         public DbSet<SMS.Domain.Common.Notification> Notifications { get; set; }
-
         public DbSet<Holiday> Holidays { get; set; }
 
-        // Front Office Module
-        public DbSet<Visitor> Visitors { get; set; }
+        // Core Restaurant Management System (RMS)
+        public DbSet<Category> MenuCategories { get; set; }
+        public DbSet<MenuItem> MenuItems { get; set; }
+        public DbSet<DiningTable> DiningTables { get; set; }
+        public DbSet<TableReservation> TableReservations { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<KitchenOrderTicket> KitchenOrderTickets { get; set; }
+        public DbSet<Customer> Customers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -142,7 +90,7 @@ namespace SMS.Infrastructure.Persistence
                     modelBuilder.Entity(entityType.ClrType).HasQueryFilter(lambda);
                 }
 
-                // 2. DateTime UTC Value Converter (Using standard .HasConversion)
+                // 2. DateTime UTC Value Converter
                 foreach (var property in entityType.GetProperties())
                 {
                     if (property.ClrType == typeof(DateTime) || property.ClrType == typeof(DateTime?))
@@ -194,60 +142,21 @@ namespace SMS.Infrastructure.Persistence
                 var auditEntry = new AuditLog
                 {
                     id = Guid.NewGuid(),
+                    tenant_id = TenantId,
                     table_name = entry.Metadata.GetTableName() ?? entry.Entity.GetType().Name,
                     action = entry.State.ToString(),
                     user_id = userId,
                     ip_address = ipAddress,
-                    tenant_id = TenantId,
-                    created_at = DateTimeOffset.UtcNow
+                    created_at = DateTimeOffset.UtcNow,
+                    new_values = System.Text.Json.JsonSerializer.Serialize(entry.CurrentValues.ToObject())
                 };
-
-                var oldValues = new System.Collections.Generic.Dictionary<string, object>();
-                var newValues = new System.Collections.Generic.Dictionary<string, object>();
-
-                foreach (var property in entry.Properties)
-                {
-                    if (property.IsTemporary) continue;
-                    
-                    string propertyName = property.Metadata.Name;
-                    
-                    if (property.Metadata.IsPrimaryKey())
-                    {
-                        auditEntry.record_id = property.CurrentValue?.ToString() ?? string.Empty;
-                    }
-
-                    switch (entry.State)
-                    {
-                        case EntityState.Added:
-                            newValues[propertyName] = property.CurrentValue;
-                            break;
-
-                        case EntityState.Deleted:
-                            oldValues[propertyName] = property.OriginalValue;
-                            break;
-
-                        case EntityState.Modified:
-                            if (property.IsModified)
-                            {
-                                oldValues[propertyName] = property.OriginalValue;
-                                newValues[propertyName] = property.CurrentValue;
-                            }
-                            break;
-                    }
-                }
-
-                if (oldValues.Count > 0)
-                    auditEntry.old_values = System.Text.Json.JsonSerializer.Serialize(oldValues);
-                
-                if (newValues.Count > 0)
-                    auditEntry.new_values = System.Text.Json.JsonSerializer.Serialize(newValues);
 
                 auditEntries.Add(auditEntry);
             }
 
-            foreach (var auditEntry in auditEntries)
+            if (auditEntries.Count > 0)
             {
-                AuditLogs.Add(auditEntry);
+                AuditLogs.AddRange(auditEntries);
             }
 
             return await base.SaveChangesAsync(cancellationToken);

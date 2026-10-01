@@ -30,7 +30,7 @@ import {
 interface ReportItem {
   id: string;
   title: string;
-  category: 'Academic' | 'Financial' | 'Certificates & Student';
+  category: 'Financial' | 'Operations' | 'Payroll';
   description: string;
   path: string;
   icon: React.ReactNode;
@@ -42,100 +42,34 @@ interface ReportItem {
 export default function ReportsCenter() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
-  const [selectedCategory, setSelectedCategory] = useState<'All' | 'Academic' | 'Financial' | 'Certificates & Student'>(
+  const [selectedCategory, setSelectedCategory] = useState<'All' | 'Financial' | 'Operations' | 'Payroll'>(
     (searchParams.get('category') as any) || 'All'
   );
 
   useEffect(() => {
     const cat = searchParams.get('category');
-    if (cat && ['All', 'Academic', 'Financial', 'Certificates & Student'].includes(cat)) {
+    if (cat && ['All', 'Financial', 'Operations', 'Payroll'].includes(cat)) {
       setSelectedCategory(cat as any);
     }
   }, [searchParams]);
 
   const reportsList: ReportItem[] = [
     {
-      id: 'broadsheet',
-      title: 'Class Broadsheet Result',
-      category: 'Academic',
-      description: 'Comprehensive exam broadsheet matrix, score ratio, percentage, and candidate rankings.',
-      path: '/reports/broadsheet',
-      icon: <Award className="w-6 h-6 text-indigo-500" />,
-      badge: 'Academic Broadsheet',
-      color: 'border-indigo-200 dark:border-indigo-900/60 hover:border-indigo-500',
-      gradient: 'from-indigo-500/10 to-indigo-600/5',
-    },
-    {
-      id: 'fee-voucher',
-      title: '3-Copy Fee Voucher Slip',
+      id: 'daily-collection',
+      title: 'Daily Sales & Collection Report',
       category: 'Financial',
-      description: 'Official A4 3-part printable fee collection vouchers (Bank, School, and Parent copy).',
-      path: '/reports/fee-voucher',
-      icon: <Receipt className="w-6 h-6 text-emerald-500" />,
-      badge: '3-Copy Printable',
-      color: 'border-emerald-200 dark:border-emerald-900/60 hover:border-emerald-500',
-      gradient: 'from-emerald-500/10 to-teal-600/5',
-    },
-    {
-      id: 'slc-certificate',
-      title: 'School Leaving Certificate (SLC)',
-      category: 'Certificates & Student',
-      description: 'Generate and print official School Leaving & Character Certificates with school seal.',
-      path: '/reports/slc-certificate',
-      icon: <GraduationCap className="w-6 h-6 text-amber-500" />,
-      badge: 'Official SLC PDF',
-      color: 'border-amber-200 dark:border-amber-900/60 hover:border-amber-500',
-      gradient: 'from-amber-500/10 to-orange-600/5',
-    },
-    {
-      id: 'staff-payroll',
-      title: 'Staff Payroll Summary',
-      category: 'Financial',
-      description: 'Monthly staff salary summaries, base pay breakdowns, net payable calculations.',
-      path: '/reports/staff-payroll',
-      icon: <DollarSign className="w-6 h-6 text-purple-500" />,
-      badge: 'HR & Salaries',
-      color: 'border-purple-200 dark:border-purple-900/60 hover:border-purple-500',
-      gradient: 'from-purple-500/10 to-violet-600/5',
-    },
-    {
-      id: 'student-id-cards',
-      title: 'Bulk Student ID Cards Sheet',
-      category: 'Certificates & Student',
-      description: 'Printable grid layout of official Student Identification Cards filtered by class.',
-      path: '/reports/student-id-cards',
-      icon: <IdCard className="w-6 h-6 text-blue-500" />,
-      badge: 'Bulk ID Printable',
-      color: 'border-blue-200 dark:border-blue-900/60 hover:border-blue-500',
-      gradient: 'from-blue-500/10 to-sky-600/5',
-    },
-    {
-      id: 'attendance',
-      title: 'Student Attendance Heatmap',
-      category: 'Academic',
-      description: 'Daily class attendance heatmap grid, low attendance alerts, and student roll summary.',
-      path: '/reports/attendance',
-      icon: <Calendar className="w-6 h-6 text-teal-500" />,
-      badge: 'Analytics Heatmap',
-      color: 'border-teal-200 dark:border-teal-900/60 hover:border-teal-500',
-      gradient: 'from-teal-500/10 to-emerald-600/5',
-    },
-    {
-      id: 'fee-defaulters',
-      title: 'Fee Defaulters Aging Report',
-      category: 'Financial',
-      description: 'Track overdue fee balances, aging buckets (1-30, 31-60, 90+ days), and send WhatsApp alerts.',
-      path: '/reports/fee-defaulters',
-      icon: <AlertTriangle className="w-6 h-6 text-rose-500" />,
-      badge: 'Aging Buckets',
-      color: 'border-rose-200 dark:border-rose-900/60 hover:border-rose-500',
-      gradient: 'from-rose-500/10 to-red-600/5',
+      description: 'Monitor daily sales revenue, cash drawer collections, card settlements, and cashier logs.',
+      path: '/reports/daily-collection',
+      icon: <CalendarDays className="w-6 h-6 text-sky-500" />,
+      badge: 'Sales & Cash Log',
+      color: 'border-sky-200 dark:border-sky-900/60 hover:border-sky-500',
+      gradient: 'from-sky-500/10 to-blue-600/5',
     },
     {
       id: 'profit-loss',
       title: 'Profit & Loss Statement',
       category: 'Financial',
-      description: 'Income vs Expenditure calculation, itemized revenue/expense breakdown, and PDF export.',
+      description: 'Food revenue vs ingredient & operational expense calculations, gross margins, and net profit.',
       path: '/reports/profit-loss',
       icon: <TrendingUp className="w-6 h-6 text-emerald-600" />,
       badge: 'Income Statement',
@@ -143,21 +77,10 @@ export default function ReportsCenter() {
       gradient: 'from-emerald-600/10 to-teal-700/5',
     },
     {
-      id: 'daily-collection',
-      title: 'Daily Collection Report',
-      category: 'Financial',
-      description: 'Monitor daily cash and bank fee collections, transaction volume, and receipt logs.',
-      path: '/reports/daily-collection',
-      icon: <CalendarDays className="w-6 h-6 text-sky-500" />,
-      badge: 'Cash & Bank Log',
-      color: 'border-sky-200 dark:border-sky-900/60 hover:border-sky-500',
-      gradient: 'from-sky-500/10 to-blue-600/5',
-    },
-    {
       id: 'balance-sheet',
       title: 'Balance Sheet Statement',
       category: 'Financial',
-      description: 'Financial Position Statement enforcing Assets = Liabilities + Equity accounting equation.',
+      description: 'Financial position statement enforcing Assets = Liabilities + Equity accounting equation.',
       path: '/reports/balance-sheet',
       icon: <Scale className="w-6 h-6 text-indigo-600" />,
       badge: 'Financial Audit',
@@ -176,27 +99,16 @@ export default function ReportsCenter() {
       gradient: 'from-cyan-600/10 to-teal-700/5',
     },
     {
-      id: 'report-cards',
-      title: 'Academic Report Cards & Transcripts',
-      category: 'Academic',
-      description: 'Compile cumulative class results, process grade thresholds, and print transcripts.',
-      path: '/reports/report-cards',
-      icon: <Users className="w-6 h-6 text-violet-600" />,
-      badge: 'Transcripts & GPA',
-      color: 'border-violet-200 dark:border-violet-900/60 hover:border-violet-600',
-      gradient: 'from-violet-600/10 to-purple-700/5',
+      id: 'staff-payroll',
+      title: 'Staff Payroll Summary',
+      category: 'Payroll',
+      description: 'Restaurant staff monthly salary summaries, base pay, tips/overtime breakdowns, and net pay.',
+      path: '/reports/staff-payroll',
+      icon: <DollarSign className="w-6 h-6 text-purple-500" />,
+      badge: 'HR & Salaries',
+      color: 'border-purple-200 dark:border-purple-900/60 hover:border-purple-500',
+      gradient: 'from-purple-500/10 to-violet-600/5',
     },
-    {
-      id: 'student-certificates',
-      title: 'Student Certificates (TC / Bonafide / Conduct)',
-      category: 'Certificates & Student',
-      description: 'Generate Transfer Certificates (TC), Bonafide Certificates, and Character Certificates.',
-      path: '/reports/student-certificates',
-      icon: <ShieldCheck className="w-6 h-6 text-amber-500" />,
-      badge: 'Certificates Desk',
-      color: 'border-amber-200 dark:border-amber-900/60 hover:border-amber-500',
-      gradient: 'from-amber-500/10 to-orange-600/5',
-    }
   ];
 
   const filteredReports = useMemo(() => {
@@ -211,7 +123,7 @@ export default function ReportsCenter() {
 
   return (
     <>
-      <PageMeta title="Master Reports & Analytics Hub" description="Centralized School Reports Desk" />
+      <PageMeta title="Restaurant Reports & Analytics Hub" description="Centralized Restaurant Reports Desk" />
 
       <div className="w-full space-y-8 animate-in fade-in duration-300 max-w-[1600px] mx-auto pb-12">
         {/* BREADCRUMB */}
@@ -226,13 +138,13 @@ export default function ReportsCenter() {
             <div className="max-w-2xl">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/10 text-brand-300 text-xs font-bold mb-4 backdrop-blur-md">
                 <Sparkles className="w-4 h-4 text-amber-400" />
-                Screen-by-Screen Navigation Gateway
+                Restaurant Intelligence Gateway
               </div>
               <h1 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight leading-tight">
-                Master Reports & Analytics Hub 📊
+                Restaurant Reports & Analytics Hub 📊
               </h1>
               <p className="text-gray-300 text-sm md:text-base font-medium mt-2 leading-relaxed">
-                Centralized hub for all 13 school management reports. Instantly generate printable fee vouchers, academic broadsheets, profit & loss audit statements, attendance heatmaps, and official student certificates.
+                Centralized financial and operational analytics. Monitor daily cash collections, food profit & loss margins, double-entry trial balance, balance sheets, and staff payroll slips.
               </p>
             </div>
 
@@ -242,7 +154,7 @@ export default function ReportsCenter() {
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
                   type="text"
-                  placeholder="Search 13 reports..."
+                  placeholder="Search reports..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-11 pr-4 py-3 bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl text-white placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all shadow-inner"
@@ -255,16 +167,16 @@ export default function ReportsCenter() {
         {/* KPI STAT CARDS */}
         <StatCards
           stats={[
-            { title: 'Total Available Reports', value: '13 Reports', icon: <FileText className="w-5 h-5" />, theme: 'brand' },
-            { title: 'Printable Vouchers & Slips', value: '3-Part A4', icon: <Receipt className="w-5 h-5" />, theme: 'success' },
+            { title: 'Available Reports', value: '5 Reports', icon: <FileText className="w-5 h-5" />, theme: 'brand' },
+            { title: 'Daily Revenue Logs', value: 'Live Cashier', icon: <Receipt className="w-5 h-5" />, theme: 'success' },
             { title: 'Financial Audit Statements', value: 'Double Entry', icon: <Scale className="w-5 h-5" />, theme: 'indigo' },
-            { title: 'Academic Transcripts & SLC', value: 'PDF Printable', icon: <GraduationCap className="w-5 h-5" />, theme: 'warning' },
+            { title: 'Staff Payroll Summaries', value: 'Monthly Net', icon: <DollarSign className="w-5 h-5" />, theme: 'warning' },
           ]}
         />
 
         {/* CATEGORY FILTER TABS */}
         <div className="flex flex-wrap items-center gap-2 border-b border-gray-200 dark:border-gray-800 pb-4">
-          {(['All', 'Academic', 'Financial', 'Certificates & Student'] as const).map(cat => (
+          {(['All', 'Financial', 'Operations', 'Payroll'] as const).map(cat => (
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
@@ -274,7 +186,7 @@ export default function ReportsCenter() {
                   : 'bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700'
               }`}
             >
-              {cat === 'All' ? 'All Reports (13)' : cat}
+              {cat === 'All' ? `All Reports (${reportsList.length})` : cat}
             </button>
           ))}
         </div>

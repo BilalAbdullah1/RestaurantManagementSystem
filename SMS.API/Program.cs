@@ -69,7 +69,6 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 // Register Auto Database Backups Hosted Service
 builder.Services.AddHostedService<DatabaseBackupService>();
-builder.Services.AddHostedService<FeeChallanGeneratorService>();
 
 // SignalR & Dispatcher
 builder.Services.AddSignalR();

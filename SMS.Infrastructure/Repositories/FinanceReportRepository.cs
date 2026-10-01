@@ -22,57 +22,44 @@ namespace SMS.Infrastructure.Repositories
         {
             var now = DateTime.UtcNow;
 
-            // Fetch overdue or unpaid challans
-            var overdueChallans = await _context.FeeChallans
-                .Where(fc => fc.tenant_id == tenantId && fc.status != "Paid" && fc.status != "Cancelled" && fc.due_date < now)
+            // In RMS: fetch unpaid or pending orders
+            var unpaidOrders = await _context.Orders
+                .Where(o => o.tenant_id == tenantId && (o.payment_status == "Unpaid" || o.payment_status == "Pending"))
                 .ToListAsync();
 
-            var studentIds = overdueChallans.Select(c => c.student_id).Distinct().ToList();
-
-            var students = await _context.Students
-                .Where(s => studentIds.Contains(s.id))
-                .ToDictionaryAsync(s => s.id);
-
-            var classIds = overdueChallans.Select(c => c.class_id).Distinct().ToList();
-            var classes = await _context.Classes
-                .Where(c => classIds.Contains(c.id))
-                .ToDictionaryAsync(c => c.id);
-
             var report = new DefaulterReportDto();
-            var defaultersDict = new Dictionary<Guid, DefaulterDto>();
+            var defaultersDict = new Dictionary<string, DefaulterDto>();
 
-            foreach (var challan in overdueChallans)
+            foreach (var order in unpaidOrders)
             {
-                if (!defaultersDict.TryGetValue(challan.student_id, out var def))
-                {
-                    var student = students.GetValueOrDefault(challan.student_id);
-                    var className = classes.GetValueOrDefault(challan.class_id)?.name ?? "Unknown";
+                var customerKey = !string.IsNullOrEmpty(order.customer_phone) 
+                    ? order.customer_phone 
+                    : (!string.IsNullOrEmpty(order.customer_name) ? order.customer_name : order.id.ToString());
 
+                if (!defaultersDict.TryGetValue(customerKey, out var def))
+                {
                     def = new DefaulterDto
                     {
-                        StudentId = challan.student_id,
-                        StudentName = student != null ? $"{student.first_name} {student.last_name}" : "Unknown",
-                        AdmissionNumber = student?.admission_number ?? "N/A",
-                        ClassName = className,
-                        ParentPhone = student?.guardian_phone ?? "N/A",
+                        StudentId = order.id,
+                        StudentName = string.IsNullOrEmpty(order.customer_name) ? "Walk-in Guest" : order.customer_name,
+                        AdmissionNumber = order.order_number,
+                        ClassName = order.order_type,
+                        ParentPhone = order.customer_phone ?? "N/A",
                         PendingAmount = 0,
                         OverdueChallansCount = 0
                     };
-                    defaultersDict[challan.student_id] = def;
+                    defaultersDict[customerKey] = def;
                 }
 
-                // Remaining balance = net_payable - paid_amount (for partial payments)
-                var remaining = challan.net_payable - challan.paid_amount;
-                def.PendingAmount += remaining > 0 ? remaining : challan.net_payable;
+                def.PendingAmount += order.total_amount;
                 def.OverdueChallansCount++;
 
-                var daysOverdue = (now - challan.due_date).TotalDays;
+                var daysOverdue = (now - order.created_at).TotalDays;
                 string aging = "1-30 Days";
                 if (daysOverdue > 90) aging = "90+ Days";
                 else if (daysOverdue > 60) aging = "61-90 Days";
                 else if (daysOverdue > 30) aging = "31-60 Days";
 
-                // Keep the worst aging category
                 if (def.AgingCategory == "" || (def.AgingCategory == "1-30 Days" && aging != "1-30 Days"))
                     def.AgingCategory = aging;
                 else if (def.AgingCategory == "31-60 Days" && (aging == "61-90 Days" || aging == "90+ Days"))
@@ -100,145 +87,47 @@ namespace SMS.Infrastructure.Repositories
                 PeriodLabel = $"{startDate:dd MMM yyyy} – {endDate:dd MMM yyyy}"
             };
 
-            // ── 1. FEE PAYMENTS ──────────────────────────────────────────────────────
-            // Get all challan IDs for this tenant
-            var tenantChallanIds = await _context.FeeChallans
-                .Where(fc => fc.tenant_id == tenantId)
-                .Select(fc => fc.id)
+            // ── 1. RESTAURANT ORDER REVENUE ──────────────────────────────────────────
+            var paidOrders = await _context.Orders
+                .Where(o => o.tenant_id == tenantId
+                         && o.payment_status == "Paid"
+                         && o.created_at >= startDate
+                         && o.created_at <= endDate)
+                .OrderBy(o => o.created_at)
                 .ToListAsync();
 
-            // Payments in the date range
-            var payments = await _context.FeePayments
-                .Where(p => tenantChallanIds.Contains(p.challan_id)
-                         && p.payment_date >= startDate
-                         && p.payment_date <= endDate)
-                .ToListAsync();
+            var revenueByType = new Dictionary<string, decimal>(StringComparer.OrdinalIgnoreCase);
 
-            var paymentChallanIds = payments.Select(p => p.challan_id).Distinct().ToList();
-
-            // Load challan details for fee-category breakdown
-            var challanDetails = await _context.FeeChallanDetails
-                .Where(d => paymentChallanIds.Contains(d.challan_id))
-                .ToListAsync();
-
-            // Load challans (for late_fine + student info)
-            var challans = await _context.FeeChallans
-                .Where(fc => paymentChallanIds.Contains(fc.id))
-                .ToDictionaryAsync(fc => fc.id);
-
-            // Load students for descriptions
-            var studentIds = challans.Values.Select(c => c.student_id).Distinct().ToList();
-            var students = await _context.Students
-                .Where(s => studentIds.Contains(s.id))
-                .ToDictionaryAsync(s => s.id);
-
-            // Load classes
-            var classIds = challans.Values.Select(c => c.class_id).Distinct().ToList();
-            var classes = await _context.Classes
-                .Where(c => classIds.Contains(c.id))
-                .ToDictionaryAsync(c => c.id);
-
-            // ── Revenue: Fee payments broken down by fee category name ──────────────
-            // We allocate each payment proportionally across fee_challan_details
-            // so we get proper "Tuition Fee", "Transport Fee", "Lab Fee" breakdown
-            var feeRevenueByCat = new Dictionary<string, decimal>(StringComparer.OrdinalIgnoreCase);
-
-            foreach (var payment in payments)
+            foreach (var order in paidOrders)
             {
-                if (!challans.TryGetValue(payment.challan_id, out var challan)) continue;
-                var details = challanDetails.Where(d => d.challan_id == payment.challan_id).ToList();
-                var challanNet = challan.net_payable > 0 ? challan.net_payable : 1;
+                var type = string.IsNullOrWhiteSpace(order.order_type) ? "DineIn" : order.order_type;
+                revenueByType[type] = revenueByType.GetValueOrDefault(type, 0) + order.total_amount;
 
-                if (details.Any())
-                {
-                    foreach (var det in details)
-                    {
-                        var catName = string.IsNullOrWhiteSpace(det.fee_name) ? "Tuition Fee" : det.fee_name;
-                        var proportion = det.net_amount / challanNet;
-                        var allocated = payment.amount * proportion;
-                        feeRevenueByCat[catName] = feeRevenueByCat.GetValueOrDefault(catName, 0) + allocated;
-                    }
-                }
-                else
-                {
-                    // No detail rows — lump under Tuition Fee
-                    feeRevenueByCat["Tuition Fee"] = feeRevenueByCat.GetValueOrDefault("Tuition Fee", 0) + payment.amount;
-                }
-
-                // Line item for each payment
-                students.TryGetValue(challan.student_id, out var stu);
-                classes.TryGetValue(challan.class_id, out var cls);
-                var stuName = stu != null ? $"{stu.first_name} {stu.last_name}" : "Student";
                 pnl.RevenueItems.Add(new PnlLineItemDto
                 {
-                    Date       = payment.payment_date.ToString("dd MMM yyyy"),
-                    Description = $"Fee Collection — {stuName} ({cls?.name ?? "N/A"})",
-                    Category   = "Fee Payment",
-                    Reference  = $"REC-{challan.challan_number}",
-                    Amount     = payment.amount,
-                    Source     = "FeePayment"
+                    Date = order.created_at.ToString("dd MMM yyyy"),
+                    Description = $"Order #{order.order_number} ({type}) — {order.customer_name}",
+                    Category = $"{type} Sales",
+                    Reference = $"ORD-{order.order_number}",
+                    Amount = order.total_amount,
+                    Source = "FoodOrder"
                 });
             }
 
-            decimal totalFeeRevenue = feeRevenueByCat.Values.Sum();
+            pnl.TotalRevenue = paidOrders.Sum(o => o.total_amount);
+            pnl.TotalPaymentsCount = paidOrders.Count;
 
-            // ── Revenue: Late Fines (from paid challans in period) ─────────────────
-            var paidChallansInPeriod = await _context.FeeChallans
-                .Where(fc => fc.tenant_id == tenantId
-                          && fc.status == "Paid"
-                          && fc.late_fine > 0)
-                .ToListAsync();
-
-            // Filter: only challans that had a payment in this period
-            var paidWithFine = paidChallansInPeriod
-                .Where(fc => paymentChallanIds.Contains(fc.id) && fc.late_fine > 0)
-                .ToList();
-
-            decimal totalLateFine = paidWithFine.Sum(fc => fc.late_fine);
-
-            foreach (var fc in paidWithFine)
-            {
-                students.TryGetValue(fc.student_id, out var stu);
-                classes.TryGetValue(fc.class_id, out var cls);
-                var stuName = stu != null ? $"{stu.first_name} {stu.last_name}" : "Student";
-                pnl.RevenueItems.Add(new PnlLineItemDto
-                {
-                    Date        = fc.created_at.ToString("dd MMM yyyy"),
-                    Description = $"Late Fine — {stuName} ({cls?.name ?? "N/A"})",
-                    Category    = "Late Fine",
-                    Reference   = $"FINE-{fc.challan_number}",
-                    Amount      = fc.late_fine,
-                    Source      = "LateFine"
-                });
-            }
-
-            pnl.TotalRevenue       = totalFeeRevenue + totalLateFine;
-            pnl.TotalPaymentsCount = payments.Count;
-
-            // Revenue Breakdown (categories for bar chart)
-            foreach (var kv in feeRevenueByCat.OrderByDescending(k => k.Value))
+            // Revenue Breakdown (categories for bar / pie chart)
+            foreach (var kv in revenueByType.OrderByDescending(k => k.Value))
             {
                 pnl.RevenueBreakdown.Add(new FinanceCategorySummaryDto
                 {
-                    Category   = kv.Key,
-                    Amount     = Math.Round(kv.Value, 2),
+                    Category = $"{kv.Key} Sales",
+                    Amount = Math.Round(kv.Value, 2),
                     Percentage = pnl.TotalRevenue > 0
                                     ? Math.Round((kv.Value / pnl.TotalRevenue) * 100, 1)
                                     : 0,
-                    Count      = payments.Count(p => paymentChallanIds.Contains(p.challan_id))
-                });
-            }
-
-            if (totalLateFine > 0)
-            {
-                pnl.RevenueBreakdown.Add(new FinanceCategorySummaryDto
-                {
-                    Category   = "Late Fines",
-                    Amount     = Math.Round(totalLateFine, 2),
-                    Percentage = pnl.TotalRevenue > 0
-                                    ? Math.Round((totalLateFine / pnl.TotalRevenue) * 100, 1)
-                                    : 0,
-                    Count      = paidWithFine.Count
+                    Count = paidOrders.Count(o => (o.order_type ?? "DineIn").Equals(kv.Key, StringComparison.OrdinalIgnoreCase))
                 });
             }
 
@@ -246,7 +135,10 @@ namespace SMS.Infrastructure.Repositories
             {
                 pnl.RevenueBreakdown.Add(new FinanceCategorySummaryDto
                 {
-                    Category = "No Income Recorded", Amount = 0, Percentage = 0
+                    Category = "No Sales Recorded",
+                    Amount = 0,
+                    Percentage = 0,
+                    Count = 0
                 });
             }
 
@@ -267,34 +159,34 @@ namespace SMS.Infrastructure.Repositories
 
             // Load staff names for salary line items
             var salStaffIds = salaries.Select(s => s.staff_id).Distinct().ToList();
-            var salStaff    = await _context.Staff
+            var salStaff = await _context.Staff
                 .Where(st => salStaffIds.Contains(st.id))
                 .ToDictionaryAsync(st => st.id);
-            var salUserIds  = salStaff.Values.Select(st => st.user_id).Distinct().ToList();
-            var salUsers    = await _context.Users
+            var salUserIds = salStaff.Values.Select(st => st.user_id).Distinct().ToList();
+            var salUsers = await _context.Users
                 .Where(u => salUserIds.Contains(u.id))
                 .ToDictionaryAsync(u => u.id);
 
             decimal totalSchoolExpense = expenses.Sum(e => e.amount);
             decimal totalSalaryExpense = salaries.Sum(s => s.net_salary);
-            pnl.TotalExpenses    = totalSchoolExpense + totalSalaryExpense;
+            pnl.TotalExpenses = totalSchoolExpense + totalSalaryExpense;
             pnl.TotalExpenseCount = expenses.Count + salaries.Count;
 
-            // Expense line items — school expenses
+            // Expense line items — restaurant operations expenses
             foreach (var exp in expenses)
             {
                 pnl.ExpenseItems.Add(new PnlLineItemDto
                 {
-                    Date        = exp.expense_date.ToString("dd MMM yyyy"),
+                    Date = exp.expense_date.ToString("dd MMM yyyy"),
                     Description = exp.title,
-                    Category    = string.IsNullOrWhiteSpace(exp.category) ? "Miscellaneous" : exp.category,
-                    Reference   = exp.receipt_no ?? "—",
-                    Amount      = exp.amount,
-                    Source      = "Expense"
+                    Category = string.IsNullOrWhiteSpace(exp.category) ? "Kitchen & Ops" : exp.category,
+                    Reference = exp.receipt_no ?? "—",
+                    Amount = exp.amount,
+                    Source = "Expense"
                 });
             }
 
-            // Expense line items — salaries
+            // Expense line items — staff salaries
             foreach (var sal in salaries)
             {
                 salStaff.TryGetValue(sal.staff_id, out var st);
@@ -304,23 +196,23 @@ namespace SMS.Infrastructure.Repositories
 
                 pnl.ExpenseItems.Add(new PnlLineItemDto
                 {
-                    Date        = (sal.payment_date ?? sal.created_at).ToString("dd MMM yyyy"),
+                    Date = (sal.payment_date ?? sal.created_at).ToString("dd MMM yyyy"),
                     Description = $"Salary — {staffName} ({sal.salary_month})",
-                    Category    = "Staff Salaries",
-                    Reference   = $"SAL-{sal.id.ToString()[..8].ToUpper()}",
-                    Amount      = sal.net_salary,
-                    Source      = "Salary"
+                    Category = "Staff Salaries",
+                    Reference = $"SAL-{sal.id.ToString()[..8].ToUpper()}",
+                    Amount = sal.net_salary,
+                    Source = "Salary"
                 });
             }
 
-            // Expense Breakdown (categories for bar chart) — ALL expenses collected first, THEN compute %
+            // Expense Breakdown
             var expByCat = expenses
-                .GroupBy(e => string.IsNullOrWhiteSpace(e.category) ? "Miscellaneous" : e.category)
+                .GroupBy(e => string.IsNullOrWhiteSpace(e.category) ? "Kitchen & Ops" : e.category)
                 .Select(g => new FinanceCategorySummaryDto
                 {
-                    Category   = g.Key,
-                    Amount     = g.Sum(e => e.amount),
-                    Count      = g.Count(),
+                    Category = g.Key,
+                    Amount = g.Sum(e => e.amount),
+                    Count = g.Count(),
                     Percentage = pnl.TotalExpenses > 0
                                     ? Math.Round((g.Sum(e => e.amount) / pnl.TotalExpenses) * 100, 1)
                                     : 0
@@ -332,9 +224,9 @@ namespace SMS.Infrastructure.Repositories
             {
                 expByCat.Add(new FinanceCategorySummaryDto
                 {
-                    Category   = "Staff Salaries",
-                    Amount     = totalSalaryExpense,
-                    Count      = salaries.Count,
+                    Category = "Staff Salaries",
+                    Amount = totalSalaryExpense,
+                    Count = salaries.Count,
                     Percentage = pnl.TotalExpenses > 0
                                     ? Math.Round((totalSalaryExpense / pnl.TotalExpenses) * 100, 1)
                                     : 0
@@ -345,7 +237,10 @@ namespace SMS.Infrastructure.Repositories
             {
                 expByCat.Add(new FinanceCategorySummaryDto
                 {
-                    Category = "No Expenses Recorded", Amount = 0, Percentage = 0
+                    Category = "No Expenses Recorded",
+                    Amount = 0,
+                    Percentage = 0,
+                    Count = 0
                 });
             }
 
@@ -357,74 +252,43 @@ namespace SMS.Infrastructure.Repositories
             return pnl;
         }
 
-
         public async Task<DailyCollectionDto> GetDailyCollectionAsync(Guid tenantId, DateTime date)
         {
             var startOfDay = date.Date;
             var endOfDay = startOfDay.AddDays(1).AddTicks(-1);
 
-            // FIX: Use FeePayments table with actual payment_date for daily collection
-            // First get all challan IDs belonging to this tenant
-            var tenantChallanIds = await _context.FeeChallans
-                .Where(fc => fc.tenant_id == tenantId)
-                .Select(fc => fc.id)
+            // Fetch paid orders for this specific date
+            var dailyOrders = await _context.Orders
+                .Where(o => o.tenant_id == tenantId
+                         && o.payment_status == "Paid"
+                         && o.created_at >= startOfDay
+                         && o.created_at <= endOfDay)
+                .OrderByDescending(o => o.created_at)
                 .ToListAsync();
 
-            // Then get payments made on this specific date
-            var dailyPayments = await _context.FeePayments
-                .Where(p => tenantChallanIds.Contains(p.challan_id)
-                         && p.payment_date >= startOfDay
-                         && p.payment_date <= endOfDay)
-                .ToListAsync();
-
-            var challanIds = dailyPayments.Select(p => p.challan_id).Distinct().ToList();
-
-            // Load challans for student/class info
-            var challans = await _context.FeeChallans
-                .Where(fc => challanIds.Contains(fc.id))
-                .ToDictionaryAsync(fc => fc.id);
-
-            var studentIds = challans.Values.Select(c => c.student_id).Distinct().ToList();
-            var students = await _context.Students
-                .Where(s => studentIds.Contains(s.id))
-                .ToDictionaryAsync(s => s.id);
-
-            var classIds = challans.Values.Select(c => c.class_id).Distinct().ToList();
-            var classes = await _context.Classes
-                .Where(c => classIds.Contains(c.id))
-                .ToDictionaryAsync(c => c.id);
-
-            var totalCollected = dailyPayments.Sum(p => p.amount);
-
-            // FIX: Real cash/bank breakdown from actual payment_method field
-            var cashTotal = dailyPayments.Where(p => p.payment_method == "Cash" || string.IsNullOrEmpty(p.payment_method)).Sum(p => p.amount);
-            var bankTotal = dailyPayments.Where(p => p.payment_method != "Cash" && !string.IsNullOrEmpty(p.payment_method)).Sum(p => p.amount);
+            var totalCollected = dailyOrders.Sum(o => o.total_amount);
+            var cashTotal = dailyOrders.Where(o => o.payment_method == "Cash" || string.IsNullOrEmpty(o.payment_method)).Sum(o => o.total_amount);
+            var bankTotal = dailyOrders.Where(o => o.payment_method != "Cash" && !string.IsNullOrEmpty(o.payment_method)).Sum(o => o.total_amount);
 
             var dto = new DailyCollectionDto
             {
                 Date = date,
                 TotalCollected = totalCollected,
-                TotalTransactions = dailyPayments.Count,
+                TotalTransactions = dailyOrders.Count,
                 CashCollection = cashTotal,
                 BankCollection = bankTotal
             };
 
-            foreach (var payment in dailyPayments.OrderByDescending(p => p.payment_date))
+            foreach (var order in dailyOrders)
             {
-                var challan = challans.GetValueOrDefault(payment.challan_id);
-                if (challan == null) continue;
-
-                var student = students.GetValueOrDefault(challan.student_id);
-                var className = classes.GetValueOrDefault(challan.class_id)?.name ?? "Unknown";
-
                 dto.Transactions.Add(new DailyCollectionTransactionDto
                 {
-                    ReceiptNumber = $"REC-{challan.challan_number}",
-                    StudentName = student != null ? $"{student.first_name} {student.last_name}" : "Unknown",
-                    ClassName = className,
-                    Amount = payment.amount,
-                    PaymentMode = string.IsNullOrEmpty(payment.payment_method) ? "Cash" : payment.payment_method,
-                    PaymentTime = payment.payment_date
+                    ReceiptNumber = $"ORD-{order.order_number}",
+                    StudentName = string.IsNullOrEmpty(order.customer_name) ? "Walk-in Guest" : order.customer_name,
+                    ClassName = $"{order.order_type ?? "DineIn"} (Table {order.table_number ?? "N/A"})",
+                    Amount = order.total_amount,
+                    PaymentMode = string.IsNullOrEmpty(order.payment_method) ? "Cash" : order.payment_method,
+                    PaymentTime = order.created_at
                 });
             }
 
@@ -445,60 +309,40 @@ namespace SMS.Infrastructure.Repositories
             var salaryExpenseAcc = coaList.FirstOrDefault(a => a.code == "5101" || a.code == "5001" || a.name.Contains("Salary")) ?? coaList.FirstOrDefault(a => a.type == "Expense");
             var generalExpenseAcc = coaList.FirstOrDefault(a => a.code == "5201" || a.code == "5003" || a.type == "Expense");
 
-            // 1. Fee Payments -> Fee Collection JVs
-            var feeChallans = await _context.FeeChallans
-                .Where(fc => fc.tenant_id == tenantId)
-                .ToDictionaryAsync(fc => fc.id);
+            // 1. Paid Orders -> Sales JVs
+            var orderQuery = _context.Orders
+                .Where(o => o.tenant_id == tenantId && o.payment_status == "Paid");
 
-            var feeChallanIds = feeChallans.Keys.ToList();
+            if (startDate.HasValue) orderQuery = orderQuery.Where(o => o.created_at >= startDate.Value);
+            if (endDate.HasValue) orderQuery = orderQuery.Where(o => o.created_at <= endDate.Value);
 
-            var feePaymentsQuery = _context.FeePayments
-                .Where(p => feeChallanIds.Contains(p.challan_id));
+            var orders = await orderQuery.OrderByDescending(o => o.created_at).ToListAsync();
 
-            if (startDate.HasValue) feePaymentsQuery = feePaymentsQuery.Where(p => p.payment_date >= startDate.Value);
-            if (endDate.HasValue) feePaymentsQuery = feePaymentsQuery.Where(p => p.payment_date <= endDate.Value);
-
-            var feePayments = await feePaymentsQuery.OrderByDescending(p => p.payment_date).ToListAsync();
-
-            var studentIds = feeChallans.Values.Select(c => c.student_id).Distinct().ToList();
-            var students = await _context.Students.Where(s => studentIds.Contains(s.id)).ToDictionaryAsync(s => s.id);
-            var classIds = feeChallans.Values.Select(c => c.class_id).Distinct().ToList();
-            var classes = await _context.Classes.Where(c => classIds.Contains(c.id)).ToDictionaryAsync(c => c.id);
-
-            int feeIndex = 1;
-            foreach (var fp in feePayments)
+            int orderIndex = 1;
+            foreach (var ord in orders)
             {
-                feeChallans.TryGetValue(fp.challan_id, out var challan);
-                var studentName = "Student";
-                var className = "";
-                if (challan != null)
-                {
-                    if (students.TryGetValue(challan.student_id, out var st)) studentName = $"{st.first_name} {st.last_name}";
-                    if (classes.TryGetValue(challan.class_id, out var cl)) className = cl.name;
-                }
-
-                bool isBank = !string.IsNullOrEmpty(fp.payment_method) && fp.payment_method.ToLower().Contains("bank");
+                bool isBank = !string.IsNullOrEmpty(ord.payment_method) && !ord.payment_method.Equals("Cash", StringComparison.OrdinalIgnoreCase);
                 var debitAcc = isBank ? (bankAcc ?? cashAcc) : (cashAcc ?? bankAcc);
 
                 result.Add(new GeneralLedgerTransactionDto
                 {
-                    Id = fp.id.ToString(),
-                    VoucherNo = $"JV-{fp.payment_date.Year}-FEE-{feeIndex++:D4}",
-                    Date = fp.payment_date,
+                    Id = ord.id.ToString(),
+                    VoucherNo = $"JV-{ord.created_at.Year}-SLS-{orderIndex++:D4}",
+                    Date = ord.created_at,
                     DebitAccountId = debitAcc?.id,
-                    DebitAccountName = debitAcc?.name ?? (isBank ? "Bank Account" : "Cash Vault"),
+                    DebitAccountName = debitAcc?.name ?? (isBank ? "POS Card / Bank Account" : "Cash Register Drawer"),
                     DebitAccountType = debitAcc?.type ?? "Asset",
                     CreditAccountId = revenueAcc?.id,
-                    CreditAccountName = revenueAcc?.name ?? "Tuition Fee Revenue",
+                    CreditAccountName = revenueAcc?.name ?? "Food & Beverage Sales Revenue",
                     CreditAccountType = revenueAcc?.type ?? "Revenue",
-                    Narrative = $"Fee Collection: {studentName} ({className}) - Rec #{challan?.challan_number ?? "N/A"}",
-                    Amount = fp.amount,
-                    Source = "Fee Collection",
-                    PostedAt = fp.payment_date
+                    Narrative = $"Restaurant Sales: Order #{ord.order_number} ({ord.order_type}) - Guest: {ord.customer_name}",
+                    Amount = ord.total_amount,
+                    Source = "FoodOrder",
+                    PostedAt = ord.created_at
                 });
             }
 
-            // 2. School Expenses -> Expense JVs
+            // 2. Restaurant Expenses -> Expense JVs
             var expenseQuery = _context.SchoolExpenses
                 .Where(e => e.tenant_id == tenantId);
 
@@ -522,10 +366,10 @@ namespace SMS.Infrastructure.Repositories
                     VoucherNo = $"JV-{exp.expense_date.Year}-EXP-{expIndex++:D4}",
                     Date = exp.expense_date,
                     DebitAccountId = matchedExpAcc?.id,
-                    DebitAccountName = matchedExpAcc?.name ?? (exp.category ?? "School Expense"),
+                    DebitAccountName = matchedExpAcc?.name ?? (exp.category ?? "Kitchen & Restaurant Expense"),
                     DebitAccountType = matchedExpAcc?.type ?? "Expense",
                     CreditAccountId = creditAcc?.id,
-                    CreditAccountName = creditAcc?.name ?? (isBank ? "Bank Account" : "Cash Vault"),
+                    CreditAccountName = creditAcc?.name ?? (isBank ? "Bank Account" : "Cash Drawer"),
                     CreditAccountType = creditAcc?.type ?? "Asset",
                     Narrative = $"{exp.category ?? "Expense"}: {exp.title} (Paid to: {exp.paid_to ?? "Vendor"})",
                     Amount = exp.amount,
@@ -564,7 +408,7 @@ namespace SMS.Infrastructure.Repositories
                     VoucherNo = $"JV-{payDate.Year}-PAY-{salIndex++:D4}",
                     Date = payDate,
                     DebitAccountId = salaryExpenseAcc?.id,
-                    DebitAccountName = salaryExpenseAcc?.name ?? "Staff Payroll Expense",
+                    DebitAccountName = salaryExpenseAcc?.name ?? "Restaurant Staff Payroll Expense",
                     DebitAccountType = salaryExpenseAcc?.type ?? "Expense",
                     CreditAccountId = bankAcc?.id,
                     CreditAccountName = bankAcc?.name ?? "Bank Account",
@@ -577,8 +421,6 @@ namespace SMS.Infrastructure.Repositories
             }
 
             return result.OrderByDescending(x => x.Date).ToList();
-
         }
     }
 }
-

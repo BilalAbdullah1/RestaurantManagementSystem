@@ -27,26 +27,41 @@ namespace SMS.Infrastructure.Services
 
             var lowerKeyword = keyword.ToLower();
 
-            // 1. Search Students
-            var students = await _context.Students
+            // 1. Search Menu Items
+            var dishes = await _context.MenuItems
                 .AsNoTracking()
-                .Where(s => s.tenant_id == tenantId && 
-                            (s.first_name.ToLower().Contains(lowerKeyword) || 
-                             s.last_name.ToLower().Contains(lowerKeyword) || 
-                             s.admission_number.ToLower().Contains(lowerKeyword)))
+                .Where(m => m.tenant_id == tenantId && m.name.ToLower().Contains(lowerKeyword))
                 .Take(5)
                 .ToListAsync();
 
-            results.AddRange(students.Select(s => new GlobalSearchResultDto
+            results.AddRange(dishes.Select(d => new GlobalSearchResultDto
             {
-                Id = s.id,
-                Title = $"{s.first_name} {s.last_name}",
-                Subtitle = $"Reg No: {s.admission_number}",
-                Type = "Student",
-                Url = $"/students/{s.id}"
+                Id = d.id,
+                Title = d.name,
+                Subtitle = $"Price: PKR {d.selling_price} | Prep: {d.preparation_time_minutes}m",
+                Type = "Menu Dish",
+                Url = "/menu"
             }));
 
-            // 2. Search Staff
+            // 2. Search Orders
+            var orders = await _context.Orders
+                .AsNoTracking()
+                .Where(o => o.tenant_id == tenantId && 
+                            (o.order_number.ToLower().Contains(lowerKeyword) || 
+                             o.customer_name.ToLower().Contains(lowerKeyword)))
+                .Take(5)
+                .ToListAsync();
+
+            results.AddRange(orders.Select(o => new GlobalSearchResultDto
+            {
+                Id = o.id,
+                Title = $"Order {o.order_number}",
+                Subtitle = $"Guest: {o.customer_name} | PKR {o.total_amount}",
+                Type = "Order Receipt",
+                Url = "/orders"
+            }));
+
+            // 3. Search Staff
             var staffQuery = from s in _context.Staff.AsNoTracking()
                              join u in _context.Users.AsNoTracking() on s.user_id equals u.id
                              where s.tenant_id == tenantId && 
@@ -61,45 +76,27 @@ namespace SMS.Infrastructure.Services
             {
                 Id = s.id,
                 Title = $"{s.first_name} {s.last_name}",
-                Subtitle = $"Desig: {s.designation} | CNIC: {s.cnic}",
-                Type = "Staff",
-                Url = $"/staff/{s.id}"
+                Subtitle = $"Role: {s.designation} | CNIC: {s.cnic}",
+                Type = "Staff Member",
+                Url = "/StaffDirectory"
             }));
 
-            // 3. Search Fee Challans (Invoices)
-            var challans = await _context.FeeChallans
+            // 4. Search Customers
+            var customers = await _context.Customers
                 .AsNoTracking()
                 .Where(c => c.tenant_id == tenantId && 
-                            c.challan_number.ToLower().Contains(lowerKeyword))
+                            (c.name.ToLower().Contains(lowerKeyword) || 
+                             c.phone.Contains(lowerKeyword)))
                 .Take(5)
                 .ToListAsync();
 
-            results.AddRange(challans.Select(c => new GlobalSearchResultDto
+            results.AddRange(customers.Select(c => new GlobalSearchResultDto
             {
                 Id = c.id,
-                Title = $"Challan #{c.challan_number}",
-                Subtitle = $"Amount: {c.total_amount}",
-                Type = "Invoice",
-                Url = $"/fees/challans/{c.id}"
-            }));
-
-            // 4. Search Library Books
-            var books = await _context.LibraryBooks
-                .AsNoTracking()
-                .Where(b => b.tenant_id == tenantId && 
-                            (b.title.ToLower().Contains(lowerKeyword) || 
-                             b.author.ToLower().Contains(lowerKeyword) || 
-                             b.isbn.ToLower().Contains(lowerKeyword)))
-                .Take(5)
-                .ToListAsync();
-
-            results.AddRange(books.Select(b => new GlobalSearchResultDto
-            {
-                Id = b.id,
-                Title = b.title,
-                Subtitle = $"Author: {b.author}",
-                Type = "Book",
-                Url = $"/library/books" // Library page doesn't usually have details page, just goes to list
+                Title = c.name,
+                Subtitle = $"Phone: {c.phone} | Points: {c.loyalty_points}",
+                Type = "Customer",
+                Url = "/customers"
             }));
 
             return results;

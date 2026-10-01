@@ -16,19 +16,19 @@ namespace SMS.Infrastructure.Services
             _context = context;
         }
 
-        public async Task<byte[]> ExportStudentsToCsvAsync(Guid tenantId)
+        public async Task<byte[]> ExportMenuItemsToCsvAsync(Guid tenantId)
         {
-            var students = await _context.Students
+            var items = await _context.MenuItems
                 .AsNoTracking()
-                .Where(s => s.tenant_id == tenantId)
+                .Where(m => m.tenant_id == tenantId)
                 .ToListAsync();
 
             var csv = new StringBuilder();
-            csv.AppendLine("AdmissionNumber,FirstName,LastName,Gender,DateOfBirth,BFormNumber,FatherName,GuardianPhone,Status");
+            csv.AppendLine("DishName,SellingPrice,CostPrice,DietaryType,PrepTimeMinutes,Calories,IsAvailable");
 
-            foreach (var s in students)
+            foreach (var m in items)
             {
-                var row = $"{EscapeCsv(s.admission_number)},{EscapeCsv(s.first_name)},{EscapeCsv(s.last_name)},{EscapeCsv(s.gender)},{s.date_of_birth:yyyy-MM-dd},{EscapeCsv(s.b_form_number)},{EscapeCsv(s.father_name)},{EscapeCsv(s.guardian_phone)},{(s.is_active ? "Active" : "Inactive")}";
+                var row = $"{EscapeCsv(m.name)},{m.selling_price},{m.cost_price},{m.dietary_type},{m.preparation_time_minutes},{m.calories},{(m.is_available ? "InStock" : "OutOfStock")}";
                 csv.AppendLine(row);
             }
 
