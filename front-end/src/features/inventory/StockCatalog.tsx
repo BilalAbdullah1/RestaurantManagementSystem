@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+﻿import React, { useState, useEffect, useMemo, useRef } from 'react';
 import api from '../../utils/axiosConfig';
 import Swal from 'sweetalert2';
 import Input from '../../components/form/input/InputField';
@@ -89,7 +89,7 @@ export default function StockCatalog() {
 
   useEffect(() => {
     if (!tenantId) {
-      Swal.fire({ icon: 'error', title: 'Unable to Continue', text: 'School not identified. Please log in again.' });
+      Swal.fire({ icon: 'error', title: 'Unable to Continue', text: 'Branch not identified. Please log in again.' });
       setLoading(false);
       return;
     }

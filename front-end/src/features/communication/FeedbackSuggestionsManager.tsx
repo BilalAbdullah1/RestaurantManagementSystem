@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router';
 import api from '../../utils/axiosConfig';
 import Swal from 'sweetalert2';
@@ -130,9 +130,9 @@ export default function FeedbackSuggestionsManager() {
 
   const categoryOptions: SearchableSelectOption[] = [
     { value: 'Academic Quality', label: '📖 Academic & Teaching Quality' },
-    { value: 'Infrastructure', label: '🏫 School Facilities & Infrastructure' },
+    { value: 'Infrastructure', label: '🍽️ Dining & Kitchen Facilities' },
     { value: 'Discipline', label: '🛡️ Student Discipline & Behavior' },
-    { value: 'General', label: '💡 General School Suggestion' },
+    { value: 'General', label: '💡 General Restaurant Suggestion' },
   ];
 
   return (

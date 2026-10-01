@@ -1,133 +1,81 @@
 import React, { useEffect, useState } from 'react';
-import api from '../utils/axiosConfig';
 import Swal from 'sweetalert2';
+import { Clock } from 'lucide-react';
 
-interface AcademicYear {
-  id: string;
-  title: string;
-  is_current: boolean;
-}
+const RESTAURANT_SHIFTS = [
+  { id: 'dinner', title: 'Dinner Service (Peak)', hours: '06:00 PM – 12:00 AM' },
+  { id: 'lunch', title: 'Lunch Service', hours: '12:00 PM – 05:00 PM' },
+  { id: 'breakfast', title: 'Breakfast / Brunch', hours: '08:00 AM – 11:30 AM' },
+  { id: 'night', title: 'Late Night Takeaway', hours: '12:00 AM – 04:00 AM' }
+];
 
 export default function SidebarWidget() {
-  const [sessionTitle, setSessionTitle] = useState<string>('Loading...');
-  const [years, setYears] = useState<AcademicYear[]>([]);
-  const tenantId = localStorage.getItem('tenantId') || '';
+  const [shiftTitle, setShiftTitle] = useState<string>('Dinner Service (Peak)');
 
   useEffect(() => {
-    const savedTitle = localStorage.getItem('academicSessionTitle');
-    if (savedTitle) {
-      setSessionTitle(savedTitle);
-    }
-    
-    if (tenantId) {
-      fetchYears();
-    }
-  }, [tenantId]);
-
-  const fetchYears = async () => {
-    try {
-      const response = await api.get<AcademicYear[]>(`/academicyears/tenant/${tenantId}`);
-      setYears(response.data);
+    const saved = localStorage.getItem('rms_active_shift');
+    if (saved) {
+      setShiftTitle(saved);
+    } else {
+      // Auto-detect based on current hour
+      const hour = new Date().getHours();
+      let defaultShift = RESTAURANT_SHIFTS[0].title;
+      if (hour >= 8 && hour < 12) defaultShift = RESTAURANT_SHIFTS[2].title;
+      else if (hour >= 12 && hour < 17) defaultShift = RESTAURANT_SHIFTS[1].title;
+      else if (hour >= 17 || hour < 1) defaultShift = RESTAURANT_SHIFTS[0].title;
+      else defaultShift = RESTAURANT_SHIFTS[3].title;
       
-      const savedId = localStorage.getItem('academicSessionId');
-      if (!savedId && response.data.length > 0) {
-        // Find current or default to first
-        const current = response.data.find(y => y.is_current) || response.data[0];
-        if (current) {
-          setSessionTitle(current.title);
-          localStorage.setItem('academicSessionId', current.id);
-          localStorage.setItem('academicSessionTitle', current.title);
-        }
-      } else if (savedId && response.data.length > 0) {
-        // Validate saved ID still exists
-        const exists = response.data.find(y => y.id === savedId);
-        if (exists) {
-           setSessionTitle(exists.title);
-           localStorage.setItem('academicSessionTitle', exists.title);
-        } else {
-           const current = response.data.find(y => y.is_current) || response.data[0];
-           setSessionTitle(current.title);
-           localStorage.setItem('academicSessionId', current.id);
-           localStorage.setItem('academicSessionTitle', current.title);
-        }
-      }
-    } catch (error) {
-      console.error('Failed to fetch academic years', error);
-      if (!localStorage.getItem('academicSessionTitle')) {
-        setSessionTitle('Default Session');
-      }
+      setShiftTitle(defaultShift);
+      localStorage.setItem('rms_active_shift', defaultShift);
     }
-  };
+  }, []);
 
-  const handleChangeSession = async () => {
-    if (years.length === 0) {
-      await fetchYears();
-    }
-    
-    if (years.length === 0) {
-      Swal.fire({
-        icon: 'info',
-        title: 'No Sessions',
-        text: 'No academic sessions found for this school.',
-      });
-      return;
-    }
-
+  const handleChangeShift = async () => {
     const inputOptions: Record<string, string> = {};
-    years.forEach(y => {
-      inputOptions[y.id] = y.title + (y.is_current ? ' (Current)' : '');
+    RESTAURANT_SHIFTS.forEach(s => {
+      inputOptions[s.title] = `${s.title} (${s.hours})`;
     });
 
-    const currentId = localStorage.getItem('academicSessionId') || '';
-
-    const { value: selectedId } = await Swal.fire({
-      title: 'Change Academic Session',
+    const { value: selectedShift } = await Swal.fire({
+      title: 'Switch Service Shift',
       input: 'select',
       inputOptions,
-      inputValue: currentId,
+      inputValue: shiftTitle,
       showCancelButton: true,
-      confirmButtonText: 'Switch Session',
-      confirmButtonColor: '#4f46e5',
+      confirmButtonText: 'Switch Shift',
+      confirmButtonColor: '#ea580c',
     });
 
-    if (selectedId && selectedId !== currentId) {
-      const selectedYear = years.find(y => y.id === selectedId);
-      if (selectedYear) {
-        localStorage.setItem('academicSessionId', selectedYear.id);
-        localStorage.setItem('academicSessionTitle', selectedYear.title);
-        setSessionTitle(selectedYear.title);
-        
-        Swal.fire({
-          icon: 'success',
-          title: 'Session Changed',
-          text: `Switched to ${selectedYear.title}`,
-          timer: 1500,
-          showConfirmButton: false,
-        }).then(() => {
-          // Reload page to refetch all data for the new session
-          window.location.reload();
-        });
-      }
+    if (selectedShift && selectedShift !== shiftTitle) {
+      localStorage.setItem('rms_active_shift', selectedShift);
+      setShiftTitle(selectedShift);
+      
+      Swal.fire({
+        icon: 'success',
+        title: 'Shift Switched',
+        text: `Active register switched to ${selectedShift}`,
+        timer: 1500,
+        showConfirmButton: false,
+      });
     }
   };
 
-  const displayTitle = sessionTitle.toLowerCase().includes('academic') 
-    ? sessionTitle 
-    : (sessionTitle === 'Loading...' || sessionTitle === 'Default Session' ? sessionTitle : `Academic Year ${sessionTitle}`);
-
   return (
-    <div className="mx-auto mb-10 w-full max-w-60 rounded-2xl bg-brand-50/50 dark:bg-brand-900/20 border border-brand-100 dark:border-brand-800/50 px-4 py-5 text-center">
-      <h3 className="mb-1.5 font-bold text-gray-900 dark:text-white text-sm">
-        Active Session
-      </h3>
-      <p className="mb-4 text-xs font-medium text-brand-600 dark:text-brand-400">
-        {displayTitle}
+    <div className="mx-auto mb-10 w-full max-w-60 rounded-2xl bg-orange-50/60 dark:bg-orange-950/20 border border-orange-200 dark:border-orange-900/40 px-4 py-5 text-center shadow-xs">
+      <div className="flex items-center justify-center gap-1.5 mb-1.5">
+        <Clock className="w-3.5 h-3.5 text-orange-600 dark:text-orange-400" />
+        <h3 className="font-bold text-gray-900 dark:text-white text-xs uppercase tracking-wider">
+          Active Register Shift
+        </h3>
+      </div>
+      <p className="mb-4 text-xs font-semibold text-orange-600 dark:text-orange-400 truncate">
+        {shiftTitle}
       </p>
       <button 
-        onClick={handleChangeSession}
-        className="flex w-full items-center justify-center p-2.5 font-bold text-white rounded-lg bg-brand-600 text-xs hover:bg-brand-700 transition-colors shadow-sm"
+        onClick={handleChangeShift}
+        className="flex w-full items-center justify-center p-2.5 font-bold text-white rounded-xl bg-orange-600 hover:bg-orange-700 text-xs transition-colors shadow-sm"
       >
-        Change Session
+        Switch Shift
       </button>
     </div>
   );

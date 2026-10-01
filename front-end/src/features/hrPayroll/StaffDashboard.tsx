@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { User, Activity, Clock, CheckCircle, Calendar, MessageSquare, FileText, Briefcase, ChevronRight, ShieldCheck, HeartHandshake, HelpCircle } from 'lucide-react';
 import { Link } from 'react-router';
 import api from '../../utils/axiosConfig';
@@ -50,7 +50,7 @@ export default function StaffDashboard() {
   };
 
   const displayName = userInfo ? `${userInfo.first_name} ${userInfo.last_name}` : 'Staff Member';
-  const email = userInfo?.email || 'staff@school.com';
+  const email = userInfo?.email || 'staff@restaurant.com';
   const initials = getInitials(userInfo?.first_name || 'Staff', userInfo?.last_name || 'Member');
   const avatarGradient = getAvatarGradient(userId || '1');
 
@@ -68,7 +68,7 @@ export default function StaffDashboard() {
     { label: 'Staff Attendance', path: '/StaffAttendance', icon: <Activity className="w-5 h-5 text-emerald-500" />, desc: 'Check daily attendance register' },
     { label: 'Internal Staff Chat', path: '/StaffChat', icon: <MessageSquare className="w-5 h-5 text-brand-500" />, desc: 'Connect with staff & colleagues' },
     { label: 'Notice Board', path: '/Noticeboard', icon: <FileText className="w-5 h-5 text-purple-500" />, desc: 'View school notices & updates' },
-    { label: 'School Calendar', path: '/EventCalendar', icon: <Calendar className="w-5 h-5 text-blue-500" />, desc: 'Upcoming school events & holidays' },
+    { label: 'Restaurant Calendar', path: '/EventCalendar', icon: <Calendar className="w-5 h-5 text-blue-500" />, desc: 'Upcoming school events & holidays' },
     { label: 'Helpdesk & Support', path: '/HelpdeskTickets', icon: <HelpCircle className="w-5 h-5 text-rose-500" />, desc: 'Raise support ticket or inquiry' },
   ];
 
@@ -150,7 +150,7 @@ export default function StaffDashboard() {
       <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-6 shadow-sm space-y-4">
         <div className="flex justify-between items-center pb-3 border-b border-gray-200 dark:border-gray-800">
           <h3 className="font-bold text-gray-900 dark:text-white text-base flex items-center gap-2">
-            <FileText className="w-5 h-5 text-purple-600" /> School Circulars & Announcements
+            <FileText className="w-5 h-5 text-purple-600" /> Staff Circulars & Announcements
           </h3>
           <Link to="/Noticeboard" className="text-xs font-semibold text-brand-600 hover:text-brand-700">
             View All Circulars →

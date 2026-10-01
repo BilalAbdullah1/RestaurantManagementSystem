@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+﻿import React, { useState, useEffect, useMemo } from 'react';
 import api from '../../utils/axiosConfig';
 import Swal from 'sweetalert2';
 import InputField from '../../components/form/input/InputField';
@@ -225,7 +225,7 @@ export default function StaffClearanceManager() {
     doc.setFontSize(22);
     doc.setTextColor(37, 99, 235);
     doc.setFont("helvetica", "bold");
-    doc.text("SCHOOL MANAGEMENT SYSTEM", 105, 20, { align: "center" });
+    doc.text("RESTAURANT MANAGEMENT SYSTEM", 105, 20, { align: "center" });
 
     doc.setFontSize(13);
     doc.setTextColor(100);
@@ -265,7 +265,7 @@ export default function StaffClearanceManager() {
         ['Unpaid Working Salary Days Payable', `Rs. ${item.unpaid_salary_amount.toLocaleString()}`],
         ['Unutilized Leave Encashment Pay', `+ Rs. ${item.leave_encashment_amount.toLocaleString()}`],
         ['Outstanding Advance Loan Deductions', `- Rs. ${item.loan_deduction_amount.toLocaleString()}`],
-        ['Remarks / Clearance Notes', item.remarks || 'Full & Final Settlement completed. All school assets returned.']
+        ['Remarks / Clearance Notes', item.remarks || 'Full & Final Settlement completed. All restaurant assets returned.']
       ],
       foot: [['NET FINAL SETTLEMENT DISBURSED', `Rs. ${item.net_settlement_amount.toLocaleString()}`]],
       theme: 'grid',
@@ -809,7 +809,7 @@ export default function StaffClearanceManager() {
             <Label>Clearance Remarks / Reason</Label>
             <InputField 
               type="text"
-              placeholder="e.g. Resigned due to personal reasons. All school assets returned."
+              placeholder="e.g. Resigned due to personal reasons. All restaurant assets returned."
               value={formData.remarks}
               onChange={(e) => setFormData({ ...formData, remarks: e.target.value })}
             />

@@ -31,21 +31,21 @@ export default function BiometricDevicesManager() {
   const [devices, setDevices] = useState<BiometricDevice[]>([
     {
       id: '1',
-      device_name: 'Main Gate Face Recognition Terminal',
+      device_name: 'Staff Face Recognition Terminal',
       ip_address: '192.168.1.201',
       port: 4370,
       brand: 'ZKTeco',
-      location: 'Main School Entrance Gate',
+      location: 'Kitchen & Staff Entrance',
       status: 'Online',
       last_sync_time: new Date().toISOString()
     },
     {
       id: '2',
-      device_name: 'Staff Room Fingerprint Scanner',
+      device_name: 'Back-Office Fingerprint Scanner',
       ip_address: '192.168.1.202',
       port: 4370,
       brand: 'Hikvision',
-      location: 'Senior Staff Room 1st Floor',
+      location: 'Cashier & Manager Office',
       status: 'Online',
       last_sync_time: new Date(Date.now() - 600000).toISOString()
     },

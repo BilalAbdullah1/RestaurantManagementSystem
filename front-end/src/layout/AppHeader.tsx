@@ -84,7 +84,7 @@ const AppHeader: React.FC = () => {
                 {activeClientConfig.branding.shortCode}
               </span>
               <span className="text-[10px] text-gray-500 dark:text-gray-400 truncate max-w-[140px]">
-                {activeClientConfig.branding.schoolName}
+                {activeClientConfig.branding.restaurantName || activeClientConfig.branding.schoolName}
               </span>
             </div>
           </Link>

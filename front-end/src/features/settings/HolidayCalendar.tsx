@@ -112,9 +112,9 @@ export default function HolidayCalendar() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            <Calendar className="w-6 h-6 text-brand-500" /> Academic Holiday Calendar
+            <Calendar className="w-6 h-6 text-brand-500" /> Restaurant & Staff Holiday Calendar
           </h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400">Define academic year holidays, seasonal breaks, and gazetted school closures.</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Define restaurant operating holidays, gazetted closures, and special festive schedules.</p>
         </div>
         <Button variant="primary" onClick={openAdd} className="flex items-center gap-2">
           <Plus className="w-4 h-4" /> Add Holiday
@@ -126,7 +126,7 @@ export default function HolidayCalendar() {
         stats={[
           { title: 'Total Holidays Scheduled', value: totalHolidays, icon: <Palmtree className="w-5 h-5" />, theme: 'brand' },
           { title: 'Next Upcoming Break', value: nextHoliday, icon: <SunMedium className="w-5 h-5" />, theme: 'warning' },
-          { title: 'Academic Term Calendar', value: '2026 - 2027 Active', icon: <Clock className="w-5 h-5" />, theme: 'success' },
+          { title: 'Operational Year Calendar', value: '2026 - 2027 Active', icon: <Clock className="w-5 h-5" />, theme: 'success' },
         ]}
       />
 
@@ -156,7 +156,7 @@ export default function HolidayCalendar() {
                         No Holidays Scheduled
                       </h4>
                       <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">
-                        Add official academic breaks, national holidays, or seasonal vacations to sync with school timetables.
+                        Add official restaurant closures, national holidays, or seasonal schedules to sync with staff rosters.
                       </p>
                       <Button variant="primary" onClick={openAdd} className="text-xs">
                         <Plus className="w-3.5 h-3.5 mr-1" /> Add First Holiday

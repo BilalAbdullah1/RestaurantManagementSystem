@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+﻿import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useSearchParams } from 'react-router';
 import api from '../../utils/axiosConfig';
 import Swal from 'sweetalert2';
@@ -48,7 +48,7 @@ const initialForm = {
 
 // ─── Gate Pass Print Component ────────────────────────────────
 function printGatePass(visitor: Visitor) {
-  const schoolName = localStorage.getItem('schoolName') || 'School Management System';
+  const schoolName = localStorage.getItem('restaurantName') || localStorage.getItem('schoolName') || 'Restaurant Management System';
   const printHtml = `
     <html>
     <head>
@@ -319,7 +319,7 @@ export default function VisitorsLog() {
               Visitors Log & Gate Pass
             </h2>
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-              Track all school visitors, manage check-in/check-out, and print gate passes.
+              Track all restaurant visitors & suppliers, manage check-in/check-out, and print gate passes.
             </p>
           </div>
           <Button variant="primary" onClick={() => setDrawerOpen(true)} className="bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-500/20">

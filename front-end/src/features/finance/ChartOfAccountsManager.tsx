@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+﻿import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useSearchParams } from 'react-router';
 import api from '../../utils/axiosConfig';
 import Swal from 'sweetalert2';
@@ -709,7 +709,7 @@ export default function ChartOfAccountsManager() {
               onClick={handleSeedDefaults}
               disabled={seedLoading}
               className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-all h-11 flex items-center gap-2 shadow-sm disabled:opacity-50"
-              title="Seed 27 Standard Master School Accounts"
+              title="Seed Standard Master Restaurant Accounts"
             >
               {seedLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4 text-emerald-200" />}
               <span>Seed Standard Accounts</span>
@@ -968,7 +968,7 @@ export default function ChartOfAccountsManager() {
                   <tr>
                     <td colSpan={columns.length} className="px-6 py-12 text-center text-sm text-gray-400">
                       <div className="flex flex-col items-center justify-center space-y-3">
-                        <p className="italic">No chart of account heads found for this school.</p>
+                        <p className="italic">No chart of account heads found for this restaurant branch.</p>
                         <div className="flex items-center gap-3">
                           <button
                             onClick={handleSeedDefaults}
@@ -976,7 +976,7 @@ export default function ChartOfAccountsManager() {
                             className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5"
                           >
                             <Sparkles className="w-3.5 h-3.5" />
-                            <span>Seed 27 Standard Master School Accounts</span>
+                            <span>Seed Standard Master Restaurant Accounts</span>
                           </button>
                         </div>
                       </div>

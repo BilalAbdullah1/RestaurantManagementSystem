@@ -1,0 +1,572 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Restaurant Management System — RMS POS by Bilal Abdullah</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --accent: #00e676;
+      --accent2: #00b0ff;
+      --accent3: #ea00d9;
+      --dark: #080c18;
+      --dark2: #0d1428;
+      --panel: #111827;
+      --panel2: #141f35;
+      --border: rgba(0,230,118,0.18);
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --white: #ffffff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--dark);
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .poster {
+      width: 1680px;
+      min-height: 1190px;
+      background: var(--dark2);
+      margin: 20px auto;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 120px rgba(0,230,118,0.12), 0 0 60px rgba(0,176,255,0.08);
+    }
+
+    .poster::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,230,118,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,230,118,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      z-index: 0;
+    }
+
+    .orb1 {
+      position: absolute;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(0,230,118,0.12) 0%, transparent 70%);
+      top: -100px; left: -100px;
+      z-index: 0; pointer-events: none;
+    }
+    .orb2 {
+      position: absolute;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(0,176,255,0.1) 0%, transparent 70%);
+      bottom: 0; right: 200px;
+      z-index: 0; pointer-events: none;
+    }
+    .orb3 {
+      position: absolute;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(234,0,217,0.07) 0%, transparent 70%);
+      top: 50%; right: -80px;
+      z-index: 0; pointer-events: none;
+    }
+
+    .content { position: relative; z-index: 2; padding: 0; }
+
+    /* HEADER */
+    .header-band {
+      background: linear-gradient(135deg, #080c18 0%, #0d1f3c 50%, #081518 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 30px 60px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+    .header-band::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3), var(--accent));
+    }
+
+    .logo-zone { display: flex; align-items: center; gap: 20px; }
+    .logo-icon {
+      width: 64px; height: 64px;
+      background: linear-gradient(135deg, var(--accent) 0%, #00b85e 100%);
+      border-radius: 18px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+      box-shadow: 0 8px 32px rgba(0,230,118,0.4);
+      flex-shrink: 0;
+    }
+    .logo-text h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 32px; font-weight: 800; color: #fff;
+      letter-spacing: -1px; line-height: 1;
+    }
+    .logo-text h1 span { color: var(--accent); }
+    .logo-text p {
+      font-size: 13px; font-weight: 500; color: var(--muted);
+      letter-spacing: 2px; text-transform: uppercase; margin-top: 4px;
+    }
+
+    .header-badges { display: flex; gap: 10px; align-items: center; }
+    .h-badge {
+      padding: 8px 18px; border-radius: 999px;
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    .h-badge.green { background: rgba(0,230,118,0.12); border: 1px solid rgba(0,230,118,0.35); color: var(--accent); }
+    .h-badge.blue { background: rgba(0,176,255,0.1); border: 1px solid rgba(0,176,255,0.3); color: var(--accent2); }
+    .h-badge.purple { background: rgba(234,0,217,0.1); border: 1px solid rgba(234,0,217,0.3); color: var(--accent3); }
+
+    .dev-info { text-align: right; }
+    .dev-info .dev-name { font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700; color: #fff; }
+    .dev-info .dev-name span { color: var(--accent); }
+    .dev-info .dev-role { font-size: 12px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 3px; }
+    .dev-contact { display: flex; gap: 8px; margin-top: 10px; justify-content: flex-end; }
+    .contact-chip {
+      display: flex; align-items: center; gap: 6px;
+      padding: 5px 12px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; font-size: 11.5px; color: var(--muted);
+    }
+    .contact-chip span { color: var(--accent); font-size: 13px; }
+
+    /* HERO */
+    .hero-section { padding: 36px 60px 28px; display: flex; gap: 40px; align-items: stretch; }
+    .hero-tagline { flex: 1.2; }
+    .hero-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 4px;
+      text-transform: uppercase; color: var(--accent);
+      display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+    }
+    .hero-eyebrow::before { content: ''; width: 30px; height: 2px; background: var(--accent); border-radius: 2px; }
+    .hero-tagline h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 52px; font-weight: 800; line-height: 1.05;
+      letter-spacing: -2px; color: #fff;
+    }
+    .hero-tagline h2 .hl-green { color: var(--accent); }
+    .hero-tagline h2 .hl-blue { color: var(--accent2); }
+    .hero-tagline p.sub { font-size: 15px; color: var(--muted); line-height: 1.65; margin-top: 18px; max-width: 520px; }
+
+    .tech-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+    .tech-pill { padding: 6px 14px; border-radius: 8px; font-size: 11.5px; font-weight: 700; letter-spacing: 0.3px; }
+    .tp-net { background: rgba(81,50,168,0.25); border: 1px solid rgba(81,50,168,0.5); color: #b39dff; }
+    .tp-react { background: rgba(0,189,212,0.15); border: 1px solid rgba(0,189,212,0.4); color: #4dd0e1; }
+    .tp-ts { background: rgba(49,120,198,0.2); border: 1px solid rgba(49,120,198,0.5); color: #64b5f6; }
+    .tp-sql { background: rgba(204,57,0,0.2); border: 1px solid rgba(204,57,0,0.45); color: #ff8a65; }
+    .tp-pg { background: rgba(51,103,145,0.2); border: 1px solid rgba(51,103,145,0.45); color: #80cbc4; }
+    .tp-clean { background: rgba(0,230,118,0.1); border: 1px solid rgba(0,230,118,0.3); color: var(--accent); }
+    .tp-jwt { background: rgba(255,193,7,0.12); border: 1px solid rgba(255,193,7,0.35); color: #ffd54f; }
+    .tp-docker { background: rgba(33,150,243,0.12); border: 1px solid rgba(33,150,243,0.35); color: #90caf9; }
+
+    .hero-stats { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-content: start; }
+    .stat-card {
+      background: var(--panel); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px; padding: 18px 20px; position: relative; overflow: hidden;
+    }
+    .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+    .stat-card.c1::before { background: linear-gradient(90deg, var(--accent), transparent); }
+    .stat-card.c2::before { background: linear-gradient(90deg, var(--accent2), transparent); }
+    .stat-card.c3::before { background: linear-gradient(90deg, #f59e0b, transparent); }
+    .stat-card.c4::before { background: linear-gradient(90deg, var(--accent3), transparent); }
+    .stat-card.c5::before { background: linear-gradient(90deg, #a78bfa, transparent); }
+    .stat-card.c6::before { background: linear-gradient(90deg, #fb923c, transparent); }
+    .stat-num { font-family: 'Space Grotesk', sans-serif; font-size: 38px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+    .c1 .stat-num { color: var(--accent); }
+    .c2 .stat-num { color: var(--accent2); }
+    .c3 .stat-num { color: #f59e0b; }
+    .c4 .stat-num { color: var(--accent3); }
+    .c5 .stat-num { color: #a78bfa; }
+    .c6 .stat-num { color: #fb923c; }
+    .stat-label { font-size: 12px; font-weight: 600; color: var(--muted); line-height: 1.3; }
+    .stat-icon { position: absolute; top: 14px; right: 16px; font-size: 22px; opacity: 0.25; }
+
+    /* MODULES */
+    .modules-section { padding: 10px 60px 30px; }
+    .section-title {
+      font-size: 11px; font-weight: 700; letter-spacing: 4px;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 18px; display: flex; align-items: center; gap: 14px;
+    }
+    .section-title::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.06); }
+    .modules-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+    .mod-card {
+      background: var(--panel); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px; padding: 20px 18px 32px; position: relative; overflow: hidden;
+    }
+    .mod-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+    .ph1::before { background: linear-gradient(90deg, #00e676, #00bcd4); }
+    .ph2::before { background: linear-gradient(90deg, #3f51b5, #9c27b0); }
+    .ph3::before { background: linear-gradient(90deg, #f06292, #e91e63); }
+    .ph4::before { background: linear-gradient(90deg, #ff9800, #ff5722); }
+    .ph5::before { background: linear-gradient(90deg, #8bc34a, #4caf50); }
+    .ph6::before { background: linear-gradient(90deg, #ffd700, #ff8f00); }
+    .ph7::before { background: linear-gradient(90deg, #00bcd4, #009688); }
+    .ph8::before { background: linear-gradient(90deg, #7c4dff, #651fff); }
+    .ph9::before { background: linear-gradient(90deg, #ff6d00, #dd2c00); }
+    .ph10::before { background: linear-gradient(90deg, #00e5ff, #00b0ff); }
+
+    .mod-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
+    .mod-icon { font-size: 26px; flex-shrink: 0; line-height: 1; }
+    .mod-title { font-family: 'Space Grotesk', sans-serif; font-size: 13.5px; font-weight: 700; color: #fff; line-height: 1.25; }
+    .mod-phase { font-size: 10px; font-weight: 600; color: var(--muted); margin-top: 3px; letter-spacing: 0.5px; }
+    .mod-features { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+    .mod-features li { font-size: 11px; color: #94a3b8; display: flex; align-items: flex-start; gap: 7px; line-height: 1.35; }
+    .mod-features li::before { content: '▸'; font-size: 9px; margin-top: 1px; flex-shrink: 0; opacity: 0.6; }
+    .mod-screen-count {
+      position: absolute; bottom: 12px; right: 14px;
+      font-size: 10px; font-weight: 700; color: var(--muted);
+      background: rgba(255,255,255,0.05); padding: 3px 8px;
+      border-radius: 6px; border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    /* BOTTOM */
+    .bottom-section { padding: 20px 60px 36px; display: flex; gap: 20px; align-items: stretch; }
+
+    .arch-panel {
+      flex: 1.5; background: var(--panel);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 20px; padding: 24px 28px; position: relative; overflow: hidden;
+    }
+    .arch-panel::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+    .arch-title { font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .arch-layers { display: flex; flex-direction: column; gap: 8px; }
+    .arch-layer {
+      display: flex; align-items: center; gap: 14px; padding: 10px 14px;
+      border-radius: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.04);
+    }
+    .layer-icon { font-size: 18px; flex-shrink: 0; width: 32px; text-align: center; }
+    .layer-info { flex: 1; }
+    .layer-name { font-size: 12px; font-weight: 700; color: #e2e8f0; }
+    .layer-detail { font-size: 10.5px; color: var(--muted); margin-top: 1px; }
+    .layer-badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 6px; }
+    .lb-green { background: rgba(0,230,118,0.12); color: var(--accent); border: 1px solid rgba(0,230,118,0.2); }
+    .lb-blue { background: rgba(0,176,255,0.1); color: var(--accent2); border: 1px solid rgba(0,176,255,0.2); }
+    .lb-purple { background: rgba(167,139,250,0.12); color: #a78bfa; border: 1px solid rgba(167,139,250,0.25); }
+    .lb-orange { background: rgba(251,146,60,0.12); color: #fb923c; border: 1px solid rgba(251,146,60,0.25); }
+    .lb-yellow { background: rgba(251,191,36,0.12); color: #fbbf24; border: 1px solid rgba(251,191,36,0.25); }
+
+    .features-panel {
+      flex: 1; background: var(--panel);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 20px; padding: 24px 28px; position: relative; overflow: hidden;
+    }
+    .features-panel::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #f59e0b, var(--accent3)); }
+    .feat-title { font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .feat-list { display: flex; flex-direction: column; gap: 8px; }
+    .feat-item { display: flex; align-items: center; gap: 12px; padding: 9px 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.04); border-radius: 10px; }
+    .feat-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .fd-green { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+    .fd-blue { background: var(--accent2); box-shadow: 0 0 8px var(--accent2); }
+    .fd-purple { background: #a78bfa; box-shadow: 0 0 8px #a78bfa; }
+    .fd-orange { background: #fb923c; box-shadow: 0 0 8px #fb923c; }
+    .fd-pink { background: var(--accent3); box-shadow: 0 0 8px var(--accent3); }
+    .feat-text { font-size: 12px; font-weight: 600; color: var(--text); }
+
+    .cta-panel {
+      flex: 0.7;
+      background: linear-gradient(135deg, #00332b 0%, #001a29 100%);
+      border: 1px solid rgba(0,230,118,0.2);
+      border-radius: 20px; padding: 28px 26px;
+      display: flex; flex-direction: column; justify-content: space-between;
+      position: relative; overflow: hidden;
+    }
+    .cta-panel::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); }
+    .cta-glow { position: absolute; width: 200px; height: 200px; background: radial-gradient(circle, rgba(0,230,118,0.15) 0%, transparent 70%); bottom: -60px; right: -60px; pointer-events: none; }
+    .cta-top .cta-label { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .cta-top h3 { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 800; color: #fff; line-height: 1.2; margin-bottom: 14px; }
+    .cta-links { display: flex; flex-direction: column; gap: 10px; }
+    .cta-link-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: rgba(0,230,118,0.07); border: 1px solid rgba(0,230,118,0.15); border-radius: 10px; }
+    .cta-link-icon { font-size: 16px; flex-shrink: 0; }
+    .cta-link-text { flex: 1; }
+    .cli-label { font-size: 10px; font-weight: 600; color: var(--muted); }
+    .cli-value { font-size: 12.5px; font-weight: 700; color: #fff; margin-top: 1px; }
+
+    .footer-ribbon { background: rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.05); padding: 14px 60px; display: flex; align-items: center; justify-content: space-between; }
+    .footer-left { font-size: 11.5px; color: var(--muted); display: flex; align-items: center; gap: 16px; }
+    .footer-left .dot-sep { color: rgba(255,255,255,0.15); }
+    .footer-right { display: flex; align-items: center; gap: 10px; }
+    .footer-badge { padding: 5px 12px; border-radius: 8px; font-size: 10.5px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+    .fb-multi { background: rgba(0,230,118,0.1); border: 1px solid rgba(0,230,118,0.2); color: var(--accent); }
+    .fb-clean { background: rgba(0,176,255,0.1); border: 1px solid rgba(0,176,255,0.2); color: var(--accent2); }
+    .fb-rbac { background: rgba(167,139,250,0.1); border: 1px solid rgba(167,139,250,0.25); color: #a78bfa; }
+  </style>
+</head>
+<body>
+<div class="poster">
+  <div class="orb1"></div>
+  <div class="orb2"></div>
+  <div class="orb3"></div>
+
+  <div class="content">
+    <!-- HEADER -->
+    <div class="header-band">
+      <div class="logo-zone">
+        <div class="logo-icon">🎓</div>
+        <div class="logo-text">
+          <h1>Edu<span>ERP</span></h1>
+          <p>Restaurant Management & POS System</p>
+        </div>
+      </div>
+      <div class="header-badges">
+        <div class="h-badge green">✓ 100+ Screens</div>
+        <div class="h-badge blue">✓ 10 Phases</div>
+        <div class="h-badge purple">✓ Multi-Tenant SaaS</div>
+      </div>
+      <div class="dev-info">
+        <div class="dev-name">Bilal <span>Abdullah</span></div>
+        <div class="dev-role">Full-Stack Enterprise Developer</div>
+        <div class="dev-contact">
+          <div class="contact-chip"><span>📱</span> +92 300 0000000</div>
+          <div class="contact-chip"><span>🐙</span> github.com/BilalAbdullah1</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HERO -->
+    <div class="hero-section">
+      <div class="hero-tagline">
+        <div class="hero-eyebrow">Enterprise-Grade Restaurant ERP & POS Platform</div>
+        <h2>Complete<br><span class="hl-green">Restaurant</span> <span class="hl-blue">POS</span><br>Solution</h2>
+        <p class="sub">A full-featured, multi-branch Restaurant Management & POS System built on <strong>.NET 10 Clean Architecture</strong> + <strong>React 18 + TypeScript</strong>. Covers every academic, financial, HR, and administrative operation — from student admission to exam broadsheets, fee challans, payroll, and parent portals.</p>
+        <div class="tech-row">
+          <div class="tech-pill tp-net">.NET 10 / ASP.NET Core</div>
+          <div class="tech-pill tp-react">React 18 + Vite</div>
+          <div class="tech-pill tp-ts">TypeScript</div>
+          <div class="tech-pill tp-sql">SQL Server</div>
+          <div class="tech-pill tp-pg">PostgreSQL</div>
+          <div class="tech-pill tp-clean">Clean Architecture</div>
+          <div class="tech-pill tp-jwt">JWT + 2FA</div>
+          <div class="tech-pill tp-docker">Docker</div>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-card c1"><div class="stat-icon">📋</div><div class="stat-num">100+</div><div class="stat-label">Functional<br>Screens</div></div>
+        <div class="stat-card c2"><div class="stat-icon">🏛️</div><div class="stat-num">10</div><div class="stat-label">Core<br>Phases</div></div>
+        <div class="stat-card c3"><div class="stat-icon">🗄️</div><div class="stat-num">60+</div><div class="stat-label">DB Tables<br>&amp; Relations</div></div>
+        <div class="stat-card c4"><div class="stat-icon">🔌</div><div class="stat-num">200+</div><div class="stat-label">REST API<br>Endpoints</div></div>
+        <div class="stat-card c5"><div class="stat-icon">👥</div><div class="stat-num">5</div><div class="stat-label">User Roles<br>RBAC System</div></div>
+        <div class="stat-card c6"><div class="stat-icon">🏢</div><div class="stat-num">∞</div><div class="stat-label">Multi-Tenant<br>Campuses</div></div>
+      </div>
+    </div>
+
+    <!-- MODULES -->
+    <div class="modules-section">
+      <div class="section-title">System Modules — 10 Phases</div>
+      <div class="modules-grid">
+        <div class="mod-card ph1">
+          <div class="mod-header"><div class="mod-icon">🔐</div><div><div class="mod-title">Security &amp; Authentication</div><div class="mod-phase">Phase 1 · Foundation</div></div></div>
+          <ul class="mod-features">
+            <li>JWT + Refresh Token Auth</li>
+            <li>2FA OTP Verification</li>
+            <li>RBAC — 5 Role Levels</li>
+            <li>Multi-Tenant Workspace</li>
+            <li>Password Reset Flow</li>
+            <li>Audit Log Trail</li>
+          </ul>
+          <div class="mod-screen-count">2 Screens</div>
+        </div>
+        <div class="mod-card ph2">
+          <div class="mod-header"><div class="mod-icon">📚</div><div><div class="mod-title">Academic Structure</div><div class="mod-phase">Phase 2 · Core Architecture</div></div></div>
+          <ul class="mod-features">
+            <li>Academic Year Sessions</li>
+            <li>Classes &amp; Grade Levels</li>
+            <li>Sections &amp; Classrooms</li>
+            <li>Subject Catalog (Core + Elective)</li>
+            <li>Class–Subject Mapping</li>
+            <li>CSV / PDF Exports</li>
+          </ul>
+          <div class="mod-screen-count">6 Screens</div>
+        </div>
+        <div class="mod-card ph3">
+          <div class="mod-header"><div class="mod-icon">👩‍💼</div><div><div class="mod-title">HR &amp; Staff Management</div><div class="mod-phase">Phase 3 · Human Resources</div></div></div>
+          <ul class="mod-features">
+            <li>Staff Directory &amp; Profiles</li>
+            <li>Departments &amp; Designations</li>
+            <li>Employment Contracts</li>
+            <li>Leave Applications</li>
+            <li>Staff Attendance Register</li>
+            <li>Staff ID Card Generator</li>
+          </ul>
+          <div class="mod-screen-count">10 Screens</div>
+        </div>
+        <div class="mod-card ph4">
+          <div class="mod-header"><div class="mod-icon">🗓️</div><div><div class="mod-title">Timetable Scheduler</div><div class="mod-phase">Phase 4 · Academic Delivery</div></div></div>
+          <ul class="mod-features">
+            <li>Weekly Period Grid Builder</li>
+            <li>Smart Auto-Scheduler AI</li>
+            <li>Teacher Timetable View</li>
+            <li>Substitute Teacher Mgmt</li>
+            <li>Conflict Detection Engine</li>
+            <li>PDF Routine Export</li>
+          </ul>
+          <div class="mod-screen-count">4 Screens</div>
+        </div>
+        <div class="mod-card ph5">
+          <div class="mod-header"><div class="mod-icon">🎒</div><div><div class="mod-title">Student Lifecycle</div><div class="mod-phase">Phase 5 · Admissions &amp; Registry</div></div></div>
+          <ul class="mod-features">
+            <li>Student Admission Form</li>
+            <li>Auto GR Number Generator</li>
+            <li>Class Enrollment &amp; Promotions</li>
+            <li>Section Transfers</li>
+            <li>Parent Directory</li>
+            <li>Transfer Certificate (TC)</li>
+          </ul>
+          <div class="mod-screen-count">12 Screens</div>
+        </div>
+        <div class="mod-card ph6">
+          <div class="mod-header"><div class="mod-icon">💰</div><div><div class="mod-title">Finance &amp; Fee Lifecycle</div><div class="mod-phase">Phase 6 · Accounting</div></div></div>
+          <ul class="mod-features">
+            <li>Fee Structure Builder</li>
+            <li>Bulk Challan Generation</li>
+            <li>Fee Collection &amp; Receipts</li>
+            <li>Concessions &amp; Waivers</li>
+            <li>Staff Payroll Processing</li>
+            <li>Chart of Accounts</li>
+          </ul>
+          <div class="mod-screen-count">18 Screens</div>
+        </div>
+        <div class="mod-card ph7">
+          <div class="mod-header"><div class="mod-icon">🏫</div><div><div class="mod-title">Campus Services</div><div class="mod-phase">Phase 7 · Auxiliary Operations</div></div></div>
+          <ul class="mod-features">
+            <li>Transport &amp; Route Mgmt</li>
+            <li>Hostel &amp; Room Allocation</li>
+            <li>Library Book Catalog</li>
+            <li>Student Canteen Mgmt</li>
+            <li>Visitor Gate Pass</li>
+            <li>Restaurant Expenses Ledger</li>
+          </ul>
+          <div class="mod-screen-count">14 Screens</div>
+        </div>
+        <div class="mod-card ph8">
+          <div class="mod-header"><div class="mod-icon">📡</div><div><div class="mod-title">Attendance &amp; LMS</div><div class="mod-phase">Phase 8 · Daily Operations</div></div></div>
+          <ul class="mod-features">
+            <li>Student Attendance Register</li>
+            <li>Staff Attendance Tracker</li>
+            <li>Lesson Plan Builder</li>
+            <li>Homework Assignments</li>
+            <li>Resource Library Uploads</li>
+            <li>Attendance PDF Reports</li>
+          </ul>
+          <div class="mod-screen-count">12 Screens</div>
+        </div>
+        <div class="mod-card ph9">
+          <div class="mod-header"><div class="mod-icon">📝</div><div><div class="mod-title">Exams &amp; CBT Engine</div><div class="mod-phase">Phase 9 · Assessments</div></div></div>
+          <ul class="mod-features">
+            <li>Exam Setup &amp; Scheduling</li>
+            <li>Question Bank Builder</li>
+            <li>Online CBT Exam Engine</li>
+            <li>Result Entry System</li>
+            <li>Grading Scales Config</li>
+            <li>Exam Broadsheet PDF</li>
+          </ul>
+          <div class="mod-screen-count">14 Screens</div>
+        </div>
+        <div class="mod-card ph10">
+          <div class="mod-header"><div class="mod-icon">🌐</div><div><div class="mod-title">Portals &amp; Reports</div><div class="mod-phase">Phase 10 · Communication</div></div></div>
+          <ul class="mod-features">
+            <li>Student Self-Service Portal</li>
+            <li>Parent Portal &amp; Updates</li>
+            <li>Teacher Dashboard Portal</li>
+            <li>Notice Board &amp; Broadcasts</li>
+            <li>Front Office Reception</li>
+            <li>Executive Analytics Reports</li>
+          </ul>
+          <div class="mod-screen-count">16 Screens</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM -->
+    <div class="bottom-section">
+      <div class="arch-panel">
+        <div class="arch-title"><span>🏛️</span> Clean Architecture Stack</div>
+        <div class="arch-layers">
+          <div class="arch-layer">
+            <div class="layer-icon">🌐</div>
+            <div class="layer-info"><div class="layer-name">Presentation Layer</div><div class="layer-detail">React 18 + Vite + TypeScript + TailwindCSS — TanStack Table, Recharts, jsPDF, Axios</div></div>
+            <div class="layer-badge lb-blue">Frontend</div>
+          </div>
+          <div class="arch-layer">
+            <div class="layer-icon">⚙️</div>
+            <div class="layer-info"><div class="layer-name">API Layer</div><div class="layer-detail">ASP.NET Core 10 Web API — Controllers, JWT Auth Middleware, File Uploads Controller</div></div>
+            <div class="layer-badge lb-purple">RMS.API</div>
+          </div>
+          <div class="arch-layer">
+            <div class="layer-icon">📐</div>
+            <div class="layer-info"><div class="layer-name">Application Layer</div><div class="layer-detail">CQRS Pattern — DTOs, Service Interfaces, Business Logic, FluentValidation</div></div>
+            <div class="layer-badge lb-yellow">RMS.Application</div>
+          </div>
+          <div class="arch-layer">
+            <div class="layer-icon">🗄️</div>
+            <div class="layer-info"><div class="layer-name">Infrastructure Layer</div><div class="layer-detail">EF Core 10 — Repositories, Migrations, SQL Server / PostgreSQL, File Storage</div></div>
+            <div class="layer-badge lb-orange">RMS.Infrastructure</div>
+          </div>
+          <div class="arch-layer">
+            <div class="layer-icon">🎯</div>
+            <div class="layer-info"><div class="layer-name">Domain Layer</div><div class="layer-detail">Entities, Aggregates, Value Objects, Domain Events, Business Rules</div></div>
+            <div class="layer-badge lb-green">RMS.Domain</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="features-panel">
+        <div class="feat-title"><span>⚡</span> Signature Features</div>
+        <div class="feat-list">
+          <div class="feat-item"><div class="feat-dot fd-green"></div><div class="feat-text">Bulk Fee Challan Generator with PDF printing</div></div>
+          <div class="feat-item"><div class="feat-dot fd-blue"></div><div class="feat-text">Smart Auto-Timetable Scheduler (conflict-free)</div></div>
+          <div class="feat-item"><div class="feat-dot fd-purple"></div><div class="feat-text">Exam Broadsheet &amp; Result Cards PDF Export</div></div>
+          <div class="feat-item"><div class="feat-dot fd-orange"></div><div class="feat-text">Online CBT Exam Engine with Question Bank</div></div>
+          <div class="feat-item"><div class="feat-dot fd-pink"></div><div class="feat-text">Staff Payroll Processing with Salary Slips</div></div>
+          <div class="feat-item"><div class="feat-dot fd-green"></div><div class="feat-text">Student Promotion &amp; Section Transfer Engine</div></div>
+          <div class="feat-item"><div class="feat-dot fd-blue"></div><div class="feat-text">Executive Dashboard — Live KPI Analytics Charts</div></div>
+          <div class="feat-item"><div class="feat-dot fd-purple"></div><div class="feat-text">Dark Mode UI — Full TailwindCSS Theming</div></div>
+          <div class="feat-item"><div class="feat-dot fd-orange"></div><div class="feat-text">Multi-Tenant Architecture — Unlimited Campuses</div></div>
+          <div class="feat-item"><div class="feat-dot fd-pink"></div><div class="feat-text">React Portal Action Menus — No Z-Index Conflicts</div></div>
+        </div>
+      </div>
+
+      <div class="cta-panel">
+        <div class="cta-glow"></div>
+        <div class="cta-top">
+          <div class="cta-label">🚀 Get in Touch</div>
+          <h3>Need a Custom Restaurant POS System?</h3>
+          <div class="cta-links">
+            <div class="cta-link-item"><div class="cta-link-icon">📱</div><div class="cta-link-text"><div class="cli-label">WhatsApp / Call</div><div class="cli-value">+92 300 0000000</div></div></div>
+            <div class="cta-link-item"><div class="cta-link-icon">🐙</div><div class="cta-link-text"><div class="cli-label">GitHub Portfolio</div><div class="cli-value">github.com/BilalAbdullah1</div></div></div>
+            <div class="cta-link-item"><div class="cta-link-icon">✉️</div><div class="cta-link-text"><div class="cli-label">Email</div><div class="cli-value">bilal@voke.edu.pk</div></div></div>
+            <div class="cta-link-item"><div class="cta-link-icon">💼</div><div class="cta-link-text"><div class="cli-label">LinkedIn</div><div class="cli-value">linkedin.com/in/bilalabdullah</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer-ribbon">
+      <div class="footer-left">
+        <span>© 2026 Bilal Abdullah — RMS ERP</span>
+        <span class="dot-sep">|</span>
+        <span>Built with .NET 10 + React 18</span>
+        <span class="dot-sep">|</span>
+        <span>All rights reserved</span>
+      </div>
+      <div class="footer-right">
+        <div class="footer-badge fb-multi">Multi-Tenant SaaS</div>
+        <div class="footer-badge fb-clean">Clean Architecture</div>
+        <div class="footer-badge fb-rbac">RBAC Security</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

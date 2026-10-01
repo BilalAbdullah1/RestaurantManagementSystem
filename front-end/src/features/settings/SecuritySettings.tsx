@@ -33,7 +33,7 @@ export default function SecuritySettings() {
       const res = await api.post('/users/generate-2fa');
       setSecret(res.data.secret);
       
-      const dataUrl = await QRCode.toDataURL(res.data.qrCodeUri || `otpauth://totp/SMS:${res.data.email || 'user'}?secret=${res.data.secret}&issuer=ExcellenceSMS`);
+      const dataUrl = await QRCode.toDataURL(res.data.qrCodeUri || `otpauth://totp/RMS:${res.data.email || 'user'}?secret=${res.data.secret}&issuer=RMS_Restaurant`);
       setQrCodeDataUrl(dataUrl);
       toast.info('2FA Secret Generated. Scan QR code in Authenticator App.');
     } catch (err: any) {

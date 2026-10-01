@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router';
 import api from '../../utils/axiosConfig';
 import Swal from 'sweetalert2';
@@ -37,7 +37,7 @@ export default function EventCalendarManager() {
     event_type: 'Sports',
     start_date: new Date().toISOString().split('T')[0],
     end_date: new Date().toISOString().split('T')[0],
-    location: 'School Main Ground',
+    location: 'Main Dining Hall / Banquet',
     description: ''
   });
 
@@ -83,14 +83,14 @@ export default function EventCalendarManager() {
         description: formData.description
       });
 
-      Swal.fire('Added!', 'New event added to School Event Calendar.', 'success');
+      Swal.fire('Added!', 'New event added to Restaurant Event Calendar.', 'success');
       setDrawerOpen(false);
       setFormData({
         title: '',
         event_type: 'Sports',
         start_date: new Date().toISOString().split('T')[0],
         end_date: new Date().toISOString().split('T')[0],
-        location: 'School Main Ground',
+        location: 'Main Dining Hall / Banquet',
         description: ''
       });
       fetchEvents();
@@ -150,7 +150,7 @@ export default function EventCalendarManager() {
           <div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
               <CalendarIcon className="w-7 h-7 text-indigo-600" />
-              Shared School Event Calendar
+              Shared Restaurant Event Calendar
             </h2>
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Shared academic, sports, debates, cultural, and holiday calendar for parents and staff.</p>
           </div>
@@ -272,7 +272,7 @@ export default function EventCalendarManager() {
                   <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Location / Venue</label>
                   <Input 
                     type="text"
-                    placeholder="e.g. School Sports Ground / Auditorium"
+                    placeholder="e.g. Main Dining Hall / Banquet Room"
                     value={formData.location}
                     onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                   />

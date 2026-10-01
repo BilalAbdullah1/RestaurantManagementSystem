@@ -159,7 +159,7 @@ export const navItems: NavItem[] = [
     icon: <DollarSign className="w-5 h-5 text-emerald-500" />,
     name: "Finance & Accounting",
     subItems: [
-      { name: "Restaurant Expenses", path: "/SchoolExpensesTracker", icon: <DollarSign className="w-4 h-4" /> },
+      { name: "Restaurant Expenses", path: "/expenses", icon: <DollarSign className="w-4 h-4" /> },
       { name: "Chart of Accounts", path: "/ChartOfAccounts", icon: <FileSpreadsheet className="w-4 h-4" /> },
       { name: "General Ledger", path: "/GeneralLedger", icon: <BookOpen className="w-4 h-4" /> },
       { name: "Financial Audit Trail", path: "/FinancialAuditLogs", icon: <Activity className="w-4 h-4" /> },
@@ -450,7 +450,7 @@ const AppSidebar: React.FC = () => {
 
           {(isExpanded || isHovered || isMobileOpen) && (
             <h1 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white line-clamp-1 break-all">
-              {branding?.school_name || activeClientConfig.branding.schoolName}
+              {branding?.school_name || activeClientConfig.branding.restaurantName || activeClientConfig.branding.schoolName}
             </h1>
           )}
         </Link>

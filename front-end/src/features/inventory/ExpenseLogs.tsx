@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+﻿import React, { useState, useEffect, useMemo } from 'react';
 import api from '../../utils/axiosConfig';
 import Swal from 'sweetalert2';
 import Input from '../../components/form/input/InputField';
@@ -27,7 +27,7 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { Download, Edit, Trash2, DollarSign, Calendar, TrendingUp } from 'lucide-react';
 
-interface SchoolExpense {
+interface RestaurantExpense {
   id?: string;
   tenant_id: string;
   category: string;
@@ -39,7 +39,7 @@ interface SchoolExpense {
 
 const getTodayDateString = () => new Date().toISOString().split('T')[0];
 
-const initialFormState = (tenantId: string): SchoolExpense => ({
+const initialFormState = (tenantId: string): RestaurantExpense => ({
   tenant_id: tenantId,
   category: 'Utilities',
   title: '',
@@ -58,7 +58,7 @@ const categoryOptions = [
 ];
 
 export default function ExpenseLogs() {
-  const [expenses, setExpenses] = useState<SchoolExpense[]>([]);
+  const [expenses, setExpenses] = useState<RestaurantExpense[]>([]);
   const [globalFilter, setGlobalFilter] = useState('');
   const [loading, setLoading] = useState(true);
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -66,14 +66,14 @@ export default function ExpenseLogs() {
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
 
   const [view, setView] = useState<'list' | 'form'>('list');
-  const [editingItem, setEditingItem] = useState<SchoolExpense | null>(null);
+  const [editingItem, setEditingItem] = useState<RestaurantExpense | null>(null);
 
   const tenantId = localStorage.getItem('tenantId') || '';
-  const [formData, setFormData] = useState<SchoolExpense>(initialFormState(tenantId));
+  const [formData, setFormData] = useState<RestaurantExpense>(initialFormState(tenantId));
 
   useEffect(() => {
     if (!tenantId) {
-      Swal.fire({ icon: 'error', title: 'Unable to Continue', text: 'School not identified.' });
+      Swal.fire({ icon: 'error', title: 'Unable to Continue', text: 'Restaurant branch not identified.' });
       setLoading(false);
       return;
     }
@@ -83,7 +83,7 @@ export default function ExpenseLogs() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const res = await api.get<SchoolExpense[]>(`/SchoolExpenses/tenant/${tenantId}`);
+      const res = await api.get<RestaurantExpense[]>(`/RestaurantExpenses/tenant/${tenantId}`);
       setExpenses(Array.isArray(res.data) ? res.data : []);
     } catch {
       Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to retrieve expenses.' });
@@ -98,7 +98,7 @@ export default function ExpenseLogs() {
     setView('form');
   };
 
-  const openEditView = (item: SchoolExpense) => {
+  const openEditView = (item: RestaurantExpense) => {
     setEditingItem(item);
     setFormData({
       ...item,
@@ -123,10 +123,10 @@ export default function ExpenseLogs() {
     setSubmitLoading(true);
     try {
       if (editingItem && editingItem.id) {
-        await api.put(`/SchoolExpenses/${editingItem.id}`, formData);
+        await api.put(`/RestaurantExpenses/${editingItem.id}`, formData);
         Swal.fire({ icon: 'success', title: 'Updated', text: 'Expense updated.', timer: 2000, showConfirmButton: false });
       } else {
-        await api.post('/SchoolExpenses', formData);
+        await api.post('/RestaurantExpenses', formData);
         Swal.fire({ icon: 'success', title: 'Recorded', text: 'Expense recorded.', timer: 2000, showConfirmButton: false });
       }
       cancelForm();
@@ -138,7 +138,7 @@ export default function ExpenseLogs() {
     }
   };
 
-  const deleteExpense = async (exp: SchoolExpense) => {
+  const deleteExpense = async (exp: RestaurantExpense) => {
     const result = await Swal.fire({
       title: 'Delete Expense?',
       text: `Are you sure you want to delete "${exp.title}"?`,
@@ -149,7 +149,7 @@ export default function ExpenseLogs() {
     });
     if (!result.isConfirmed) return;
     try {
-      await api.delete(`/SchoolExpenses/${exp.id}`);
+      await api.delete(`/RestaurantExpenses/${exp.id}`);
       Swal.fire({ icon: 'success', title: 'Deleted', text: 'Expense deleted.', timer: 1500, showConfirmButton: false });
       fetchData();
     } catch {
@@ -169,7 +169,7 @@ export default function ExpenseLogs() {
     }
   };
 
-  const columns = useMemo<ColumnDef<SchoolExpense>[]>(() => [
+  const columns = useMemo<ColumnDef<RestaurantExpense>[]>(() => [
     {
       accessorKey: 'expense_date',
       header: 'Date',
@@ -242,7 +242,7 @@ export default function ExpenseLogs() {
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.setAttribute('download', 'School_Expenses.csv');
+    link.setAttribute('download', 'Restaurant_Expenses.csv');
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -251,7 +251,7 @@ export default function ExpenseLogs() {
   const exportPDF = () => {
     if (expenses.length === 0) return;
     const doc = new jsPDF();
-    doc.text("School Expense Logs", 14, 15);
+    doc.text("Restaurant Expense Logs", 14, 15);
     const tableData = expenses.map(t => [
       new Date(t.expense_date).toLocaleDateString(),
       t.title,
@@ -264,7 +264,7 @@ export default function ExpenseLogs() {
       body: tableData,
       startY: 20,
     });
-    doc.save("School_Expenses.pdf");
+    doc.save("Restaurant_Expenses.pdf");
   };
 
   const totalExpense = expenses.reduce((sum, e) => sum + e.amount, 0);
@@ -284,7 +284,7 @@ export default function ExpenseLogs() {
         <div className="p-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl shadow-sm">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-6 border-b border-gray-200 dark:border-gray-800 gap-4">
             <div>
-              <h2 className="text-2xl font-bold text-gray-800 dark:text-white/90">School Expense Logs</h2>
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-white/90">Restaurant Expense Logs</h2>
               <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                 Track all general and administrative expenses.
               </p>
@@ -415,7 +415,7 @@ export default function ExpenseLogs() {
       <div className="flex justify-between items-center p-5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl shadow-sm">
         <div>
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white">{editingItem ? 'Edit Expense' : 'Record Expense'}</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Provide details of the school expense.</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Provide details of the Restaurant Expense.</p>
         </div>
         <Button type="button" variant="outline" size="sm" onClick={cancelForm}>Back</Button>
       </div>

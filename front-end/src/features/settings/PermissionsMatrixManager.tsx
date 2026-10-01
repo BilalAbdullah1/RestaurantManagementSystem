@@ -315,7 +315,7 @@ export default function PermissionsMatrixManager() {
               onClick={handleSeedPresets}
               disabled={seedingPreset}
               className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 text-xs font-bold rounded-xl transition-all h-11 flex items-center gap-2 shadow-sm disabled:opacity-50"
-              title="Reset matrix to standard recommended school role permissions"
+              title="Reset matrix to standard recommended restaurant role permissions"
             >
               <Sparkles className="w-4 h-4 text-amber-500" />
               <span>{seedingPreset ? 'Applying Presets...' : 'Recommended Presets'}</span>

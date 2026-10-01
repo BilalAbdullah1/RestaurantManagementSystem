@@ -1,40 +1,46 @@
 /**
- * Client Configuration Engine
+ * Client Configuration Engine - Restaurant Management System (RMS)
  * 
- * Allows modular toggling of School Management System modules per client.
- * Disabling a module safely hides it from navigation and menus without
- * deleting or altering underlying codebase, making it easily re-enabled
- * or customized for future clients.
+ * Allows modular toggling of Restaurant Management System modules per client/branch.
  */
 
 export interface ClientModuleFlags {
-  // Core Modules (Demanded by Client)
+  // Core Restaurant Modules
   dashboard: boolean;
-  noticeBoard: boolean;
-  reportsAndAnalytics: boolean;
-  students: boolean;
-  academics: boolean;
-  lms: boolean;
-  myPortal: boolean;
-  hrPayroll: boolean;
-  financeAndFees: boolean;
-  communication: boolean;
-  examinations: boolean;
-
-  // Auxiliary Modules (Toggleable per Client)
-  hostels: boolean;
-  transport: boolean;
+  pos: boolean;
+  tables: boolean;
+  menu: boolean;
+  kds: boolean;
+  orders: boolean;
+  reservations: boolean;
+  customers: boolean;
   inventory: boolean;
-  library: boolean;
-  frontOffice: boolean;
+  hrPayroll: boolean;
+  finance: boolean;
+  reportsAndAnalytics: boolean;
 
   // Administrative
   systemSettings: boolean;
   authentication: boolean;
+
+  // Compatibility flags (safe fallbacks)
+  noticeBoard?: boolean;
+  students?: boolean;
+  academics?: boolean;
+  lms?: boolean;
+  myPortal?: boolean;
+  financeAndFees?: boolean;
+  communication?: boolean;
+  examinations?: boolean;
+  hostels?: boolean;
+  transport?: boolean;
+  library?: boolean;
+  frontOffice?: boolean;
 }
 
 export interface ClientBranding {
-  schoolName: string;
+  restaurantName: string;
+  schoolName: string; // Compatibility alias
   tagline: string;
   shortCode: string;
   currency: string;
@@ -43,158 +49,136 @@ export interface ClientBranding {
 export interface ClientConfig {
   branding: ClientBranding;
   targetTenantId?: string;
-  lockToSingleSchool: boolean;
+  lockToSingleSchool: boolean; // Compatibility flag
+  lockToSingleBranch?: boolean;
   allowPublicSignup: boolean;
   modules: ClientModuleFlags;
 }
 
 // ─── 1. DEMO PROFILE (VOKE Solutions Master Demo) ──────────────────────────
-// Full 100+ screens, all 14 modules active, all campuses switchable, public signup enabled
 export const DEMO_PROFILE: ClientConfig = {
   branding: {
-    schoolName: "VOKE School Management System",
-    tagline: "Enterprise Multi-Campus Educational Operating System",
-    shortCode: "VOKE",
+    restaurantName: "VOKE Gourmet & POS System",
+    schoolName: "VOKE Gourmet & POS System",
+    tagline: "Enterprise Multi-Branch Dining & POS Operating System",
+    shortCode: "RMS",
     currency: "PKR",
   },
-  targetTenantId: undefined, // Allows picking any school/workspace
-  lockToSingleSchool: false, // Dropdown visible, can switch to any campus!
-  allowPublicSignup: true,   // Public registration open for demo
+  targetTenantId: undefined,
+  lockToSingleSchool: false,
+  lockToSingleBranch: false,
+  allowPublicSignup: true,
   modules: {
     dashboard: true,
-    noticeBoard: true,
-    reportsAndAnalytics: true,
-    students: true,
-    academics: true,
-    lms: true,
-    myPortal: true,
-    hrPayroll: true,
-    financeAndFees: true,
-    communication: true,
-    examinations: true,
-
-    // Auxiliary Modules all ENABLED in Demo:
-    hostels: true,
-    transport: true,
+    pos: true,
+    tables: true,
+    menu: true,
+    kds: true,
+    orders: true,
+    reservations: true,
+    customers: true,
     inventory: true,
-    library: true,
-    frontOffice: true,
-
+    hrPayroll: true,
+    finance: true,
+    reportsAndAnalytics: true,
     systemSettings: true,
     authentication: true,
   },
 };
 
-// ─── 2. HAPPY PALACE GROUP OF SCHOOL PROFILE (Client White-Labeled) ──────────
-// 9 Core modules active, 5 auxiliary modules disabled, locked single school
-export const HPGS_PROFILE: ClientConfig = {
+// ─── 2. BISTRO PROFILE (Cafe & Quick Service Restaurant) ───────────────────
+export const BISTRO_PROFILE: ClientConfig = {
   branding: {
-    schoolName: "Happy Palace Group Of School",
-    tagline: "Empowering Minds, Inspiring Futures",
-    shortCode: "HPGS",
+    restaurantName: "Urban Bistro & Cafe",
+    schoolName: "Urban Bistro & Cafe",
+    tagline: "Artisan Coffee, Bakery & Gourmet Dining",
+    shortCode: "UBC",
     currency: "PKR",
   },
-  targetTenantId: "fd2e2634-28a1-4b7e-abd5-2d9c1cd85075", // Happy Palace Group Of School UUID
+  targetTenantId: "fd2e2634-28a1-4b7e-abd5-2d9c1cd85075",
   lockToSingleSchool: true,
+  lockToSingleBranch: true,
   allowPublicSignup: false,
   modules: {
     dashboard: true,
-    noticeBoard: true,
-    reportsAndAnalytics: true,
-    students: true,
-    academics: true,
-    lms: true,
-    myPortal: true,
+    pos: true,
+    tables: true,
+    menu: true,
+    kds: true,
+    orders: true,
+    reservations: false,
+    customers: true,
+    inventory: true,
     hrPayroll: true,
-    financeAndFees: true,
-    communication: true,
-    examinations: true,
-
-    // Excluded Modules for this Client:
-    hostels: false,
-    transport: false,
-    inventory: false,
-    library: false,
-    frontOffice: false,
-
+    finance: true,
+    reportsAndAnalytics: true,
     systemSettings: true,
     authentication: true,
   },
 };
 
-// ─── 3. AL HIDAYAH ACADEMY PROFILE (Client White-Labeled) ────────────────────
-// Core modules active, auxiliary modules toggleable, locked single school
-export const ALHIDAYAH_PROFILE: ClientConfig = {
+// ─── 3. STEAKHOUSE & GRILL PROFILE ─────────────────────────────────────────
+export const GRILL_PROFILE: ClientConfig = {
   branding: {
-    schoolName: "Al Hidayah Academy",
-    tagline: "Excellence in Knowledge & Character",
-    shortCode: "AHA",
+    restaurantName: "Royal Steakhouse & Grill",
+    schoolName: "Royal Steakhouse & Grill",
+    tagline: "Prime Cuts & Fine Dining Experience",
+    shortCode: "RSG",
     currency: "PKR",
   },
-  targetTenantId: undefined, // Dynamically matched via school_code ('AHA') or name from DB
+  targetTenantId: undefined,
   lockToSingleSchool: true,
+  lockToSingleBranch: true,
   allowPublicSignup: false,
   modules: {
     dashboard: true,
-    noticeBoard: true,
-    reportsAndAnalytics: true,
-    students: true,
-    academics: true,
-    lms: true,
-    myPortal: true,
+    pos: true,
+    tables: true,
+    menu: true,
+    kds: true,
+    orders: true,
+    reservations: true,
+    customers: true,
+    inventory: true,
     hrPayroll: true,
-    financeAndFees: true,
-    communication: true,
-    examinations: true,
-
-    // Auxiliary Modules (toggleable per client request):
-    hostels: false,
-    transport: false,
-    inventory: false,
-    library: false,
-    frontOffice: false,
-
+    finance: true,
+    reportsAndAnalytics: true,
     systemSettings: true,
     authentication: true,
   },
 };
 
-// ─── 4. DYNAMIC PROFILE RESOLVER ─────────────────────────────────────────────
-// Automatically determines whether to run in DEMO mode or CLIENT mode
+// Aliases for backward compatibility
+export const HPGS_PROFILE = BISTRO_PROFILE;
+export const ALHIDAYAH_PROFILE = GRILL_PROFILE;
+
 function resolveActiveConfig(): ClientConfig {
-  // A. Priority 1: Environment variable in Vercel (.env or project settings)
   const envProfile = import.meta.env.VITE_CLIENT_PROFILE?.toLowerCase()?.trim();
-  if (envProfile === "hpgs" || envProfile === "happypalace") {
-    return HPGS_PROFILE;
+  if (envProfile === "bistro" || envProfile === "hpgs") {
+    return BISTRO_PROFILE;
   }
-  if (envProfile === "alhidayah" || envProfile === "al-hidayah" || envProfile === "aha" || envProfile === "hidayah") {
-    return ALHIDAYAH_PROFILE;
+  if (envProfile === "grill" || envProfile === "steakhouse" || envProfile === "aha") {
+    return GRILL_PROFILE;
   }
   if (envProfile === "demo" || envProfile === "voke") {
     return DEMO_PROFILE;
   }
 
-  // B. Priority 2: Hostname detection (e.g. happy-palace-sms.vercel.app -> HPGS, al-hidayah-sms.vercel.app -> AHA)
   if (typeof window !== "undefined") {
     const host = window.location.hostname.toLowerCase();
-    if (host.includes("happy-palace") || host.includes("happypalace") || host.includes("hpgs")) {
-      return HPGS_PROFILE;
+    if (host.includes("bistro") || host.includes("cafe")) {
+      return BISTRO_PROFILE;
     }
-    if (host.includes("alhidayah") || host.includes("al-hidayah") || host.includes("hidayah") || host.includes("aha-sms")) {
-      return ALHIDAYAH_PROFILE;
+    if (host.includes("grill") || host.includes("steakhouse")) {
+      return GRILL_PROFILE;
     }
   }
 
-  // C. Priority 3: Default is DEMO (Full system with all 100 screens and VOKE branding)
   return DEMO_PROFILE;
 }
 
 export const activeClientConfig: ClientConfig = resolveActiveConfig();
 
-/**
- * Checks if a specific module is active in the current client configuration.
- * Maps navigation item names or custom module keys cleanly to config flags.
- */
 export function isModuleEnabled(moduleName?: string): boolean {
   if (!moduleName) return true;
 
@@ -202,40 +186,31 @@ export function isModuleEnabled(moduleName?: string): boolean {
 
   const moduleMap: Record<string, keyof ClientModuleFlags> = {
     dashboard: "dashboard",
-    noticeboard: "noticeBoard",
-    notice: "noticeBoard",
-    reportsanalytics: "reportsAndAnalytics",
-    reports: "reportsAndAnalytics",
-    students: "students",
-    student: "students",
-    academics: "academics",
-    academic: "academics",
-    lms: "lms",
-    myportal: "myPortal",
-    hrpayroll: "hrPayroll",
-    payroll: "hrPayroll",
-    staff: "hrPayroll",
-    financefees: "financeAndFees",
-    finance: "financeAndFees",
-    fees: "financeAndFees",
-    communication: "communication",
-    communications: "communication",
-    examinations: "examinations",
-    examination: "examinations",
-    exams: "examinations",
-    hostels: "hostels",
-    hostel: "hostels",
-    transport: "transport",
+    pos: "pos",
+    posterminal: "pos",
+    tables: "tables",
+    tablemanagement: "tables",
+    menu: "menu",
+    menucatalog: "menu",
+    kds: "kds",
+    kitchendisplay: "kds",
+    orders: "orders",
+    reservations: "reservations",
+    customers: "customers",
     inventory: "inventory",
-    library: "library",
-    frontoffice: "frontOffice",
+    hrpayroll: "hrPayroll",
+    staff: "hrPayroll",
+    finance: "finance",
+    expenses: "finance",
+    reports: "reportsAndAnalytics",
+    reportsandanalytics: "reportsAndAnalytics",
     systemsettings: "systemSettings",
     authentication: "authentication",
   };
 
   const key = moduleMap[normalized];
   if (key && activeClientConfig.modules[key] !== undefined) {
-    return activeClientConfig.modules[key];
+    return !!activeClientConfig.modules[key];
   }
 
   return true;

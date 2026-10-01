@@ -57,7 +57,7 @@ Every directory-style page (Student Directory, Staff Directory, Admissions, Fee 
 ## 8. API Requests (Axios)
 * **NEVER** prepend `/api/` to your frontend Axios requests. The global `axiosConfig.ts` already sets `baseURL` to `/api`. Use `api.get('/students/...')` instead of `api.get('/api/students/...')`.
 
-## 9. Master SMS System Cycle & Interactive Screen-by-Screen Study Guide Protocol
+## 9. Master RMS System Cycle & Interactive Screen-by-Screen Study Guide Protocol
 * **Strict 2 Screens per Turn:** Always explain exactly 2 screens per response in deep, easy-to-understand detail.
 * **Simultaneous Live Fixes:** Fix any user-reported errors or UI improvements live on the spot, verify build (`dotnet build` & `npx tsc --noEmit`), and report the fix cleanly.
 * **Deep Explanations:** Detail every field, state hook, API endpoint, button action, portal pattern, and Agent 1 component usage.

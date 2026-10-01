@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+﻿import React, { useState, useEffect, useMemo } from 'react';
 import api from '../../utils/axiosConfig';
 import Swal from 'sweetalert2';
 import InputField from '../../components/form/input/InputField';
@@ -169,7 +169,7 @@ export default function StaffAppraisalsManager() {
     doc.setFontSize(22);
     doc.setTextColor(37, 99, 235);
     doc.setFont("helvetica", "bold");
-    doc.text("SCHOOL MANAGEMENT SYSTEM", 105, 20, { align: "center" });
+    doc.text("RESTAURANT MANAGEMENT SYSTEM", 105, 20, { align: "center" });
 
     doc.setFontSize(14);
     doc.setTextColor(100);

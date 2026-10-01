@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+﻿import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 import api from '../../utils/axiosConfig';
 import Swal from 'sweetalert2';
@@ -90,7 +90,7 @@ export default function StaffDirectory() {
       Swal.fire({
         icon: 'error',
         title: 'Unable to Continue',
-        text: 'We could not identify your school workspace. Please log in again.',
+        text: 'We could not identify your restaurant workspace. Please log in again.',
         confirmButtonColor: '#2563eb'
       });
       setLoading(false);
@@ -459,7 +459,7 @@ export default function StaffDirectory() {
           <div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Staff Directory</h2>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-              Search, view and manage school faculty credentials and payroll baselines.
+              Search, view and manage restaurant staff credentials and payroll baselines.
             </p>
           </div>
           <div className="flex flex-wrap gap-2 items-center">
@@ -495,7 +495,7 @@ export default function StaffDirectory() {
                 No Faculty or Staff Members Registered Yet
               </h3>
               <p className="text-sm text-gray-500 dark:text-gray-400 mb-6 max-w-sm">
-                Start building your school faculty roster by adding teachers, administrative staff, or importing staff records via CSV.
+                Start building your restaurant staff roster by adding teachers, administrative staff, or importing staff records via CSV.
               </p>
               <div className="flex flex-wrap items-center justify-center gap-3">
                 <Button variant="primary" onClick={openAddView} startIcon={<Plus className="w-4 h-4" />}>
@@ -612,7 +612,7 @@ export default function StaffDirectory() {
               </div>
               <div>
                 <Label required>Email Address</Label>
-                <Input type="email" required placeholder="tariq@school.edu.pk" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
+                <Input type="email" required placeholder="staff@restaurant.com" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
               </div>
             </div>
           </div>

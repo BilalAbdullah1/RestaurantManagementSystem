@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import api from '../../utils/axiosConfig';
 import Swal from 'sweetalert2';
 import Button from '../../components/ui/button/Button';
@@ -200,17 +200,17 @@ export default function Tenants() {
   return (
     <div className="w-full space-y-6">
       <div>
-        <Breadcrumb items={[{ label: 'System Settings', href: '#' }, { label: 'Multi-Tenant Campus Provisioner' }]} />
+        <Breadcrumb items={[{ label: 'System Settings', href: '#' }, { label: 'Multi-Branch Restaurant Provisioner' }]} />
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mt-2">
           <div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
               <Building className="w-7 h-7 text-indigo-600" />
-              Multi-Tenant Campus Isolation & Subdomains
+              Multi-Branch Restaurant Isolation & Subdomains
             </h2>
-            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Provision isolated school database schemas, custom subdomains, and branding themes.</p>
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Provision isolated restaurant database schemas, custom branch codes, and dining themes.</p>
           </div>
           <Button variant="primary" onClick={openAddTab} className="bg-indigo-600 hover:bg-indigo-700">
-            + Provision New School Tenant
+            + Provision New Branch
           </Button>
         </div>
       </div>
@@ -218,7 +218,7 @@ export default function Tenants() {
       <StatCards
         stats={[
           { title: 'Provisioned Tenants', value: tenants.length, icon: <Building className="w-5 h-5" />, theme: 'brand' },
-          { title: 'Active School Campuses', value: tenants.filter(t => t.is_active).length, icon: <CheckCircle className="w-5 h-5" />, theme: 'success' },
+          { title: 'Active Restaurant Branches', value: tenants.filter(t => t.is_active).length, icon: <CheckCircle className="w-5 h-5" />, theme: 'success' },
           { title: 'Subdomain Mappings', value: tenants.filter(t => t.subdomain).length, icon: <Globe className="w-5 h-5" />, theme: 'indigo' },
         ]}
       />
@@ -232,7 +232,7 @@ export default function Tenants() {
               ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400'
               : 'border-transparent text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200'}`}
         >
-          All Schools ({tenants.length})
+          All Branches ({tenants.length})
         </button>
         <button
           onClick={openAddTab}
@@ -241,7 +241,7 @@ export default function Tenants() {
               ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400'
               : 'border-transparent text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200'}`}
         >
-          {editingTenant ? 'Edit School Tenant' : '+ Add New School Tenant'}
+          {editingTenant ? 'Edit Restaurant Branch' : '+ Add New Branch'}
         </button>
       </div>
 
@@ -254,8 +254,8 @@ export default function Tenants() {
               <thead className="bg-slate-50 dark:bg-slate-800">
                 <tr>
                   <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">Logo</th>
-                  <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">School Name</th>
-                  <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">School Code</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">Restaurant / Branch Name</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">Branch Code</th>
                   <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">Email</th>
                   <th className="px-6 py-4 text-center text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">Status</th>
                   <th className="px-6 py-4 text-right text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">Actions</th>
@@ -270,13 +270,13 @@ export default function Tenants() {
                           <Building className="w-7 h-7 text-indigo-600 dark:text-indigo-400" />
                         </div>
                         <h4 className="text-base font-bold text-gray-800 dark:text-gray-200 mb-1">
-                          No School Tenants Configured
+                          No Restaurant Branches Configured
                         </h4>
                         <p className="text-xs text-gray-500 dark:text-gray-400 mb-5 leading-relaxed">
-                          Provision isolated multi-branch schemas, custom school codes, subdomains, and campus themes.
+                          Provision isolated multi-branch schemas, custom branch codes, subdomains, and dining themes.
                         </p>
                         <Button variant="primary" onClick={openAddTab} className="bg-indigo-600 hover:bg-indigo-700">
-                          + Provision First School Tenant
+                          + Provision First Restaurant Branch
                         </Button>
                       </div>
                     </td>
@@ -343,7 +343,7 @@ export default function Tenants() {
         <form onSubmit={handleSubmit} className="w-full">
           <div className="flex justify-between items-center pb-6">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-              {editingTenant ? 'Edit School' : 'Add New School'}
+              {editingTenant ? 'Edit Restaurant Branch' : 'Add New Restaurant Branch'}
             </h2>
             <Button type="button" variant="outline" onClick={() => setActiveTab('list')}>
               ← Back
@@ -353,7 +353,7 @@ export default function Tenants() {
           <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-3xl shadow-sm p-10 space-y-8">
             {/* Logo Upload */}
             <div className="flex flex-col items-center">
-              <label className="block text-sm font-bold mb-3 text-gray-700 dark:text-slate-300">School Logo</label>
+              <label className="block text-sm font-bold mb-3 text-gray-700 dark:text-slate-300">Restaurant Logo</label>
               <div className="relative w-32 h-32 border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-2xl overflow-hidden bg-gray-50 dark:bg-slate-800">
                 {logoPreview ? (
                   <img src={resolveLogoUrl(logoPreview)} alt="preview" className="w-full h-full object-cover" />
@@ -372,11 +372,11 @@ export default function Tenants() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-xs font-bold mb-2 text-gray-700 dark:text-slate-300">School Name *</label>
+                <label className="block text-xs font-bold mb-2 text-gray-700 dark:text-slate-300">Restaurant / Branch Name *</label>
                 <Input type="text" required value={formData.school_name} onChange={(e) => setFormData({ ...formData, school_name: e.target.value })} />
               </div>
               <div>
-                <label className="block text-xs font-bold mb-2 text-gray-700 dark:text-slate-300">School Code *</label>
+                <label className="block text-xs font-bold mb-2 text-gray-700 dark:text-slate-300">Branch Code *</label>
                 <Input type="text" required value={formData.school_code} onChange={(e) => setFormData({ ...formData, school_code: e.target.value })} />
               </div>
             </div>
@@ -384,7 +384,7 @@ export default function Tenants() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-xs font-bold mb-2 text-gray-700 dark:text-slate-300">Subdomain</label>
-                <Input type="text" value={formData.subdomain} onChange={(e) => setFormData({ ...formData, subdomain: e.target.value })} placeholder="school-name" />
+                <Input type="text" value={formData.subdomain} onChange={(e) => setFormData({ ...formData, subdomain: e.target.value })} placeholder="branch-name" />
               </div>
               <div>
                 <label className="block text-xs font-bold mb-2 text-gray-700 dark:text-slate-300">Email</label>
@@ -399,7 +399,7 @@ export default function Tenants() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-xs font-bold mb-2 text-gray-700 dark:text-slate-300">Principal Name</label>
+                <label className="block text-xs font-bold mb-2 text-gray-700 dark:text-slate-300">General Manager / Contact Person</label>
                 <Input type="text" value={formData.principal_name} onChange={(e) => setFormData({ ...formData, principal_name: e.target.value })} />
               </div>
               <div>
@@ -438,14 +438,14 @@ export default function Tenants() {
                 onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
                 className="w-5 h-5 accent-blue-600"
               />
-              <label className="text-sm font-medium text-gray-700 dark:text-slate-300">School is Active</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-slate-300">Restaurant Branch is Active</label>
             </div>
           </div>
 
           <div className="flex justify-end gap-4 pt-8">
             <Button type="button" variant="outline" onClick={() => setActiveTab('list')}>Cancel</Button>
             <Button type="submit" variant="primary" disabled={submitLoading}>
-              {submitLoading ? 'Saving...' : editingTenant ? 'Update School' : 'Create School'}
+              {submitLoading ? 'Saving...' : editingTenant ? 'Update Branch' : 'Create Branch'}
             </Button>
           </div>
         </form>

@@ -19,9 +19,9 @@ export default function DatabaseBackupManager() {
   const [searchParams] = useSearchParams();
   const [backingUp, setBackingUp] = useState(false);
   const [backups, setBackups] = useState([
-    { id: '1', filename: 'SMS_Full_Backup_2026-10-28.sql', size: '48.5 MB', created_at: new Date().toISOString(), status: 'Cloud Synced' },
-    { id: '2', filename: 'SMS_Full_Backup_2026-10-27.sql', size: '47.2 MB', created_at: new Date(Date.now() - 86400000).toISOString(), status: 'Cloud Synced' },
-    { id: '3', filename: 'SMS_Full_Backup_2026-10-26.sql', size: '46.8 MB', created_at: new Date(Date.now() - 172800000).toISOString(), status: 'Cloud Synced' },
+    { id: '1', filename: 'RMS_Full_Backup_2026-10-28.sql', size: '48.5 MB', created_at: new Date().toISOString(), status: 'Cloud Synced' },
+    { id: '2', filename: 'RMS_Full_Backup_2026-10-27.sql', size: '47.2 MB', created_at: new Date(Date.now() - 86400000).toISOString(), status: 'Cloud Synced' },
+    { id: '3', filename: 'RMS_Full_Backup_2026-10-26.sql', size: '46.8 MB', created_at: new Date(Date.now() - 172800000).toISOString(), status: 'Cloud Synced' },
   ]);
 
   // Deep linking: Handle URL query params
@@ -36,7 +36,7 @@ export default function DatabaseBackupManager() {
     setTimeout(() => {
       const newBackup = {
         id: (backups.length + 1).toString(),
-        filename: `SMS_Full_Backup_${new Date().toISOString().split('T')[0]}.sql`,
+        filename: `RMS_Full_Backup_${new Date().toISOString().split('T')[0]}.sql`,
         size: '49.1 MB',
         created_at: new Date().toISOString(),
         status: 'Cloud Synced'

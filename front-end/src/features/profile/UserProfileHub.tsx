@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router';
 import api from '../../utils/axiosConfig';
 import { Breadcrumb } from '../../components/ui/Breadcrumb';
@@ -235,7 +235,7 @@ export default function UserProfileHub() {
       setTwoFactorSecret(res.data.secret);
 
       const qrUrl = await QRCode.toDataURL(
-        res.data.qrCodeUri || `otpauth://totp/SMS:${profileData?.email}?secret=${res.data.secret}&issuer=${encodeURIComponent(activeClientConfig.branding.shortCode + "_SMS")}`
+        res.data.qrCodeUri || `otpauth://totp/RMS:${profileData?.email}?secret=${res.data.secret}&issuer=${encodeURIComponent(activeClientConfig.branding.shortCode + "_RMS")}`
       );
       setQrCodeDataUrl(qrUrl);
       toast.info('Scan the QR code with Google Authenticator or Microsoft Authenticator.');
@@ -429,7 +429,7 @@ export default function UserProfileHub() {
           <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm flex flex-col items-center text-center">
             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Profile Photo</h3>
             <p className="text-xs text-gray-500 dark:text-gray-400 mb-6">
-              This photo will be displayed across your school portal and directory.
+              This photo will be displayed across your restaurant portal and directory.
             </p>
 
             <ImageUpload
@@ -502,7 +502,7 @@ export default function UserProfileHub() {
                       Verified
                     </span>
                   </div>
-                  <p className="text-[11px] text-gray-400 mt-1">To change login email, please contact school administration.</p>
+                  <p className="text-[11px] text-gray-400 mt-1">To change login email, please contact restaurant management.</p>
                 </div>
 
                 <div>
@@ -729,7 +729,7 @@ export default function UserProfileHub() {
               <div>
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white">Submit a Support Ticket</h3>
                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Experiencing an issue or need assistance? Our IT & School Support team is here to help.
+                  Experiencing an issue or need assistance? Our IT & RMS Support team is here to help.
                 </p>
               </div>
             </div>
@@ -801,7 +801,7 @@ export default function UserProfileHub() {
                 <Headphones className="w-4 h-4 text-brand-600" /> Direct IT & Admin Help
               </h4>
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                For urgent emergencies, you can directly reach the school administration desk.
+                For urgent emergencies, you can directly reach the restaurant management desk.
               </p>
 
               <div className="space-y-3 pt-2">

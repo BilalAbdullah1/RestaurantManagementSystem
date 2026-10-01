@@ -470,7 +470,7 @@ export default function SignUpForm() {
 
       {/* Global Bottom Watermark */}
       <div className="absolute bottom-6 w-full text-center text-white/30 text-[10px] uppercase tracking-widest font-semibold flex items-center justify-center space-x-3 pointer-events-none z-0">
-        <span>Voke School SMS</span>
+        <span>Voke RMS Restaurant System</span>
         <span className="w-1 h-1 rounded-full bg-white/20" />
         <span>v1.0</span>
       </div>

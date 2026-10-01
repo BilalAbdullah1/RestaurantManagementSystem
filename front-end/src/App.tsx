@@ -48,7 +48,7 @@ const ExpenseLogs = lazy(() => import("./features/inventory/ExpenseLogs"));
 const ChartOfAccountsManager = lazy(() => import("./features/finance/ChartOfAccountsManager"));
 const GeneralLedger = lazy(() => import("./features/finance/GeneralLedger"));
 const FinancialAuditLogsManager = lazy(() => import("./features/finance/FinancialAuditLogsManager"));
-const SchoolExpensesTracker = lazy(() => import("./features/finance/SchoolExpensesTracker"));
+const RestaurantExpensesTracker = lazy(() => import("./features/finance/RestaurantExpensesTracker"));
 const SalarySlipsManager = lazy(() => import("./features/finance/SalarySlipsManager"));
 
 // Restaurant Reports
@@ -116,7 +116,10 @@ export default function App() {
               <Route path="/StaffLeaveApplication" element={<StaffLeaveApplication />} />
 
               {/* Financial Accounting */}
-              <Route path="/SchoolExpensesTracker" element={<SchoolExpensesTracker />} />
+              <Route path="/expenses" element={<RestaurantExpensesTracker />} />
+              <Route path="/restaurant-expenses" element={<RestaurantExpensesTracker />} />
+              <Route path="/RestaurantExpensesTracker" element={<RestaurantExpensesTracker />} />
+              <Route path="/SchoolExpensesTracker" element={<RestaurantExpensesTracker />} />
               <Route path="/ChartOfAccounts" element={<ChartOfAccountsManager />} />
               <Route path="/GeneralLedger" element={<GeneralLedger />} />
               <Route path="/FinancialAuditLogs" element={<FinancialAuditLogsManager />} />

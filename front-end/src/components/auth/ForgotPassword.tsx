@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+﻿import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router"; 
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { 
@@ -17,7 +17,7 @@ export default function ForgotPassword() {
 
   const [step, setStep] = useState<1 | 2>(1);
   const [email, setEmail] = useState('');
-  const [schoolCode, setSchoolCode] = useState(activeClientConfig.targetTenantId || '');
+  const [branchCode, setbranchCode] = useState(activeClientConfig.targetTenantId || '');
   const [tokenInput, setTokenInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -69,9 +69,9 @@ export default function ForgotPassword() {
           let matchedTenant = null;
 
           // Priority 1: Direct URL query param ?school=HPGS
-          const urlSchool = searchParams.get("school") || searchParams.get("tenant") || searchParams.get("code");
-          if (urlSchool) {
-            const param = urlSchool.toLowerCase().trim();
+          const urlBranch = searchParams.get("school") || searchParams.get("tenant") || searchParams.get("code");
+          if (urlBranch) {
+            const param = urlBranch.toLowerCase().trim();
             matchedTenant = response.data.find(
               (t: any) =>
                 t.school_code?.toLowerCase().trim() === param ||
@@ -87,7 +87,7 @@ export default function ForgotPassword() {
             matchedTenant = response.data.find(
               (t: any) =>
                 t.id === activeClientConfig.targetTenantId ||
-                t.school_name?.toLowerCase().trim() === activeClientConfig.branding.schoolName.toLowerCase().trim() ||
+                t.school_name?.toLowerCase().trim() === activeClientConfig.branding.restaurantName.toLowerCase().trim() ||
                 t.school_code?.toLowerCase().trim() === activeClientConfig.branding.shortCode.toLowerCase().trim()
             );
           }
@@ -103,7 +103,7 @@ export default function ForgotPassword() {
           }
 
           if (matchedTenant) {
-            setSchoolCode(matchedTenant.id);
+            setbranchCode(matchedTenant.id);
             setCustomBranding({
               is_custom: true,
               school_name: matchedTenant.school_name,
@@ -120,7 +120,7 @@ export default function ForgotPassword() {
           if (activeClientConfig.lockToSingleSchool) {
             setCustomBranding({
               is_custom: true,
-              school_name: activeClientConfig.branding.schoolName,
+              school_name: activeClientConfig.branding.restaurantName,
               primary_color: "#1e40af"
             });
           }
@@ -134,7 +134,7 @@ export default function ForgotPassword() {
   }, []);
 
   const handleTenantSelect = (tenantId: string) => {
-    setSchoolCode(tenantId);
+    setbranchCode(tenantId);
     setIsWorkspaceOpen(false);
     if (error) setError(null);
 
@@ -159,7 +159,7 @@ export default function ForgotPassword() {
 
   const handleRequestToken = async (e: React.FormEvent) => {
     e.preventDefault();
-    const targetTenant = schoolCode || activeClientConfig.targetTenantId || (tenants.length > 0 ? tenants[0].id : "");
+    const targetTenant = branchCode || activeClientConfig.targetTenantId || (tenants.length > 0 ? tenants[0].id : "");
 
     if (!email || !targetTenant) {
       setError("Please enter your registered email address.");
@@ -274,7 +274,7 @@ export default function ForgotPassword() {
           </h2>
           <p className="text-sm font-light text-white/60">
             {step === 1 
-              ? `Enter your email to recover your account for ${customBranding?.school_name || activeClientConfig.branding.schoolName}.` 
+              ? `Enter your email to recover your account for ${customBranding?.school_name || activeClientConfig.branding.restaurantName}.` 
               : "Enter the token code sent to your email inbox."}
           </p>
         </div>
@@ -317,9 +317,9 @@ export default function ForgotPassword() {
                     onClick={() => setIsWorkspaceOpen(!isWorkspaceOpen)}
                     className="w-full pl-12 pr-12 py-4 text-sm text-left text-white bg-white/5 rounded-2xl border border-white/10 outline-none hover:bg-white/10 focus:border-white/30 focus:bg-white/10 transition-all shadow-inner relative flex items-center justify-between"
                   >
-                    <span className={`block truncate ${!schoolCode ? "text-white/40" : "text-white"}`}>
-                      {schoolCode 
-                        ? tenants.find(t => t.id === schoolCode)?.school_name || "Select your workspace" 
+                    <span className={`block truncate ${!branchCode ? "text-white/40" : "text-white"}`}>
+                      {branchCode 
+                        ? tenants.find(t => t.id === branchCode)?.school_name || "Select your workspace" 
                         : "Select your workspace *"}
                     </span>
                     <ChevronDown className={`w-4 h-4 text-white/40 absolute right-4 transition-transform duration-300 ${isWorkspaceOpen ? "rotate-180" : ""}`} />
@@ -344,10 +344,10 @@ export default function ForgotPassword() {
                               type="button"
                               onClick={() => handleTenantSelect(tenant.id)}
                               className={`w-full text-left px-4 py-3 text-sm transition-all hover:bg-white/10 flex items-center ${
-                                schoolCode === tenant.id ? 'bg-white/10 text-white font-medium' : 'text-white/70'
+                                branchCode === tenant.id ? 'bg-white/10 text-white font-medium' : 'text-white/70'
                               }`}
                             >
-                              <div className={`w-1.5 h-1.5 rounded-full mr-3 transition-colors ${schoolCode === tenant.id ? 'bg-white' : 'bg-transparent'}`} style={{ backgroundColor: schoolCode === tenant.id ? getThemeColor() : 'transparent' }} />
+                              <div className={`w-1.5 h-1.5 rounded-full mr-3 transition-colors ${branchCode === tenant.id ? 'bg-white' : 'bg-transparent'}`} style={{ backgroundColor: branchCode === tenant.id ? getThemeColor() : 'transparent' }} />
                               {tenant.school_name}
                             </button>
                           ))
@@ -468,7 +468,7 @@ export default function ForgotPassword() {
 
       {/* Global Watermark */}
       <div className="absolute bottom-6 w-full text-center text-white/30 text-[10px] uppercase tracking-widest font-semibold flex items-center justify-center space-x-3 pointer-events-none z-0">
-        <span>{customBranding?.school_name || activeClientConfig.branding.schoolName}</span>
+        <span>{customBranding?.school_name || activeClientConfig.branding.restaurantName}</span>
         <span className="w-1 h-1 rounded-full bg-white/20" />
         <span>v1.0</span>
       </div>

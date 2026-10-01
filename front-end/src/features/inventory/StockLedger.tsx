@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+﻿import React, { useState, useEffect, useMemo } from 'react';
 import api from '../../utils/axiosConfig';
 import Swal from 'sweetalert2';
 import Input from '../../components/form/input/InputField';
@@ -90,7 +90,7 @@ export default function StockLedger() {
 
   useEffect(() => {
     if (!tenantId) {
-      Swal.fire({ icon: 'error', title: 'Unable to Continue', text: 'School not identified.' });
+      Swal.fire({ icon: 'error', title: 'Unable to Continue', text: 'Branch not identified.' });
       setLoading(false);
       return;
     }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+﻿import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router';
 import api from '../../utils/axiosConfig';
 import SearchableSelect, { SearchableSelectOption } from '../../components/form/select/SearchableSelect';
@@ -177,7 +177,7 @@ export default function SalarySlipsManager() {
     doc.setFontSize(20);
     doc.setTextColor(37, 99, 235);
     doc.setFont("helvetica", "bold");
-    doc.text("SCHOOL MANAGEMENT SYSTEM", 105, 20, { align: "center" });
+    doc.text("RESTAURANT MANAGEMENT SYSTEM", 105, 20, { align: "center" });
 
     doc.setFontSize(13);
     doc.setTextColor(100);

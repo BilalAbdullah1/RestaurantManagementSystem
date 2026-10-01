@@ -93,8 +93,8 @@ export default function SignInForm() {
 
           let matchedTenant = null;
 
-          // Priority 1: Direct URL query param ?school=HPGS or ?school=VOKE or ?school=TSS
-          const urlSchool = searchParams.get("school") || searchParams.get("tenant") || searchParams.get("code");
+          // Priority 1: Direct URL query param ?branch=RMS-01 or ?restaurant=VOKE or ?school=VOKE
+          const urlSchool = searchParams.get("branch") || searchParams.get("restaurant") || searchParams.get("school") || searchParams.get("tenant") || searchParams.get("code");
           if (urlSchool) {
             const param = urlSchool.toLowerCase().trim();
             matchedTenant = response.data.find(
@@ -548,7 +548,7 @@ export default function SignInForm() {
 
       {/* Global Bottom Branding */}
       <div className="absolute bottom-6 w-full text-center text-white/30 text-[10px] uppercase tracking-widest font-semibold flex items-center justify-center space-x-3 pointer-events-none z-0">
-        <span>{activeClientConfig.branding.schoolName}</span>
+        <span>{activeClientConfig.branding.restaurantName || activeClientConfig.branding.schoolName}</span>
         <span className="w-1 h-1 rounded-full bg-white/20" />
         <span>v1.0</span>
       </div>
